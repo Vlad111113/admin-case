@@ -27,7 +27,6 @@
             text-align: center;
         }
 
-        /* Главная страница с кейсами */
         .boxes {
             display: flex;
             gap: 20px;
@@ -129,7 +128,6 @@
             display: block;
         }
 
-        /* Модалка промокода */
         .modal {
             display: none;
             position: fixed;
@@ -247,7 +245,6 @@
             50% { transform: scale(1.08); }
         }
 
-        /* Тултип для кнопки Открыть */
         .btn-tooltip {
             position: absolute;
             bottom: calc(100% + 10px);
@@ -273,7 +270,6 @@
             display: block;
         }
 
-        /* Страница рулетки */
         .roulette-page {
             display: none;
             min-height: 100vh;
@@ -326,12 +322,12 @@
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 90s linear infinite;
+            animation: slowScroll 120s linear infinite;
         }
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 10s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: transform 15s cubic-bezier(0.2, 0.05, 0.3, 1);
         }
 
         .roulette-item {
@@ -349,7 +345,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Награды */
         .rewards-section {
             width: 100%;
             max-width: 400px;
@@ -424,7 +419,6 @@
             display: block;
         }
 
-        /* Цвета редкости */
         .rarity-common {
             color: #ffffff;
         }
@@ -543,10 +537,10 @@
         // ============================================
 
         const promoCodes = {
-            "ADMIN-8886": "cheap",
-            "CASE-8888": "expensive",
             "ADMIN-8885": "cheap",
-            "CASE-8886": "expensive"
+            "CASE-8888": "expensive",
+            "ADMIN-8884": "cheap",
+            "CASE-8885": "expensive"
         };
 
         // ============================================
@@ -764,8 +758,8 @@
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Всего 1.5 оборота — очень медленно
-            const extraSpins = Math.round(totalItems * 1.5) * itemWidth;
+            // Всего 1 оборот — минимум для эффекта
+            const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
             track.classList.add('spinning');
@@ -773,8 +767,8 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // Очень медленная и плавная анимация
-                track.style.transition = 'transform 10s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                // ОЧЕНЬ медленная анимация — 15 секунд
+                track.style.transition = 'transform 15s cubic-bezier(0.2, 0.05, 0.3, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -783,7 +777,7 @@
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
                     btn.disabled = false;
-                }, 10000);
+                }, 15000);
             }, 100);
         }
 
@@ -810,4 +804,4 @@
     </script>
 
 </body>
-        </html>
+    </html>
