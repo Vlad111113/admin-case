@@ -30,16 +30,16 @@
         /* Главная страница с кейсами */
         .boxes {
             display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
+            gap: 20px;
             justify-content: center;
             align-items: center;
             min-height: 70vh;
+            flex-wrap: nowrap;
         }
 
         .box {
-            width: 220px;
-            height: 280px;
+            width: 180px;
+            height: 230px;
             background: #16213e;
             border-radius: 20px;
             cursor: pointer;
@@ -48,12 +48,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             border: 2px solid #0f3460;
+            position: relative;
         }
 
         .box:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
 
         .box.cheap {
@@ -65,22 +66,70 @@
         }
 
         .box-icon {
-            font-size: 4rem;
+            font-size: 3rem;
         }
 
         .box-name {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: bold;
         }
 
         .lock-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             opacity: 0.5;
         }
 
         .box-price {
-            font-size: 1rem;
+            font-size: 0.85rem;
             opacity: 0.7;
+        }
+
+        /* Кружок с восклицательным знаком на кейсах */
+        .info-circle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #fff;
+            z-index: 5;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .info-circle:hover {
+            background: #888;
+        }
+
+        /* Тултип для кейсов */
+        .case-tooltip {
+            position: absolute;
+            top: 10px;
+            right: 45px;
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            color: #ccc;
+            display: none;
+            white-space: nowrap;
+            z-index: 10;
+            max-width: 200px;
+            white-space: normal;
+            line-height: 1.3;
+        }
+
+        .case-tooltip.show {
+            display: block;
         }
 
         /* Модалка промокода */
@@ -163,18 +212,6 @@
             color: #fff;
         }
 
-        .btn-info {
-            background: #ff9800;
-            color: #fff;
-            padding: 5px 10px;
-            font-size: 0.9rem;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-
         .message {
             margin: 15px 0;
             padding: 15px;
@@ -232,49 +269,57 @@
             color: #ff6b6b;
         }
 
-        .roulette-container {
+        .roulette-wrapper {
             position: relative;
             width: 100%;
             max-width: 400px;
+        }
+
+        /* Стрелка сверху */
+        .roulette-arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: -5px;
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 0 15px #ff6b6b;
+            animation: arrowBounce 1s ease infinite;
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        .roulette-container {
+            position: relative;
+            width: 100%;
             overflow: hidden;
             border-radius: 15px;
             border: 3px solid #0f3460;
             background: #1a1a2e;
-            margin-bottom: 30px;
         }
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 20s linear infinite;
+            animation: slowScroll 30s linear infinite;
             will-change: transform;
         }
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 6s cubic-bezier(0.12, 0.8, 0.08, 1);
+            transition: transform 6s cubic-bezier(0.15, 0.85, 0.25, 1);
         }
 
         .roulette-item {
             min-width: 180px;
-            padding: 35px 20px;
+            padding: 30px 20px;
             text-align: center;
             font-weight: bold;
             font-size: 1.1rem;
             border-right: 1px solid #0f3460;
-            background: #16213e;
             flex-shrink: 0;
-        }
-
-        .roulette-pointer {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 3px;
-            background: #ff6b6b;
-            transform: translateX(-50%);
-            z-index: 10;
-            box-shadow: 0 0 15px #ff6b6b;
         }
 
         @keyframes slowScroll {
@@ -306,6 +351,7 @@
             align-items: center;
             border: 1px solid #0f3460;
             gap: 10px;
+            position: relative;
         }
 
         .reward-name {
@@ -314,12 +360,94 @@
             font-size: 1.1rem;
         }
 
-        /* Адаптация для маленьких экранов */
+        /* Кружок с восклицательным знаком у наград */
+        .reward-info-circle {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            background: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #fff;
+            border: none;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        .reward-info-circle:hover {
+            background: #888;
+        }
+
+        /* Тултип для наград */
+        .reward-tooltip {
+            position: absolute;
+            top: 50%;
+            right: 45px;
+            transform: translateY(-50%);
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            color: #ccc;
+            display: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .reward-tooltip.show {
+            display: block;
+        }
+
+        /* Цвета редкости */
+        .rarity-common {
+            color: #ffffff;
+        }
+
+        .rarity-rare {
+            color: #4caf50;
+        }
+
+        .rarity-epic {
+            color: #9b59b6;
+        }
+
+        .rarity-legendary {
+            color: #ffd700;
+        }
+
+        /* Адаптация */
         @media (max-width: 480px) {
+            .box {
+                width: 150px;
+                height: 200px;
+            }
+
+            .box-icon {
+                font-size: 2.5rem;
+            }
+
+            .box-name {
+                font-size: 1rem;
+            }
+
+            .lock-icon {
+                font-size: 2rem;
+            }
+
             .roulette-item {
                 min-width: 140px;
                 padding: 25px 15px;
                 font-size: 0.9rem;
+            }
+
+            .boxes {
+                gap: 10px;
             }
         }
     </style>
@@ -332,6 +460,8 @@
 
         <div class="boxes">
             <div class="box cheap" onclick="openPromoModal('cheap')">
+                <button class="info-circle" onclick="event.stopPropagation(); toggleTooltip('cheap-tooltip')">!</button>
+                <div class="case-tooltip" id="cheap-tooltip">Награды кейса вы сможете узнать на форуме</div>
                 <div class="box-icon">📦</div>
                 <div class="box-name">Дешевый</div>
                 <div class="lock-icon">🔒</div>
@@ -339,6 +469,8 @@
             </div>
 
             <div class="box expensive" onclick="openPromoModal('expensive')">
+                <button class="info-circle" onclick="event.stopPropagation(); toggleTooltip('expensive-tooltip')">!</button>
+                <div class="case-tooltip" id="expensive-tooltip">Награды кейса вы сможете узнать на форуме</div>
                 <div class="box-icon">🎁</div>
                 <div class="box-name">Дорогой</div>
                 <div class="lock-icon">🔒</div>
@@ -351,9 +483,11 @@
     <div class="roulette-page" id="roulette-page">
         <h2 id="roulette-title">Кейс</h2>
 
-        <div class="roulette-container">
-            <div class="roulette-pointer"></div>
-            <div class="roulette-track" id="roulette-track"></div>
+        <div class="roulette-wrapper">
+            <div class="roulette-arrow">▼</div>
+            <div class="roulette-container">
+                <div class="roulette-track" id="roulette-track"></div>
+            </div>
         </div>
 
         <button class="btn btn-open" id="btn-spin" onclick="spinRoulette()">Открыть</button>
@@ -399,18 +533,18 @@
 
         const caseContents = {
             cheap: [
-                { name: "50 репортов", chance: 70 },
-                { name: "200 репортов", chance: 40 },
-                { name: "400 репортов", chance: 20 },
-                { name: "800 репортов", chance: 5 },
-                { name: "Освобождение", chance: 2 }
+                { name: "50 репортов", chance: 90 },
+                { name: "200 репортов", chance: 50 },
+                { name: "400 репортов", chance: 10 },
+                { name: "800 репортов", chance: 3 },
+                { name: "Освобождение", chance: 1 }
             ],
             expensive: [
-                { name: "300 репортов", chance: 70 },
+                { name: "300 репортов", chance: 90 },
                 { name: "500 репортов", chance: 50 },
-                { name: "800 репортов", chance: 25 },
-                { name: "1100 репортов", chance: 10 },
-                { name: "Освобождение", chance: 5 }
+                { name: "800 репортов", chance: 20 },
+                { name: "1100 репортов", chance: 8 },
+                { name: "Освобождение", chance: 4 }
             ]
         };
 
@@ -428,6 +562,33 @@
             if (saved) usedCodes = JSON.parse(saved);
         } catch(e) {
             usedCodes = {};
+        }
+
+        // Функция определения редкости по шансу
+        function getRarity(chance) {
+            if (chance >= 50) return 'rarity-common';      // 100-50% - обычные
+            if (chance >= 20) return 'rarity-rare';        // 49-20% - редкие
+            if (chance >= 5) return 'rarity-epic';         // 19-5% - эпические
+            return 'rarity-legendary';                      // 4-0% - легендарные
+        }
+
+        // Тултипы для кейсов
+        function toggleTooltip(id) {
+            const tooltip = document.getElementById(id);
+            tooltip.classList.toggle('show');
+            
+            // Закрыть другие тултипы
+            document.querySelectorAll('.case-tooltip').forEach(t => {
+                if (t.id !== id) t.classList.remove('show');
+            });
+        }
+
+        // Тултипы для наград
+        function toggleRewardTooltip(event, chance) {
+            event.stopPropagation();
+            const tooltip = event.target.parentElement.querySelector('.reward-tooltip');
+            tooltip.textContent = `Шанс выпадения: ${chance}%`;
+            tooltip.classList.toggle('show');
         }
 
         function openPromoModal(caseType) {
@@ -490,10 +651,8 @@
         }
 
         function showRoulettePage(caseType) {
-            // Скрываем главную
             document.getElementById('main-page').style.display = 'none';
             
-            // Показываем рулетку
             const page = document.getElementById('roulette-page');
             page.classList.add('active');
 
@@ -540,25 +699,18 @@
             caseContents[caseType].forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'reward-item';
+                const rarityClass = getRarity(item.chance);
                 div.innerHTML = `
-                    <span class="reward-name">${item.name}</span>
-                    <button class="btn btn-info" onclick="showChance('${item.name}', ${item.chance})">!</button>
+                    <span class="reward-name ${rarityClass}">${item.name}</span>
+                    <div class="reward-info-circle" onclick="toggleRewardTooltip(event, ${item.chance})">
+                        !
+                        <div class="reward-tooltip"></div>
+                    </div>
                 `;
                 rewardsList.appendChild(div);
             });
 
-            // Прокрутка страницы наверх
             window.scrollTo(0, 0);
-        }
-
-        function showChance(name, chance) {
-            const msg = document.getElementById('result-message');
-            msg.className = 'message win';
-            msg.textContent = `Шанс "${name}": ${chance}%`;
-            setTimeout(() => {
-                msg.className = 'message';
-                msg.textContent = '';
-            }, 3000);
         }
 
         function spinRoulette() {
@@ -585,7 +737,7 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
-            const extraSpins = 4 * totalItems * itemWidth;
+            const extraSpins = 3 * totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
             // Останавливаем медленную прокрутку
@@ -594,7 +746,7 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                track.style.transition = 'transform 6s cubic-bezier(0.12, 0.8, 0.08, 1)';
+                track.style.transition = 'transform 6s cubic-bezier(0.15, 0.85, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -611,7 +763,17 @@
         document.getElementById('promo-modal').addEventListener('click', function(e) {
             if (e.target === this) closePromoModal();
         });
+
+        // Закрытие тултипов при клике вне
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.info-circle') && !e.target.closest('.case-tooltip')) {
+                document.querySelectorAll('.case-tooltip').forEach(t => t.classList.remove('show'));
+            }
+            if (!e.target.closest('.reward-info-circle')) {
+                document.querySelectorAll('.reward-tooltip').forEach(t => t.classList.remove('show'));
+            }
+        });
     </script>
 
 </body>
-</html>
+    </html>
