@@ -327,7 +327,7 @@
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 10s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: transform 6s cubic-bezier(0.33, 0.1, 0.33, 1);
         }
 
         .roulette-item {
@@ -467,7 +467,6 @@
 </head>
 <body>
 
-    <!-- Главная страница -->
     <div id="main-page">
         <h1>AdminCase</h1>
 
@@ -492,7 +491,6 @@
         </div>
     </div>
 
-    <!-- Страница рулетки -->
     <div class="roulette-page" id="roulette-page">
         <h2 id="roulette-title">Кейс</h2>
 
@@ -516,7 +514,6 @@
         </div>
     </div>
 
-    <!-- Модалка промокода -->
     <div class="modal" id="promo-modal">
         <div class="modal-content">
             <h2 id="promo-title">Введите промокод</h2>
@@ -529,10 +526,6 @@
     </div>
 
     <script>
-        // ============================================
-        // ⚠️ СЮДА ВПИСЫВАЙ ПРОМОКОДЫ ⚠️
-        // ============================================
-
         const promoCodes = {
             "B4N7K2": "cheap",
             "M9Q3W6": "cheap",
@@ -556,10 +549,6 @@
             "E9R3T6": "expensive"
         };
 
-        // ============================================
-        // НАГРАДЫ КЕЙСОВ
-        // ============================================
-
         const caseContents = {
             cheap: [
                 { name: "50 репортов", chance: 95 },
@@ -577,24 +566,17 @@
             ]
         };
 
-        // ============================================
-        // ❌ ДАЛЬШЕ НЕ ТРОГАЙ ❌
-        // ============================================
-
         let currentCase = null;
         let isSpinning = false;
         let hasSpun = false;
         let rouletteItems = [];
         let usedCodes = {};
         let activeCode = null;
-        let winItem = null;
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
             if (saved) usedCodes = JSON.parse(saved);
-        } catch(e) {
-            usedCodes = {};
-        }
+        } catch(e) { usedCodes = {}; }
 
         try {
             const savedActive = localStorage.getItem('admincase_active_code');
@@ -627,7 +609,7 @@
         function toggleRewardTooltip(event, chance) {
             event.stopPropagation();
             const tooltip = event.target.parentElement.querySelector('.reward-tooltip');
-            tooltip.textContent = `Шанс выпадения: ${chance}%`;
+            tooltip.textContent = 'Шанс выпадения: ' + chance + '%';
             tooltip.classList.toggle('show');
         }
 
@@ -697,20 +679,15 @@
 
         function showRoulettePage(caseType) {
             document.getElementById('main-page').style.display = 'none';
-            
-            const page = document.getElementById('roulette-page');
-            page.classList.add('active');
-
+            document.getElementById('roulette-page').classList.add('active');
             document.getElementById('roulette-title').textContent = 
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
-
             document.getElementById('result-message').className = 'message';
             document.getElementById('result-message').textContent = '';
             document.getElementById('btn-spin').disabled = false;
             document.getElementById('btn-tooltip').classList.remove('show');
             isSpinning = false;
             hasSpun = false;
-            winItem = null;
 
             rouletteItems = [];
             caseContents[caseType].forEach(item => {
@@ -760,9 +737,7 @@
             if (hasSpun) {
                 const tooltip = document.getElementById('btn-tooltip');
                 tooltip.classList.add('show');
-                setTimeout(() => {
-                    tooltip.classList.remove('show');
-                }, 2000);
+                setTimeout(() => { tooltip.classList.remove('show'); }, 2000);
                 return;
             }
 
@@ -788,15 +763,18 @@
                 return;
             }
 
-            // Выбираем выигрыш
+            // Выбираем выигрышный предмет
             const winIndex = Math.floor(Math.random() * totalItems);
-            winItem = rouletteItems[winIndex];
+            const winItem = rouletteItems[winIndex];
 
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
-            const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
+            const centerOffset = containerWidth / 2 - itemWidth / 2;
             
-            // Добавляем 2 полных оборота
-            const extraSpins = 2 * totalItems * itemWidth;
+            // Позиция, при которой выигрышный предмет будет под стрелкой
+            const stopPosition = -(winIndex * itemWidth) + centerOffset;
+            
+            // Добавляем ровно 1 полный оборот
+            const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
             track.classList.add('spinning');
@@ -804,28 +782,26 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // 10 секунд, плавный разгон и остановка
-                track.style.transition = 'transform 10s cubic-bezier(0.25, 0.1, 0.25, 1)';
-                track.style.transform = `translateX(${finalPosition}px)`;
+                // 6 секунд: разгон - равномерно - остановка
+                // cubic-bezier(0.33, 0.1, 0.33, 1) даёт именно такой эффект
+                track.style.transition = 'transform 6s cubic-bezier(0.33, 0.1, 0.33, 1)';
+                track.style.transform = 'translateX(' + finalPosition + 'px)';
 
                 setTimeout(() => {
                     msg.className = 'message win';
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
                     btn.disabled = false;
-                    
                     localStorage.removeItem('admincase_active_code');
                     activeCode = null;
-                }, 10000);
+                }, 6000);
             }, 100);
         }
 
-        // Закрытие модалки по клику вне
         document.getElementById('promo-modal').addEventListener('click', function(e) {
             if (e.target === this) closePromoModal();
         });
 
-        // Закрытие тултипов
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.info-circle') && !e.target.closest('.case-tooltip')) {
                 document.querySelectorAll('.case-tooltip').forEach(t => t.classList.remove('show'));
@@ -837,4 +813,4 @@
     </script>
 
 </body>
-    </html>
+</html>
