@@ -322,12 +322,12 @@
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 180s linear infinite;
+            animation: slowScroll 60s linear infinite;
         }
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 5s linear;
+            transition: transform 10s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .roulette-item {
@@ -788,18 +788,15 @@
                 return;
             }
 
-            // Выбираем выигрышный индекс
+            // Выбираем выигрыш
             const winIndex = Math.floor(Math.random() * totalItems);
             winItem = rouletteItems[winIndex];
 
-            // Минимальное движение — всего 1 элемент
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
-            
-            // Позиция, чтобы выигрышный элемент был под стрелкой
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Добавляем минимум — всего 1 полный оборот
-            const extraSpins = totalItems * itemWidth;
+            // Добавляем 2 полных оборота
+            const extraSpins = 2 * totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
             track.classList.add('spinning');
@@ -807,8 +804,8 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // МАКСИМАЛЬНО МЕДЛЕННАЯ — 5 секунд linear (равномерная скорость)
-                track.style.transition = 'transform 5s linear';
+                // 10 секунд, плавный разгон и остановка
+                track.style.transition = 'transform 10s cubic-bezier(0.25, 0.1, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -819,7 +816,7 @@
                     
                     localStorage.removeItem('admincase_active_code');
                     activeCode = null;
-                }, 5000);
+                }, 10000);
             }, 100);
         }
 
