@@ -316,7 +316,7 @@
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 60s linear infinite;
+            animation: slowScroll 120s linear infinite;
         }
 
         .roulette-track.spinning {
@@ -700,7 +700,6 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            // Сохраняем все элементы рулетки (включая дублированные)
             allRouletteItems = [...rouletteItems, ...rouletteItems];
             
             allRouletteItems.forEach(item => {
@@ -730,17 +729,14 @@
             window.scrollTo(0, 0);
         }
 
-        // Функция определения того, что под стрелкой
         function getItemUnderArrow(trackPosition) {
             const itemWidth = 180;
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2;
             
-            // Преобразуем позицию в положительное значение для индекса
             const absolutePosition = Math.abs(trackPosition) + centerOffset;
             const itemIndex = Math.floor(absolutePosition / itemWidth);
             
-            // Проверяем, что индекс в пределах массива
             if (itemIndex >= 0 && itemIndex < allRouletteItems.length) {
                 return allRouletteItems[itemIndex];
             }
@@ -780,13 +776,10 @@
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2 - itemWidth / 2;
             
-            // Выбираем случайный индекс из первой половины
             const winIndex = Math.floor(Math.random() * totalItems);
-            
-            // Позиция, при которой элемент winIndex будет под стрелкой
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
             
-            // Добавляем 1 полный оборот (totalItems элементов)
+            // Добавляем 1 полный оборот
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -794,8 +787,8 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            // Анимация через requestAnimationFrame
-            const duration = 6000; // 6 секунд
+            // МЕДЛЕННАЯ АНИМАЦИЯ: 15 секунд (чуть быстрее чем 120с/круг)
+            const duration = 15000;
             const startTime = performance.now();
             const startPosition = 0;
             const distance = finalPosition - startPosition;
@@ -819,9 +812,7 @@
                 if (progress < 1) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
-                    // Пауза 500мс, затем определяем что под стрелкой
                     setTimeout(() => {
-                        // Определяем что реально под стрелкой
                         const actualWinItem = getItemUnderArrow(finalTrackPosition);
                         
                         msg.className = 'message win';
