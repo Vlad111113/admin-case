@@ -779,7 +779,6 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
             
-            // Добавляем 1 полный оборот
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -787,8 +786,8 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            // МЕДЛЕННАЯ АНИМАЦИЯ: 15 секунд (чуть быстрее чем 120с/круг)
-            const duration = 15000;
+            // 6 секунд, БЕЗ разгона в начале, только плавная остановка в конце
+            const duration = 6000;
             const startTime = performance.now();
             const startPosition = 0;
             const distance = finalPosition - startPosition;
@@ -798,12 +797,8 @@
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                let eased;
-                if (progress < 0.5) {
-                    eased = 4 * progress * progress * progress;
-                } else {
-                    eased = 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                }
+                // easeOutCubic — БЕЗ разгона в начале, только замедление в конце
+                const eased = 1 - Math.pow(1 - progress, 3);
 
                 const currentPosition = startPosition + distance * eased;
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
