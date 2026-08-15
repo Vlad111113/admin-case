@@ -327,7 +327,7 @@
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 20s cubic-bezier(0.2, 0.05, 0.25, 1);
+            transition: transform 8s cubic-bezier(0.2, 0.05, 0.25, 1);
         }
 
         .roulette-item {
@@ -565,18 +565,18 @@
 
         const caseContents = {
             cheap: [
-                { name: "50 репортов", chance: 90 },
-                { name: "200 репортов", chance: 50 },
-                { name: "400 репортов", chance: 10 },
+                { name: "50 репортов", chance: 95 },
+                { name: "200 репортов", chance: 30 },
+                { name: "400 репортов", chance: 14 },
                 { name: "800 репортов", chance: 3 },
-                { name: "Освобождение", chance: 1 }
+                { name: "Освобождение", chance: 0.5 }
             ],
             expensive: [
-                { name: "300 репортов", chance: 90 },
-                { name: "500 репортов", chance: 50 },
-                { name: "800 репортов", chance: 20 },
-                { name: "1100 репортов", chance: 8 },
-                { name: "Освобождение", chance: 4 }
+                { name: "300 репортов", chance: 95 },
+                { name: "500 репортов", chance: 20 },
+                { name: "800 репортов", chance: 8 },
+                { name: "1100 репортов", chance: 2 },
+                { name: "Освобождение", chance: 1 }
             ]
         };
 
@@ -604,7 +604,6 @@
             if (savedActive) {
                 const activeData = JSON.parse(savedActive);
                 if (activeData && activeData.caseType) {
-                    // Показываем рулетку вместо главной
                     document.getElementById('main-page').style.display = 'none';
                     showRoulettePage(activeData.caseType);
                     activeCode = activeData.code;
@@ -717,7 +716,7 @@
 
             rouletteItems = [];
             caseContents[caseType].forEach(item => {
-                const count = Math.max(1, Math.round(item.chance / 10));
+                const count = Math.max(1, Math.round(item.chance));
                 for (let i = 0; i < count; i++) {
                     rouletteItems.push(item);
                 }
@@ -795,7 +794,6 @@
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Всего 1 оборот — очень медленно
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -804,8 +802,8 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // ОЧЕНЬ МЕДЛЕННАЯ анимация — 20 секунд
-                track.style.transition = 'transform 20s cubic-bezier(0.2, 0.05, 0.25, 1)';
+                // 8 секунд
+                track.style.transition = 'transform 8s cubic-bezier(0.2, 0.05, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -815,10 +813,9 @@
                     isSpinning = false;
                     btn.disabled = false;
                     
-                    // Очищаем активный код после открытия
                     localStorage.removeItem('admincase_active_code');
                     activeCode = null;
-                }, 20000);
+                }, 8000);
             }, 100);
         }
 
@@ -839,4 +836,4 @@
     </script>
 
 </body>
-                    </html>
+</html>
