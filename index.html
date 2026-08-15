@@ -779,28 +779,35 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
             
-            const extraSpins = totalItems * itemWidth;
-            const finalPosition = stopPosition - extraSpins;
+            // Проходим ровно 12 клеток (2 клетки/сек * 6 секунд)
+            const totalDistance = 12 * itemWidth;
+            const finalPosition = stopPosition - totalDistance;
 
             track.classList.add('spinning');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            // 6 секунд, БЕЗ разгона в начале, только плавная остановка в конце
-            const duration = 6000;
+            const duration = 6000; // 6 секунд
             const startTime = performance.now();
             const startPosition = 0;
-            const distance = finalPosition - startPosition;
             let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // easeOutCubic — БЕЗ разгона в начале, только замедление в конце
-                const eased = 1 - Math.pow(1 - progress, 3);
+                // Линейное движение 5 секунд, затем плавная остановка на последней секунде
+                let currentPosition;
+                if (progress < 5/6) {
+                    // Первые 5 секунд — ровно 2 клетки в секунду
+                    currentPosition = startPosition - (2 * itemWidth * (progress * duration / 1000) * 1000);
+                } else {
+                    // Последняя секунда — плавное замедление
+                    const stopProgress = (progress - 5/6) * 6; // 0 до 1
+                    const eased = 1 - Math.pow(1 - stopProgress, 3);
+                    currentPosition = startPosition - (2 * itemWidth * 5) - (2 * itemWidth * eased);
+                }
 
-                const currentPosition = startPosition + distance * eased;
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
                 finalTrackPosition = currentPosition;
 
@@ -838,4 +845,4 @@
     </script>
 
 </body>
-    </html>
+</html>
