@@ -50,8 +50,6 @@
             justify-content: center;
             gap: 15px;
             border: 2px solid #0f3460;
-            text-decoration: none;
-            color: #fff;
         }
 
         .box:hover {
@@ -89,7 +87,12 @@
             opacity: 0.7;
         }
 
-        /* Модальное окно */
+        .lock-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -111,10 +114,12 @@
             background: #16213e;
             border-radius: 20px;
             padding: 30px;
-            width: 90%;
-            max-width: 400px;
+            width: 95%;
+            max-width: 500px;
             text-align: center;
             border: 2px solid #0f3460;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-content h2 {
@@ -135,19 +140,15 @@
             text-transform: uppercase;
         }
 
-        .modal-content input:focus {
-            outline: none;
-            border-color: #4caf50;
-        }
-
         .btn {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border-radius: 10px;
             border: none;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            margin: 5px;
         }
 
         .btn-open {
@@ -160,40 +161,119 @@
             transform: scale(1.05);
         }
 
+        .btn-open:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-close {
             background: #f44336;
             color: #fff;
-            margin-top: 10px;
         }
 
-        .btn-close:hover {
-            background: #d32f2f;
+        .btn-info {
+            background: #ff9800;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+        }
+
+        /* Рулетка */
+        .roulette-container {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 3px solid #0f3460;
+            background: #1a1a2e;
+        }
+
+        .roulette-track {
+            display: flex;
+            transition: transform 6s cubic-bezier(0.12, 0.8, 0.08, 1);
+            will-change: transform;
+        }
+
+        .roulette-item {
+            min-width: 150px;
+            padding: 30px 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-right: 1px solid #0f3460;
+            background: #16213e;
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #ff6b6b;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 10px #ff6b6b;
         }
 
         /* Награды */
         .rewards {
-            display: none;
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: left;
-        }
-
-        .rewards.active {
-            display: block;
         }
 
         .reward-item {
             background: #1a1a2e;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 10px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #0f3460;
+            gap: 10px;
+        }
+
+        .reward-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
         }
 
         .reward-name {
             font-weight: bold;
+        }
+
+        .reward-chance-tooltip {
+            position: relative;
+            display: none;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffd700;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 20;
+        }
+
+        .reward-info-wrapper {
+            position: relative;
+        }
+
+        .reward-info-wrapper:hover .reward-chance-tooltip {
+            display: block;
         }
 
         .reward-chance {
@@ -202,7 +282,7 @@
         }
 
         .message {
-            margin-top: 15px;
+            margin: 15px 0;
             padding: 12px;
             border-radius: 10px;
             display: none;
@@ -223,16 +303,22 @@
             border: 1px solid #f44336;
         }
 
-        .message.info {
+        .message.win {
             display: block;
             background: rgba(255, 215, 0, 0.2);
             color: #ffd700;
             border: 1px solid #ffd700;
+            font-size: 1.1rem;
         }
 
-        .lock-icon {
-            font-size: 3rem;
-            opacity: 0.5;
+        /* Анимация выигрыша */
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .win-animation {
+            animation: winPulse 0.5s ease 3;
         }
     </style>
 </head>
@@ -242,7 +328,7 @@
 
     <div class="boxes">
         <!-- Дешевый бокс -->
-        <div class="box cheap" onclick="openModal('cheap')">
+        <div class="box cheap" onclick="openPromoModal('cheap')">
             <div class="box-icon">📦</div>
             <div class="box-name">Дешевый</div>
             <div class="lock-icon">🔒</div>
@@ -250,7 +336,7 @@
         </div>
 
         <!-- Дорогой бокс -->
-        <div class="box expensive" onclick="openModal('expensive')">
+        <div class="box expensive" onclick="openPromoModal('expensive')">
             <div class="box-icon">🎁</div>
             <div class="box-name">Дорогой</div>
             <div class="lock-icon">🔒</div>
@@ -258,19 +344,39 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
-    <div class="modal" id="modal">
+    <!-- Модальное окно для промокода -->
+    <div class="modal" id="promo-modal">
         <div class="modal-content">
-            <h2 id="modal-title">Введите промокод</h2>
+            <h2 id="promo-modal-title">Введите промокод</h2>
             <input type="text" id="promo-input" placeholder="ВВЕДИТЕ КОД" maxlength="20">
             <br>
-            <button class="btn btn-open" onclick="checkPromo()">Открыть</button>
-            <button class="btn btn-close" onclick="closeModal()">Закрыть</button>
+            <button class="btn btn-open" onclick="checkPromo()">Активировать</button>
+            <button class="btn btn-close" onclick="closePromoModal()">Закрыть</button>
 
-            <div class="message" id="message"></div>
+            <div class="message" id="promo-message"></div>
+        </div>
+    </div>
 
-            <div class="rewards" id="rewards">
-                <h3 style="margin-bottom: 15px;">Содержимое кейса:</h3>
+    <!-- Модальное окно с рулеткой -->
+    <div class="modal" id="roulette-modal">
+        <div class="modal-content">
+            <h2 id="roulette-title">Кейс</h2>
+
+            <!-- Рулетка -->
+            <div class="roulette-container" id="roulette-container">
+                <div class="roulette-pointer"></div>
+                <div class="roulette-track" id="roulette-track"></div>
+            </div>
+
+            <!-- Кнопка Открыть -->
+            <button class="btn btn-open" id="btn-spin" onclick="spinRoulette()">Открыть</button>
+
+            <!-- Сообщение о выигрыше -->
+            <div class="message" id="result-message"></div>
+
+            <!-- Награды -->
+            <div class="rewards" id="rewards-section">
+                <h3 style="margin-bottom: 15px;">Награды кейса:</h3>
                 <div id="rewards-list"></div>
             </div>
         </div>
@@ -285,8 +391,10 @@
         // ============================================
 
         const promoCodes = {
-            "ADMIN-123": "cheap",
-            "CASE-456": "expensive"
+            "ADMIN-444": "cheap",
+            "CASE-555": "expensive",
+            "ADMIN-555": "cheap",
+            "CASE-666": "expensive"
         };
 
         // ============================================
@@ -295,10 +403,18 @@
 
         const caseContents = {
             cheap: [
-                { name: "50 репортов", chance: 100 }
+                { name: "50 репортов", chance: 70 },
+                { name: "200 репортов", chance: 40 },
+                { name: "400 репортов", chance: 20 },
+                { name: "800 репортов", chance: 5 },
+                { name: "Освобождение", chance: 2 }
             ],
             expensive: [
-                { name: "Скоро будет наполнение", chance: 100 }
+                { name: "300 репортов", chance: 70 },
+                { name: "500 репортов", chance: 50 },
+                { name: "800 репортов", chance: 25 },
+                { name: "1100 репортов", chance: 10 },
+                { name: "Освобождение", chance: 5 }
             ]
         };
 
@@ -308,33 +424,37 @@
 
         let currentCase = null;
         let usedCodes = JSON.parse(localStorage.getItem('usedCodes') || '{}');
+        let isSpinning = false;
+        let rouletteItems = [];
 
-        function openModal(caseType) {
+        // Открытие модалки промокода
+        function openPromoModal(caseType) {
             currentCase = caseType;
-            document.getElementById('modal').classList.add('active');
-            document.getElementById('modal-title').textContent = 
-                caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс';
+            document.getElementById('promo-modal').classList.add('active');
+            document.getElementById('promo-modal-title').textContent = 
+                caseType === 'cheap' ? 'Дешевый кейс — промокод' : 'Дорогой кейс — промокод';
             document.getElementById('promo-input').value = '';
-            document.getElementById('message').className = 'message';
-            document.getElementById('message').textContent = '';
-            document.getElementById('rewards').classList.remove('active');
+            document.getElementById('promo-message').className = 'message';
+            document.getElementById('promo-message').textContent = '';
         }
 
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
+        function closePromoModal() {
+            document.getElementById('promo-modal').classList.remove('active');
             currentCase = null;
         }
 
+        function closeRouletteModal() {
+            if (isSpinning) return;
+            document.getElementById('roulette-modal').classList.remove('active');
+        }
+
+        // Проверка промокода
         function checkPromo() {
             const input = document.getElementById('promo-input').value.trim().toUpperCase();
-            const messageEl = document.getElementById('message');
-            const rewardsEl = document.getElementById('rewards');
-            const rewardsList = document.getElementById('rewards-list');
+            const messageEl = document.getElementById('promo-message');
 
-            // Сброс сообщений
             messageEl.className = 'message';
             messageEl.textContent = '';
-            rewardsEl.classList.remove('active');
 
             if (!input) {
                 messageEl.className = 'message error';
@@ -342,21 +462,18 @@
                 return;
             }
 
-            // Проверка кода
             if (!promoCodes[input]) {
                 messageEl.className = 'message error';
                 messageEl.textContent = 'Неверный промокод!';
                 return;
             }
 
-            // Проверка, использован ли код
             if (usedCodes[input]) {
                 messageEl.className = 'message error';
                 messageEl.textContent = 'Этот код уже использован!';
                 return;
             }
 
-            // Проверка соответствия кейса
             const codeCase = promoCodes[input];
             if (codeCase !== currentCase) {
                 messageEl.className = 'message error';
@@ -368,31 +485,156 @@
             usedCodes[input] = true;
             localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
 
-            // Показ наград
+            // Показ успеха
             messageEl.className = 'message success';
-            messageEl.textContent = '✅ Код активирован! Вот содержимое кейса:';
+            messageEl.textContent = '✅ Код активирован!';
 
+            // Закрыть промо-модалку и открыть рулетку
+            setTimeout(() => {
+                closePromoModal();
+                openRouletteModal(currentCase);
+            }, 500);
+        }
+
+        // Открытие рулетки
+        function openRouletteModal(caseType) {
+            document.getElementById('roulette-modal').classList.add('active');
+            document.getElementById('roulette-title').textContent = 
+                caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
+            
+            // Сброс
+            document.getElementById('result-message').className = 'message';
+            document.getElementById('result-message').textContent = '';
+            document.getElementById('btn-spin').disabled = false;
+            isSpinning = false;
+
+            // Заполнение рулетки
+            rouletteItems = [];
+            caseContents[caseType].forEach(item => {
+                // Добавляем предмет несколько раз в зависимости от шанса
+                const count = Math.round(item.chance / 10) || 1;
+                for (let i = 0; i < count; i++) {
+                    rouletteItems.push(item);
+                }
+            });
+
+            // Перемешивание
+            rouletteItems = shuffleArray(rouletteItems);
+
+            // Отрисовка рулетки
+            const track = document.getElementById('roulette-track');
+            track.innerHTML = '';
+            track.style.transform = 'translateX(0)';
+
+            rouletteItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'roulette-item';
+                div.textContent = item.name;
+                track.appendChild(div);
+            });
+
+            // Отрисовка наград
+            renderRewards(caseType);
+        }
+
+        // Отрисовка списка наград с шансами
+        function renderRewards(caseType) {
+            const rewardsList = document.getElementById('rewards-list');
             rewardsList.innerHTML = '';
-            caseContents[currentCase].forEach(item => {
+
+            caseContents[caseType].forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'reward-item';
                 div.innerHTML = `
-                    <span class="reward-name">${item.name}</span>
-                    <span class="reward-chance">${item.chance}%</span>
+                    <div class="reward-left">
+                        <span class="reward-name">${item.name}</span>
+                        <div class="reward-info-wrapper">
+                            <button class="btn btn-info" onclick="showChance('${item.name}', ${item.chance})">!</button>
+                        </div>
+                    </div>
                 `;
                 rewardsList.appendChild(div);
             });
-
-            rewardsEl.classList.add('active');
         }
 
-        // Закрытие по клику вне модалки
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
+        // Показать шанс
+        function showChance(name, chance) {
+            const messageEl = document.getElementById('result-message');
+            messageEl.className = 'message win';
+            messageEl.textContent = `Шанс выпадения "${name}": ${chance}%`;
+            
+            setTimeout(() => {
+                messageEl.className = 'message';
+                messageEl.textContent = '';
+            }, 3000);
+        }
+
+        // Вращение рулетки
+        function spinRoulette() {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const btn = document.getElementById('btn-spin');
+            btn.disabled = true;
+
+            const messageEl = document.getElementById('result-message');
+            messageEl.className = 'message';
+            messageEl.textContent = '';
+
+            const track = document.getElementById('roulette-track');
+            const itemWidth = 150; // ширина одного элемента
+            const totalItems = rouletteItems.length;
+
+            // Случайный индекс выигрыша
+            const winIndex = Math.floor(Math.random() * totalItems);
+
+            // Расчёт позиции остановки (центр указателя)
+            const stopPosition = -(winIndex * itemWidth) + (window.innerWidth / 2 - itemWidth / 2);
+
+            // Добавляем дополнительные обороты для красоты
+            const extraSpins = 3 * totalItems * itemWidth;
+            const finalPosition = stopPosition - extraSpins;
+
+            // Устанавливаем начальную позицию
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+
+            // Запускаем вращение
+            setTimeout(() => {
+                track.style.transition = 'transform 6s cubic-bezier(0.12, 0.8, 0.08, 1)';
+                track.style.transform = `translateX(${finalPosition}px)`;
+
+                // После остановки
+                setTimeout(() => {
+                    const winItem = rouletteItems[winIndex];
+                    messageEl.className = 'message win win-animation';
+                    messageEl.textContent = `🎉 Вы выиграли: ${winItem.name}!`;
+                    
+                    isSpinning = false;
+                    btn.disabled = false;
+                }, 6000);
+            }, 100);
+        }
+
+        // Перемешивание массива
+        function shuffleArray(arr) {
+            const newArr = [...arr];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
             }
+            return newArr;
+        }
+
+        // Закрытие модалок по клику вне
+        document.getElementById('promo-modal').addEventListener('click', function(e) {
+            if (e.target === this) closePromoModal();
+        });
+
+        document.getElementById('roulette-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeRouletteModal();
         });
     </script>
 
 </body>
-</html>
+    </html>
