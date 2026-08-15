@@ -327,7 +327,7 @@
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 5s cubic-bezier(0.3, 0.05, 0.3, 1);
+            transition: transform 5s linear;
         }
 
         .roulette-item {
@@ -531,9 +531,6 @@
     <script>
         // ============================================
         // ⚠️ СЮДА ВПИСЫВАЙ ПРОМОКОДЫ ⚠️
-        // Формат: "КОД": "тип_кейса"
-        // "cheap" = Дешевый
-        // "expensive" = Дорогой
         // ============================================
 
         const promoCodes = {
@@ -599,7 +596,6 @@
             usedCodes = {};
         }
 
-        // Проверка при загрузке
         try {
             const savedActive = localStorage.getItem('admincase_active_code');
             if (savedActive) {
@@ -792,21 +788,17 @@
                 return;
             }
 
-            // Выбираем выигрышный предмет
+            // Выбираем выигрышный индекс
             const winIndex = Math.floor(Math.random() * totalItems);
             winItem = rouletteItems[winIndex];
 
-            // Находим позицию предмета, который должен остановиться под стрелкой
-            // Так как у нас дублированный массив, ищем в первой половине
-            const actualWinIndex = winIndex;
-            
+            // Минимальное движение — всего 1 элемент
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             
-            // Рассчитываем позицию так, чтобы выигрышный предмет был под стрелкой
-            const itemCenterOffset = containerWidth / 2 - itemWidth / 2;
-            const stopPosition = -(actualWinIndex * itemWidth) + itemCenterOffset;
+            // Позиция, чтобы выигрышный элемент был под стрелкой
+            const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Добавляем ровно 1 полный оборот (totalItems элементов)
+            // Добавляем минимум — всего 1 полный оборот
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -815,12 +807,11 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // 5 секунд, очень медленно
-                track.style.transition = 'transform 5s cubic-bezier(0.3, 0.05, 0.3, 1)';
+                // МАКСИМАЛЬНО МЕДЛЕННАЯ — 5 секунд linear (равномерная скорость)
+                track.style.transition = 'transform 5s linear';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
-                    // Показываем выигрыш
                     msg.className = 'message win';
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
@@ -849,4 +840,4 @@
     </script>
 
 </body>
-        </html>
+    </html>
