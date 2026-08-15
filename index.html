@@ -303,12 +303,6 @@
             position: relative;
             z-index: 10;
             text-shadow: 0 0 15px #ff6b6b;
-            animation: arrowBounce 1s ease infinite;
-        }
-
-        @keyframes arrowBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(5px); }
         }
 
         .roulette-container {
@@ -327,7 +321,6 @@
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 6s cubic-bezier(0.33, 0.1, 0.33, 1);
         }
 
         .roulette-item {
@@ -527,26 +520,26 @@
 
     <script>
         const promoCodes = {
-            "B4N7K2": "cheap",
-            "M9Q3W6": "cheap",
-            "T8R5Y1": "cheap",
-            "U2I7O4": "cheap",
-            "P9A3S6": "cheap",
-            "D1F8G4": "cheap",
-            "H6J2K9": "cheap",
-            "L3Z7X5": "cheap",
-            "C8V2B6": "cheap",
-            "N4M9Q7": "cheap",
-            "W6E2R8": "expensive",
-            "T3Y7U5": "expensive",
-            "I9O4P2": "expensive",
-            "A1S6D8": "expensive",
-            "F5G9H3": "expensive",
-            "J2K7L4": "expensive",
-            "Z8X3C6": "expensive",
-            "V5B1N9": "expensive",
-            "M7Q2W4": "expensive",
-            "E9R3T6": "expensive"
+            "K5J8H2": "cheap",
+            "R9T4Y6": "cheap",
+            "W2U7I3": "cheap",
+            "S8A4D1": "cheap",
+            "F6G9H5": "cheap",
+            "X3C7V2": "cheap",
+            "B8N5M1": "cheap",
+            "Q4W6E9": "cheap",
+            "Z7X3C5": "cheap",
+            "L2K9J4": "cheap",
+            "P8O3I6": "expensive",
+            "M5N2B7": "expensive",
+            "V9C4X1": "expensive",
+            "H3J8K6": "expensive",
+            "G5F2D9": "expensive",
+            "T7Y4U8": "expensive",
+            "E2R6W3": "expensive",
+            "A9S5D7": "expensive",
+            "Q1Z8X4": "expensive",
+            "N6M3B9": "expensive"
         };
 
         const caseContents = {
@@ -572,6 +565,7 @@
         let rouletteItems = [];
         let usedCodes = {};
         let activeCode = null;
+        let animationFrame = null;
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
@@ -781,21 +775,43 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            setTimeout(() => {
-                // 6 секунд: разгон - равномерно - остановка
-                // cubic-bezier(0.33, 0.1, 0.33, 1) даёт именно такой эффект
-                track.style.transition = 'transform 6s cubic-bezier(0.33, 0.1, 0.33, 1)';
-                track.style.transform = 'translateX(' + finalPosition + 'px)';
+            // Используем requestAnimationFrame для ПЛАВНОЙ и МЕДЛЕННОЙ анимации
+            const duration = 6000; // 6 секунд
+            const startTime = performance.now();
+            const startPosition = 0;
+            const distance = finalPosition - startPosition;
 
-                setTimeout(() => {
-                    msg.className = 'message win';
-                    msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
-                    isSpinning = false;
-                    btn.disabled = false;
-                    localStorage.removeItem('admincase_active_code');
-                    activeCode = null;
-                }, 6000);
-            }, 100);
+            function animateSpin(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // easeInOutCubic — плавный разгон и плавное замедление
+                let eased;
+                if (progress < 0.5) {
+                    eased = 4 * progress * progress * progress;
+                } else {
+                    eased = 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                }
+
+                const currentPosition = startPosition + distance * eased;
+                track.style.transform = 'translateX(' + currentPosition + 'px)';
+
+                if (progress < 1) {
+                    animationFrame = requestAnimationFrame(animateSpin);
+                } else {
+                    // Пауза 200мс перед показом результата
+                    setTimeout(() => {
+                        msg.className = 'message win';
+                        msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
+                        isSpinning = false;
+                        btn.disabled = false;
+                        localStorage.removeItem('admincase_active_code');
+                        activeCode = null;
+                    }, 200);
+                }
+            }
+
+            animationFrame = requestAnimationFrame(animateSpin);
         }
 
         document.getElementById('promo-modal').addEventListener('click', function(e) {
@@ -813,4 +829,4 @@
     </script>
 
 </body>
-</html>
+    </html>
