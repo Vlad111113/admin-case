@@ -20,6 +20,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         h1 {
@@ -87,6 +88,152 @@
             font-size: 1rem;
             opacity: 0.7;
         }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #16213e;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid #0f3460;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-open {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .btn-open:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn-close {
+            background: #f44336;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .btn-close:hover {
+            background: #d32f2f;
+        }
+
+        /* Награды */
+        .rewards {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .rewards.active {
+            display: block;
+        }
+
+        .reward-item {
+            background: #1a1a2e;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #0f3460;
+        }
+
+        .reward-name {
+            font-weight: bold;
+        }
+
+        .reward-chance {
+            color: #ffd700;
+            font-size: 0.9rem;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .message.info {
+            display: block;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .lock-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -95,19 +242,157 @@
 
     <div class="boxes">
         <!-- Дешевый бокс -->
-        <a href="#" class="box cheap">
+        <div class="box cheap" onclick="openModal('cheap')">
             <div class="box-icon">📦</div>
             <div class="box-name">Дешевый</div>
-            <div class="box-price">Скоро описание</div>
-        </a>
+            <div class="lock-icon">🔒</div>
+            <div class="box-price">Содержимое скрыто</div>
+        </div>
 
         <!-- Дорогой бокс -->
-        <a href="#" class="box expensive">
+        <div class="box expensive" onclick="openModal('expensive')">
             <div class="box-icon">🎁</div>
             <div class="box-name">Дорогой</div>
-            <div class="box-price">Скоро описание</div>
-        </a>
+            <div class="lock-icon">🔒</div>
+            <div class="box-price">Содержимое скрыто</div>
+        </div>
     </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Введите промокод</h2>
+            <input type="text" id="promo-input" placeholder="ВВЕДИТЕ КОД" maxlength="20">
+            <br>
+            <button class="btn btn-open" onclick="checkPromo()">Открыть</button>
+            <button class="btn btn-close" onclick="closeModal()">Закрыть</button>
+
+            <div class="message" id="message"></div>
+
+            <div class="rewards" id="rewards">
+                <h3 style="margin-bottom: 15px;">Содержимое кейса:</h3>
+                <div id="rewards-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ⚠️ СЮДА ВПИСЫВАЙ НОВЫЕ ПРОМОКОДЫ ⚠️
+        // Формат: "КОД": "тип_кейса"
+        // "cheap" = Дешевый кейс
+        // "expensive" = Дорогой кейс
+        // ============================================
+
+        const promoCodes = {
+            "ADMIN-123": "cheap",
+            "CASE-456": "expensive"
+        };
+
+        // ============================================
+        // СОДЕРЖИМОЕ КЕЙСОВ
+        // ============================================
+
+        const caseContents = {
+            cheap: [
+                { name: "50 репортов", chance: 100 }
+            ],
+            expensive: [
+                { name: "Скоро будет наполнение", chance: 100 }
+            ]
+        };
+
+        // ============================================
+        // ❌ ДАЛЬШЕ НИЧЕГО НЕ ТРОГАЙ ❌
+        // ============================================
+
+        let currentCase = null;
+        let usedCodes = JSON.parse(localStorage.getItem('usedCodes') || '{}');
+
+        function openModal(caseType) {
+            currentCase = caseType;
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modal-title').textContent = 
+                caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс';
+            document.getElementById('promo-input').value = '';
+            document.getElementById('message').className = 'message';
+            document.getElementById('message').textContent = '';
+            document.getElementById('rewards').classList.remove('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            currentCase = null;
+        }
+
+        function checkPromo() {
+            const input = document.getElementById('promo-input').value.trim().toUpperCase();
+            const messageEl = document.getElementById('message');
+            const rewardsEl = document.getElementById('rewards');
+            const rewardsList = document.getElementById('rewards-list');
+
+            // Сброс сообщений
+            messageEl.className = 'message';
+            messageEl.textContent = '';
+            rewardsEl.classList.remove('active');
+
+            if (!input) {
+                messageEl.className = 'message error';
+                messageEl.textContent = 'Введите промокод!';
+                return;
+            }
+
+            // Проверка кода
+            if (!promoCodes[input]) {
+                messageEl.className = 'message error';
+                messageEl.textContent = 'Неверный промокод!';
+                return;
+            }
+
+            // Проверка, использован ли код
+            if (usedCodes[input]) {
+                messageEl.className = 'message error';
+                messageEl.textContent = 'Этот код уже использован!';
+                return;
+            }
+
+            // Проверка соответствия кейса
+            const codeCase = promoCodes[input];
+            if (codeCase !== currentCase) {
+                messageEl.className = 'message error';
+                messageEl.textContent = 'Этот код для другого кейса!';
+                return;
+            }
+
+            // Активация кода
+            usedCodes[input] = true;
+            localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
+
+            // Показ наград
+            messageEl.className = 'message success';
+            messageEl.textContent = '✅ Код активирован! Вот содержимое кейса:';
+
+            rewardsList.innerHTML = '';
+            caseContents[currentCase].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'reward-item';
+                div.innerHTML = `
+                    <span class="reward-name">${item.name}</span>
+                    <span class="reward-chance">${item.chance}%</span>
+                `;
+                rewardsList.appendChild(div);
+            });
+
+            rewardsEl.classList.add('active');
+        }
+
+        // Закрытие по клику вне модалки
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
