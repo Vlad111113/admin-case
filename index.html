@@ -322,12 +322,12 @@
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 120s linear infinite;
+            animation: slowScroll 180s linear infinite;
         }
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 15s cubic-bezier(0.2, 0.05, 0.3, 1);
+            transition: transform 20s cubic-bezier(0.2, 0.05, 0.25, 1);
         }
 
         .roulette-item {
@@ -537,10 +537,26 @@
         // ============================================
 
         const promoCodes = {
-            "ADMIN-8885": "cheap",
-            "CASE-8888": "expensive",
-            "ADMIN-8884": "cheap",
-            "CASE-8885": "expensive"
+            "X7K2M9": "cheap",
+            "Q3W8E4": "cheap",
+            "R5T9Y1": "cheap",
+            "U7I2O6": "cheap",
+            "P4A8S3": "cheap",
+            "D6F9G2": "cheap",
+            "H5J8K1": "cheap",
+            "L7Z3X6": "cheap",
+            "C9V4B2": "cheap",
+            "N8M5Q1": "cheap",
+            "W3E6R9": "expensive",
+            "T5Y8U2": "expensive",
+            "I7O4P1": "expensive",
+            "A6S9D3": "expensive",
+            "F8G5H2": "expensive",
+            "J9K6L1": "expensive",
+            "Z4X7C3": "expensive",
+            "V2B8N5": "expensive",
+            "M1Q9W6": "expensive",
+            "E3R7T4": "expensive"
         };
 
         // ============================================
@@ -573,6 +589,7 @@
         let hasSpun = false;
         let rouletteItems = [];
         let usedCodes = {};
+        let activeCode = null;
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
@@ -580,6 +597,21 @@
         } catch(e) {
             usedCodes = {};
         }
+
+        // Проверка при загрузке: если есть активный код и кейс не открыт
+        try {
+            const savedActive = localStorage.getItem('admincase_active_code');
+            if (savedActive) {
+                const activeData = JSON.parse(savedActive);
+                if (activeData && activeData.caseType) {
+                    // Показываем рулетку вместо главной
+                    document.getElementById('main-page').style.display = 'none';
+                    showRoulettePage(activeData.caseType);
+                    activeCode = activeData.code;
+                    hasSpun = false;
+                }
+            }
+        } catch(e) {}
 
         function getRarity(chance) {
             if (chance >= 50) return 'rarity-common';
@@ -649,8 +681,13 @@
             }
 
             usedCodes[input] = true;
+            activeCode = input;
             try {
                 localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes));
+                localStorage.setItem('admincase_active_code', JSON.stringify({
+                    code: input,
+                    caseType: currentCase
+                }));
             } catch(e) {}
 
             msg.className = 'message success';
@@ -758,7 +795,7 @@
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Всего 1 оборот — минимум для эффекта
+            // Всего 1 оборот — очень медленно
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -767,8 +804,8 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // ОЧЕНЬ медленная анимация — 15 секунд
-                track.style.transition = 'transform 15s cubic-bezier(0.2, 0.05, 0.3, 1)';
+                // ОЧЕНЬ МЕДЛЕННАЯ анимация — 20 секунд
+                track.style.transition = 'transform 20s cubic-bezier(0.2, 0.05, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -777,7 +814,11 @@
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
                     btn.disabled = false;
-                }, 15000);
+                    
+                    // Очищаем активный код после открытия
+                    localStorage.removeItem('admincase_active_code');
+                    activeCode = null;
+                }, 20000);
             }, 100);
         }
 
@@ -795,13 +836,7 @@
                 document.querySelectorAll('.reward-tooltip').forEach(t => t.classList.remove('show'));
             }
         });
-
-        // При обновлении страницы — всегда показывать главную страницу
-        window.addEventListener('beforeunload', function() {
-            document.getElementById('main-page').style.display = 'block';
-            document.getElementById('roulette-page').classList.remove('active');
-        });
     </script>
 
 </body>
-    </html>
+                    </html>
