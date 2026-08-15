@@ -327,7 +327,7 @@
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 8s cubic-bezier(0.2, 0.05, 0.25, 1);
+            transition: transform 5s cubic-bezier(0.3, 0.05, 0.3, 1);
         }
 
         .roulette-item {
@@ -792,13 +792,21 @@
                 return;
             }
 
-            // Выбираем индекс выигрыша
+            // Выбираем выигрышный предмет
             const winIndex = Math.floor(Math.random() * totalItems);
             winItem = rouletteItems[winIndex];
 
-            const containerWidth = document.querySelector('.roulette-container').offsetWidth;
-            const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
+            // Находим позицию предмета, который должен остановиться под стрелкой
+            // Так как у нас дублированный массив, ищем в первой половине
+            const actualWinIndex = winIndex;
             
+            const containerWidth = document.querySelector('.roulette-container').offsetWidth;
+            
+            // Рассчитываем позицию так, чтобы выигрышный предмет был под стрелкой
+            const itemCenterOffset = containerWidth / 2 - itemWidth / 2;
+            const stopPosition = -(actualWinIndex * itemWidth) + itemCenterOffset;
+            
+            // Добавляем ровно 1 полный оборот (totalItems элементов)
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -807,10 +815,12 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                track.style.transition = 'transform 8s cubic-bezier(0.2, 0.05, 0.25, 1)';
+                // 5 секунд, очень медленно
+                track.style.transition = 'transform 5s cubic-bezier(0.3, 0.05, 0.3, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
+                    // Показываем выигрыш
                     msg.className = 'message win';
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
@@ -818,7 +828,7 @@
                     
                     localStorage.removeItem('admincase_active_code');
                     activeCode = null;
-                }, 8000);
+                }, 5000);
             }, 100);
         }
 
@@ -839,4 +849,4 @@
     </script>
 
 </body>
-    </html>
+        </html>
