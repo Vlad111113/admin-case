@@ -566,6 +566,7 @@
         let usedCodes = {};
         let activeCode = null;
         let animationFrame = null;
+        let allRouletteItems = [];
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
@@ -699,8 +700,10 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            const duplicatedItems = [...rouletteItems, ...rouletteItems];
-            duplicatedItems.forEach(item => {
+            // Сохраняем все элементы рулетки (включая дублированные)
+            allRouletteItems = [...rouletteItems, ...rouletteItems];
+            
+            allRouletteItems.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'roulette-item';
                 div.textContent = item.name;
@@ -725,6 +728,23 @@
             });
 
             window.scrollTo(0, 0);
+        }
+
+        // Функция определения того, что под стрелкой
+        function getItemUnderArrow(trackPosition) {
+            const itemWidth = 180;
+            const containerWidth = document.querySelector('.roulette-container').offsetWidth;
+            const centerOffset = containerWidth / 2;
+            
+            // Преобразуем позицию в положительное значение для индекса
+            const absolutePosition = Math.abs(trackPosition) + centerOffset;
+            const itemIndex = Math.floor(absolutePosition / itemWidth);
+            
+            // Проверяем, что индекс в пределах массива
+            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) {
+                return allRouletteItems[itemIndex];
+            }
+            return allRouletteItems[0];
         }
 
         function spinRoulette() {
@@ -757,17 +777,16 @@
                 return;
             }
 
-            // Выбираем выигрышный предмет
-            const winIndex = Math.floor(Math.random() * totalItems);
-            const winItem = rouletteItems[winIndex];
-
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2 - itemWidth / 2;
             
-            // Позиция, при которой выигрышный предмет будет под стрелкой
+            // Выбираем случайный индекс из первой половины
+            const winIndex = Math.floor(Math.random() * totalItems);
+            
+            // Позиция, при которой элемент winIndex будет под стрелкой
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
             
-            // Добавляем ровно 1 полный оборот
+            // Добавляем 1 полный оборот (totalItems элементов)
             const extraSpins = totalItems * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
@@ -775,17 +794,17 @@
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            // Используем requestAnimationFrame для ПЛАВНОЙ и МЕДЛЕННОЙ анимации
+            // Анимация через requestAnimationFrame
             const duration = 6000; // 6 секунд
             const startTime = performance.now();
             const startPosition = 0;
             const distance = finalPosition - startPosition;
+            let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // easeInOutCubic — плавный разгон и плавное замедление
                 let eased;
                 if (progress < 0.5) {
                     eased = 4 * progress * progress * progress;
@@ -795,19 +814,23 @@
 
                 const currentPosition = startPosition + distance * eased;
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
+                finalTrackPosition = currentPosition;
 
                 if (progress < 1) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
-                    // Пауза 200мс перед показом результата
+                    // Пауза 500мс, затем определяем что под стрелкой
                     setTimeout(() => {
+                        // Определяем что реально под стрелкой
+                        const actualWinItem = getItemUnderArrow(finalTrackPosition);
+                        
                         msg.className = 'message win';
-                        msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
+                        msg.textContent = '🎉 Вы выиграли: ' + actualWinItem.name + '!';
                         isSpinning = false;
                         btn.disabled = false;
                         localStorage.removeItem('admincase_active_code');
                         activeCode = null;
-                    }, 200);
+                    }, 500);
                 }
             }
 
