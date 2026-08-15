@@ -326,13 +326,12 @@
 
         .roulette-track {
             display: flex;
-            animation: slowScroll 60s linear infinite;
-            will-change: transform;
+            animation: slowScroll 90s linear infinite;
         }
 
         .roulette-track.spinning {
             animation: none;
-            transition: transform 6s cubic-bezier(0.3, 0.1, 0.3, 1);
+            transition: transform 10s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .roulette-item {
@@ -544,10 +543,10 @@
         // ============================================
 
         const promoCodes = {
-            "ADMIN-8888": "cheap",
+            "ADMIN-8886": "cheap",
             "CASE-8888": "expensive",
-            "ADMIN-8887": "cheap",
-            "CASE-8887": "expensive"
+            "ADMIN-8885": "cheap",
+            "CASE-8886": "expensive"
         };
 
         // ============================================
@@ -730,7 +729,6 @@
         }
 
         function spinRoulette() {
-            // Если уже крутили — показать тултип
             if (hasSpun) {
                 const tooltip = document.getElementById('btn-tooltip');
                 tooltip.classList.add('show');
@@ -766,8 +764,8 @@
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
-            // Уменьшаем количество оборотов — всего 2 полных оборота
-            const extraSpins = 2 * totalItems * itemWidth;
+            // Всего 1.5 оборота — очень медленно
+            const extraSpins = Math.round(totalItems * 1.5) * itemWidth;
             const finalPosition = stopPosition - extraSpins;
 
             track.classList.add('spinning');
@@ -775,8 +773,8 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // Используем более медленную кривую
-                track.style.transition = 'transform 6s cubic-bezier(0.3, 0.1, 0.3, 1)';
+                // Очень медленная и плавная анимация
+                track.style.transition = 'transform 10s cubic-bezier(0.25, 0.1, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
@@ -785,7 +783,7 @@
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
                     btn.disabled = false;
-                }, 6000);
+                }, 10000);
             }, 100);
         }
 
@@ -812,4 +810,4 @@
     </script>
 
 </body>
-    </html>
+        </html>
