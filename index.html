@@ -537,26 +537,26 @@
         // ============================================
 
         const promoCodes = {
-            "X7K2M9": "cheap",
-            "Q3W8E4": "cheap",
-            "R5T9Y1": "cheap",
-            "U7I2O6": "cheap",
-            "P4A8S3": "cheap",
-            "D6F9G2": "cheap",
-            "H5J8K1": "cheap",
-            "L7Z3X6": "cheap",
-            "C9V4B2": "cheap",
-            "N8M5Q1": "cheap",
-            "W3E6R9": "expensive",
-            "T5Y8U2": "expensive",
-            "I7O4P1": "expensive",
-            "A6S9D3": "expensive",
-            "F8G5H2": "expensive",
-            "J9K6L1": "expensive",
-            "Z4X7C3": "expensive",
-            "V2B8N5": "expensive",
-            "M1Q9W6": "expensive",
-            "E3R7T4": "expensive"
+            "B4N7K2": "cheap",
+            "M9Q3W6": "cheap",
+            "T8R5Y1": "cheap",
+            "U2I7O4": "cheap",
+            "P9A3S6": "cheap",
+            "D1F8G4": "cheap",
+            "H6J2K9": "cheap",
+            "L3Z7X5": "cheap",
+            "C8V2B6": "cheap",
+            "N4M9Q7": "cheap",
+            "W6E2R8": "expensive",
+            "T3Y7U5": "expensive",
+            "I9O4P2": "expensive",
+            "A1S6D8": "expensive",
+            "F5G9H3": "expensive",
+            "J2K7L4": "expensive",
+            "Z8X3C6": "expensive",
+            "V5B1N9": "expensive",
+            "M7Q2W4": "expensive",
+            "E9R3T6": "expensive"
         };
 
         // ============================================
@@ -590,6 +590,7 @@
         let rouletteItems = [];
         let usedCodes = {};
         let activeCode = null;
+        let winItem = null;
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
@@ -598,7 +599,7 @@
             usedCodes = {};
         }
 
-        // Проверка при загрузке: если есть активный код и кейс не открыт
+        // Проверка при загрузке
         try {
             const savedActive = localStorage.getItem('admincase_active_code');
             if (savedActive) {
@@ -713,6 +714,7 @@
             document.getElementById('btn-tooltip').classList.remove('show');
             isSpinning = false;
             hasSpun = false;
+            winItem = null;
 
             rouletteItems = [];
             caseContents[caseType].forEach(item => {
@@ -790,7 +792,10 @@
                 return;
             }
 
+            // Выбираем индекс выигрыша
             const winIndex = Math.floor(Math.random() * totalItems);
+            winItem = rouletteItems[winIndex];
+
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const stopPosition = -(winIndex * itemWidth) + (containerWidth / 2 - itemWidth / 2);
             
@@ -802,12 +807,10 @@
             track.style.transform = 'translateX(0)';
 
             setTimeout(() => {
-                // 8 секунд
                 track.style.transition = 'transform 8s cubic-bezier(0.2, 0.05, 0.25, 1)';
                 track.style.transform = `translateX(${finalPosition}px)`;
 
                 setTimeout(() => {
-                    const winItem = rouletteItems[winIndex];
                     msg.className = 'message win';
                     msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
                     isSpinning = false;
@@ -836,4 +839,4 @@
     </script>
 
 </body>
-</html>
+    </html>
