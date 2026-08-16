@@ -499,6 +499,13 @@
             if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
         } catch(e) {}
 
+        // ===== ЛОГ ВХОДА =====
+        db.collection('logins').add({
+            userName: userName,
+            userID: userID,
+            timestamp: Date.now()
+        }).catch(function() {});
+
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
@@ -564,7 +571,6 @@
             if (winHistory.length === 0) {
                 list.innerHTML = '<p style="opacity:0.5; width:100%; text-align:center;">Пока пусто</p>';
             } else {
-                // Сортировка: новые первыми
                 var sortedHistory = winHistory.slice().sort(function(a, b) {
                     return (b.timestamp || 0) - (a.timestamp || 0);
                 });
@@ -630,6 +636,8 @@
                     return;
                 }
                 
+                var oldName = userName;
+                
                 if (userName !== 'Игрок') {
                     db.collection('taken_names')
                         .where('uid', '==', userUID)
@@ -657,6 +665,16 @@
                                 localStorage.setItem('admincase_user_name', userName);
                                 localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                             } catch(e) {}
+                            
+                            // Лог смены имени
+                            db.collection('name_changes').add({
+                                userName: newName,
+                                userID: userID,
+                                oldName: oldName,
+                                newName: newName,
+                                timestamp: now
+                            }).catch(function() {});
+                            
                             applyProfileData();
                             exitEditMode();
                         })
@@ -677,6 +695,16 @@
                             localStorage.setItem('admincase_user_name', userName);
                             localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                         } catch(e) {}
+                        
+                        // Лог смены имени
+                        db.collection('name_changes').add({
+                            userName: newName,
+                            userID: userID,
+                            oldName: oldName,
+                            newName: newName,
+                            timestamp: now
+                        }).catch(function() {});
+                        
                         applyProfileData();
                         exitEditMode();
                     }).catch(function() {
@@ -875,6 +903,15 @@
                             localStorage.setItem('admincase_opened_count', openedCount);
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                         } catch(e) {}
+                        
+                        // ЛОГ ОТКРЫТИЯ КЕЙСА
+                        db.collection('case_openings').add({
+                            userName: userName,
+                            userID: userID,
+                            caseType: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                            reward: actualWin,
+                            timestamp: Date.now()
+                        }).catch(function() {});
                         
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
