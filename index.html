@@ -20,7 +20,6 @@
         }
 
         /* ===== ТЕМЫ ===== */
-        /* Неон */
         body.theme-neon {
             background: #0a0a0a;
             color: #00ffcc;
@@ -45,7 +44,6 @@
         body.theme-neon .btn-open { background: #00ffcc; color: #000; }
         body.theme-neon .stat-value { color: #00ffcc; }
 
-        /* Золото */
         body.theme-gold {
             background: #1a1608;
             color: #fff8e1;
@@ -69,7 +67,6 @@
         body.theme-gold .btn-open { background: #ffd700; color: #000; }
         body.theme-gold .stat-value { color: #ffd700; }
 
-        /* Киберпанк */
         body.theme-cyberpunk {
             background: #0d001a;
             color: #00ffff;
@@ -93,7 +90,6 @@
         body.theme-cyberpunk .btn-open { background: #ff00ff; color: #fff; }
         body.theme-cyberpunk .stat-value { color: #ff00ff; }
 
-        /* Космос */
         body.theme-space {
             background: #000010;
             color: #e8eaf6;
@@ -117,7 +113,6 @@
         body.theme-space .btn-open { background: #7c4dff; color: #fff; }
         body.theme-space .stat-value { color: #b388ff; }
 
-        /* Кровь */
         body.theme-blood {
             background: #0a0000;
             color: #ffcccc;
@@ -141,7 +136,6 @@
         body.theme-blood .btn-open { background: #cc0000; color: #fff; }
         body.theme-blood .stat-value { color: #ff3333; }
 
-        /* Изумруд */
         body.theme-emerald {
             background: #001a0a;
             color: #ccffe8;
@@ -165,7 +159,6 @@
         body.theme-emerald .btn-open { background: #00cc88; color: #000; }
         body.theme-emerald .stat-value { color: #00ffaa; }
 
-        /* Лёд */
         body.theme-ice {
             background: #000a14;
             color: #e0f7fa;
@@ -189,7 +182,6 @@
         body.theme-ice .btn-open { background: #4dd0e1; color: #000; }
         body.theme-ice .stat-value { color: #80deea; }
 
-        /* Огонь */
         body.theme-fire {
             background: #140000;
             color: #ffe0cc;
@@ -213,7 +205,6 @@
         body.theme-fire .btn-open { background: #ff4500; color: #fff; }
         body.theme-fire .stat-value { color: #ff6b35; }
 
-        /* Сумерки */
         body.theme-twilight {
             background: #0a0a1a;
             color: #e1bee7;
@@ -415,8 +406,6 @@
             background: none; border: none; color: #fff;
             font-size: 1.5rem; cursor: pointer; padding: 5px 10px;
         }
-        
-        /* Выдвижное меню тем */
         .theme-wrapper {
             position: relative;
             display: inline-block;
@@ -453,7 +442,6 @@
         .theme-option:hover { background: rgba(255,255,255,0.1); }
         .theme-option.active { background: rgba(76,175,80,0.3); }
         .theme-option-icon { font-size: 1.2rem; }
-
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 30px; margin-bottom: 30px;
@@ -647,7 +635,6 @@
         }
         .other-stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .other-stat-label { font-size: 0.85rem; opacity: 0.7; }
-        
         .achievements-section {
             background: #16213e;
             border: 2px solid #0f3460;
@@ -895,6 +882,7 @@
 
         // ===== ДАННЫЕ =====
         var promoCodes = {
+            // Старые коды
             "A1B2C3": "cheap", "D4E5F6": "cheap", "G7H8I9": "cheap", "J1K2L3": "cheap",
             "M4N5O6": "cheap", "P7Q8R9": "cheap", "S1T2U3": "cheap", "V4W5X6": "cheap",
             "Y7Z8A9": "cheap", "B1C2D3": "cheap", "E4F5G6": "cheap", "H7I8J9": "cheap",
@@ -905,7 +893,7 @@
             "G4H5I6": "expensive", "J7K8L9": "expensive", "M1N2O3": "expensive", "P4Q5R6": "expensive",
             "S7T8U9": "expensive", "V1W2X3": "expensive", "Y4Z5A6": "expensive", "B7C8D9": "expensive",
             "E1F2G3": "expensive", "H4I5J6": "expensive", "K7L8M9": "expensive", "N1O2P3": "expensive",
-            // Дешевый кейс (50 кодов)
+            // Новые коды - Дешевый кейс (50 кодов)
             "AC-7X2K-9Q4M": "cheap",
             "BR-3P8L-6W5N": "cheap",
             "CX-9T4R-2Y7B": "cheap",
@@ -916,96 +904,97 @@
             "HL-4P7Q-6C8X": "cheap",
             "JM-8T2R-3Z5W": "cheap",
             "KN-6V4B-9Y7M": "cheap",
-"LP-3C8X-2Q5T": "cheap",
-"MQ-7Z9Y-4R6W": "cheap",
-"NR-5W2V-8B3P": "cheap",
-"PS-9T6Q-7M4C": "cheap",
-"QT-2X8Z-5Y7R": "cheap",
-"RV-4B6N-3W9M": "cheap",
-"SW-8C5X-2P7T": "cheap",
-"TX-6Q9Y-4Z3R": "cheap",
-"UY-3W7B-8M5N": "cheap",
-"VZ-5R2T-9C6X": "cheap",
-"WA-7P4Q-3Y8Z": "cheap",
-"XB-9N6M-5W2V": "cheap",
-"YC-2T8R-7B4P": "cheap",
-"ZD-4Q5X-9C3M": "cheap",
-"AE-6Y7Z-2W8T": "cheap",
-"BF-8R3P-5Q9N": "cheap",
-"CG-5T6W-4B7X": "cheap",
-"DH-7M2C-8V5Y": "cheap",
-"EJ-9X4Z-3R6Q": "cheap",
-"FK-2W7T-6P8N": "cheap",
-"GL-5B3V-9C4M": "cheap",
-"HM-8Q6X-2Y7Z": "cheap",
-"JN-4R9W-5T3P": "cheap",
-"KP-7C2B-8M6V": "cheap",
-"LQ-3Z5X-9Y4R": "cheap",
-"MR-6T8Q-2W7N": "cheap",
-"NS-9V4C-5B3P": "cheap",
-"PT-2X7Z-8R6M": "cheap",
-"QU-5Y9W-3T4Q": "cheap",
-"RV-8B6N-7C2X": "cheap",
-"SW-4M5P-9Z3Y": "cheap",
-"TX-7Q2R-6W8T": "cheap",
-"UY-3C9X-5B7V": "cheap",
-"VZ-6N4M-2P8Q": "cheap",
-"WA-9T7Y-4R5W": "cheap",
-"XB-2Z8C-7X3B": "cheap",
-"YC-5V6N-9M4P": "cheap",
-"ZD-8Q3T-2W7R": "cheap",
-"AE-4B9X-6C5Y": "cheap",
-"BF-7M2Z-8N3V": "cheap",
-"CG-9X4R-5T7W": "expensive",
-"DH-2Y8Z-3B6M": "expensive",
-"EJ-6Q7P-9C4X": "expensive",
-"FK-4V5N-2W8T": "expensive",
-"GL-8R3Q-7Y9Z": "expensive",
-"HM-5T6W-4B2P": "expensive",
-"JN-9C7X-3M8N": "expensive",
-"KP-2Z5Y-6Q4R": "expensive",
-"LQ-7W3T-8V9B": "expensive",
-"MR-4P6N-5C2X": "expensive",
-"NS-8Y7Z-9Q3W": "expensive",
-"PT-3R5T-2M6V": "expensive",
-"QU-6B4C-7X8Z": "expensive",
-"RV-9N2P-5Y3Q": "expensive",
-"SW-2T8W-4R7M": "expensive",
-"TX-7C5X-6B9N": "expensive",
-"UY-4Z3Y-8Q2P": "expensive",
-"VZ-9M6N-3T5R": "expensive",
-"WA-5W7B-2C4X": "expensive",
-"XB-8R9Q-6Z3Y": "expensive",
-"YC-3P5T-7M9N": "expensive",
-"ZD-6X4C-9B2V": "expensive",
-"AE-2Q8W-5R7T": "expensive",
-"BF-7Y3Z-4P6M": "expensive",
-"CG-9T5R-8N2Q": "expensive",
-"DH-4C6X-3B7V": "expensive",
-"EJ-8M2P-9Z5Y": "expensive",
-"FK-6Q7W-4T3R": "expensive",
-"GL-3V5N-2C8X": "expensive",
-"HM-7Z9Y-6B4P": "expensive",
-"JN-5R2T-8Q7W": "expensive",
-"KP-9X4C-3M6V": "expensive",
-"LQ-2W8Z-7Y5N": "expensive",
-"MR-6T3Q-4P9R": "expensive",
-"NS-8C5X-2B7M": "expensive",
-"PT-4V6N-9Z3Y": "expensive",
-"QU-7R2W-5T8Q": "expensive",
-"RV-3Y9Z-6C4X": "expensive",
-"SW-5P7T-8M2B": "expensive",
-"TX-9Q4R-2W6V": "expensive",
-"UY-2X8C-7Z3N": "expensive",
-"VZ-6B5V-4P9M": "expensive",
-"WA-8T3Q-5Y7R": "expensive",
-"XB-4M6N-9C2X": "expensive",
-"YC-7W5Z-3B8P": "expensive",
-"ZD-2R9T-6Q4V": "expensive",
-"AE-5X3C-8Y7M": "expensive",
-"BF-9N6B-4Z2W": "expensive",
-"CG-3Q7P-5T8R": "expensive",
-"DH-6M4X-9C2V": "expensive"
+            "LP-3C8X-2Q5T": "cheap",
+            "MQ-7Z9Y-4R6W": "cheap",
+            "NR-5W2V-8B3P": "cheap",
+            "PS-9T6Q-7M4C": "cheap",
+            "QT-2X8Z-5Y7R": "cheap",
+            "RV-4B6N-3W9M": "cheap",
+            "SW-8C5X-2P7T": "cheap",
+            "TX-6Q9Y-4Z3R": "cheap",
+            "UY-3W7B-8M5N": "cheap",
+            "VZ-5R2T-9C6X": "cheap",
+            "WA-7P4Q-3Y8Z": "cheap",
+            "XB-9N6M-5W2V": "cheap",
+            "YC-2T8R-7B4P": "cheap",
+            "ZD-4Q5X-9C3M": "cheap",
+            "AE-6Y7Z-2W8T": "cheap",
+            "BF-8R3P-5Q9N": "cheap",
+            "CG-5T6W-4B7X": "cheap",
+            "DH-7M2C-8V5Y": "cheap",
+            "EJ-9X4Z-3R6Q": "cheap",
+            "FK-2W7T-6P8N": "cheap",
+            "GL-5B3V-9C4M": "cheap",
+            "HM-8Q6X-2Y7Z": "cheap",
+            "JN-4R9W-5T3P": "cheap",
+            "KP-7C2B-8M6V": "cheap",
+            "LQ-3Z5X-9Y4R": "cheap",
+            "MR-6T8Q-2W7N": "cheap",
+            "NS-9V4C-5B3P": "cheap",
+            "PT-2X7Z-8R6M": "cheap",
+            "QU-5Y9W-3T4Q": "cheap",
+            "RV-8B6N-7C2X": "cheap",
+            "SW-4M5P-9Z3Y": "cheap",
+            "TX-7Q2R-6W8T": "cheap",
+            "UY-3C9X-5B7V": "cheap",
+            "VZ-6N4M-2P8Q": "cheap",
+            "WA-9T7Y-4R5W": "cheap",
+            "XB-2Z8C-7X3B": "cheap",
+            "YC-5V6N-9M4P": "cheap",
+            "ZD-8Q3T-2W7R": "cheap",
+            "AE-4B9X-6C5Y": "cheap",
+            "BF-7M2Z-8N3V": "cheap",
+            // Новые коды - Дорогой кейс (50 кодов)
+            "CG-9X4R-5T7W": "expensive",
+            "DH-2Y8Z-3B6M": "expensive",
+            "EJ-6Q7P-9C4X": "expensive",
+            "FK-4V5N-2W8T": "expensive",
+            "GL-8R3Q-7Y9Z": "expensive",
+            "HM-5T6W-4B2P": "expensive",
+            "JN-9C7X-3M8N": "expensive",
+            "KP-2Z5Y-6Q4R": "expensive",
+            "LQ-7W3T-8V9B": "expensive",
+            "MR-4P6N-5C2X": "expensive",
+            "NS-8Y7Z-9Q3W": "expensive",
+            "PT-3R5T-2M6V": "expensive",
+            "QU-6B4C-7X8Z": "expensive",
+            "RV-9N2P-5Y3Q": "expensive",
+            "SW-2T8W-4R7M": "expensive",
+            "TX-7C5X-6B9N": "expensive",
+            "UY-4Z3Y-8Q2P": "expensive",
+            "VZ-9M6N-3T5R": "expensive",
+            "WA-5W7B-2C4X": "expensive",
+            "XB-8R9Q-6Z3Y": "expensive",
+            "YC-3P5T-7M9N": "expensive",
+            "ZD-6X4C-9B2V": "expensive",
+            "AE-2Q8W-5R7T": "expensive",
+            "BF-7Y3Z-4P6M": "expensive",
+            "CG-9T5R-8N2Q": "expensive",
+            "DH-4C6X-3B7V": "expensive",
+            "EJ-8M2P-9Z5Y": "expensive",
+            "FK-6Q7W-4T3R": "expensive",
+            "GL-3V5N-2C8X": "expensive",
+            "HM-7Z9Y-6B4P": "expensive",
+            "JN-5R2T-8Q7W": "expensive",
+            "KP-9X4C-3M6V": "expensive",
+            "LQ-2W8Z-7Y5N": "expensive",
+            "MR-6T3Q-4P9R": "expensive",
+            "NS-8C5X-2B7M": "expensive",
+            "PT-4V6N-9Z3Y": "expensive",
+            "QU-7R2W-5T8Q": "expensive",
+            "RV-3Y9Z-6C4X": "expensive",
+            "SW-5P7T-8M2B": "expensive",
+            "TX-9Q4R-2W6V": "expensive",
+            "UY-2X8C-7Z3N": "expensive",
+            "VZ-6B5V-4P9M": "expensive",
+            "WA-8T3Q-5Y7R": "expensive",
+            "XB-4M6N-9C2X": "expensive",
+            "YC-7W5Z-3B8P": "expensive",
+            "ZD-2R9T-6Q4V": "expensive",
+            "AE-5X3C-8Y7M": "expensive",
+            "BF-9N6B-4Z2W": "expensive",
+            "CG-3Q7P-5T8R": "expensive",
+            "DH-6M4X-9C2V": "expensive"
         };
 
         var caseContents = {
@@ -1084,7 +1073,6 @@
         var userID = '';
         var registrationDate = null;
         var unlockedAchievements = [];
-        var soundEnabled = true;
         var currentTheme = 'dark';
         var visitCount = 0;
 
@@ -1211,14 +1199,6 @@
                 if (currentTheme !== 'dark') {
                     document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
                 }
-            }
-        } catch(e) {}
-
-        // ===== ЗВУК =====
-        try {
-            var savedSound = localStorage.getItem('admincase_sound');
-            if (savedSound === 'off') {
-                soundEnabled = false;
             }
         } catch(e) {}
 
@@ -1389,83 +1369,6 @@
                     list.appendChild(div);
                 })(achievements[i]);
             }
-        }
-
-        // ===== ЗВУКИ =====
-        function playSound(type) {
-            if (!soundEnabled) return;
-            try {
-                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                var oscillator = audioCtx.createOscillator();
-                var gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                
-                if (type === 'win') {
-                    oscillator.frequency.value = 800;
-                    gainNode.gain.value = 0.3;
-                    oscillator.start();
-                    setTimeout(function() {
-                        oscillator.frequency.value = 1200;
-                    }, 100);
-                    setTimeout(function() {
-                        oscillator.stop();
-                    }, 300);
-                } else if (type === 'legendary') {
-                    oscillator.frequency.value = 600;
-                    gainNode.gain.value = 0.3;
-                    oscillator.start();
-                    setTimeout(function() {
-                        oscillator.frequency.value = 900;
-                    }, 150);
-                    setTimeout(function() {
-                        oscillator.frequency.value = 1200;
-                    }, 300);
-                    setTimeout(function() {
-                        oscillator.stop();
-                    }, 500);
-                } else if (type === 'click') {
-                    oscillator.frequency.value = 400;
-                    gainNode.gain.value = 0.2;
-                    oscillator.start();
-                    setTimeout(function() {
-                        oscillator.stop();
-                    }, 100);
-                }
-            } catch(e) {}
-        }
-
-        // ===== СМЕНА ТЕМЫ =====
-        function setTheme(theme, btn) {
-            // Убираем все темы
-            for (var t = 0; t < themes.length; t++) {
-                document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
-            }
-            
-            currentTheme = theme;
-            
-            if (currentTheme !== 'dark') {
-                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
-            }
-            
-            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
-            
-            // Обновляем активную кнопку
-            var options = document.querySelectorAll('.theme-option');
-            for (var o = 0; o < options.length; o++) {
-                options[o].classList.remove('active');
-            }
-            if (btn) {
-                btn.classList.add('active');
-            } else {
-                var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
-                if (activeBtn) activeBtn.classList.add('active');
-            }
-            
-            // Закрываем меню
-            document.getElementById('themeDropdown').classList.remove('show');
-            
-            playSound('click');
         }
 
         // ===== ФУНКЦИИ =====
@@ -1901,7 +1804,6 @@
             usedCodes[input] = true;
             try { localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes)); } catch(e) {}
 
-            playSound('click');
             msg.className = 'message success';
             msg.textContent = '✅ Код активирован!';
             setTimeout(function() {
@@ -2087,12 +1989,6 @@
                         
                         checkAchievements();
                         
-                        if (actualRarity === 'legendary') {
-                            playSound('legendary');
-                        } else {
-                            playSound('win');
-                        }
-                        
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
                         isSpinning = false;
@@ -2103,6 +1999,34 @@
             spinAnimFrame = requestAnimationFrame(animateSpin);
         }
 
+        // ===== СМЕНА ТЕМЫ =====
+        function setTheme(theme, btn) {
+            for (var t = 0; t < themes.length; t++) {
+                document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
+            }
+            
+            currentTheme = theme;
+            
+            if (currentTheme !== 'dark') {
+                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+            }
+            
+            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
+            
+            var options = document.querySelectorAll('.theme-option');
+            for (var o = 0; o < options.length; o++) {
+                options[o].classList.remove('active');
+            }
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+                if (activeBtn) activeBtn.classList.add('active');
+            }
+            
+            document.getElementById('themeDropdown').classList.remove('show');
+        }
+
         // ===== ОБРАБОТЧИКИ КНОПОК =====
         document.getElementById('burgerBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.toggle('show');
@@ -2110,13 +2034,11 @@
 
         document.getElementById('profileBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
-            playSound('click');
             showProfile();
         };
 
         document.getElementById('topBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
-            playSound('click');
             showTopPage();
         };
 
@@ -2139,12 +2061,10 @@
         };
 
         document.getElementById('cheapBox').onclick = function() {
-            playSound('click');
             openPromoModal('cheap');
         };
 
         document.getElementById('expensiveBox').onclick = function() {
-            playSound('click');
             openPromoModal('expensive');
         };
 
@@ -2230,14 +2150,12 @@
             document.getElementById('themeDropdown').classList.toggle('show');
         };
 
-        // Закрытие меню тем при клике вне
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.theme-wrapper')) {
                 document.getElementById('themeDropdown').classList.remove('show');
             }
         });
 
-        // Инициализация активной темы
         (function() {
             var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
             if (activeBtn) activeBtn.classList.add('active');
@@ -2245,4 +2163,4 @@
     </script>
 
 </body>
-</html>
+    </html>
