@@ -226,6 +226,143 @@
             border: 2px solid #0f3460; background: #1a1a2e;
             color: #fff; font-size: 1.2rem; margin-top: 10px; display: none;
         }
+
+        /* Топ */
+        .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
+        .top-page.active { display: block; }
+        .top-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .top-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .top-item {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .top-item:hover {
+            border-color: #4caf50;
+            background: #1a2a4e;
+        }
+        .top-place {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            min-width: 40px;
+            text-align: center;
+        }
+        .top-avatar {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            max-width: 50px;
+            max-height: 50px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            overflow: hidden;
+        }
+        .top-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .top-info {
+            flex: 1;
+        }
+        .top-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .top-id {
+            font-size: 0.75rem;
+            color: #999;
+        }
+        .top-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        /* Чужой профиль */
+        .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
+        .other-profile-page.active { display: block; }
+        .other-profile-header {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        .other-avatar {
+            width: 100px;
+            height: 100px;
+            min-width: 100px;
+            min-height: 100px;
+            max-width: 100px;
+            max-height: 100px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+            margin: 0 auto 15px;
+        }
+        .other-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .other-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .other-id {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        .other-stats {
+            border-top: 1px solid #0f3460;
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .other-stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .other-stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
         .rarity-common { color: #fff; border-color: #fff; background: rgba(255,255,255,0.08); }
         .rarity-rare { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
@@ -257,6 +394,7 @@
 
     <div class="dropdown-menu" id="dropdownMenu">
         <button class="dropdown-item" id="profileBtn">Профиль</button>
+        <button class="dropdown-item" id="topBtn">Топ</button>
         <button class="dropdown-item" id="helpBtn">Помощь</button>
     </div>
 
@@ -318,6 +456,29 @@
             <div class="history-title">История выпавших наград</div>
             <div class="history-list" id="historyList">
                 <p style="opacity:0.5; width:100%; text-align:center;">Пока пусто</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-page" id="topPage">
+        <button class="back-btn" id="topBackBtn">‹</button>
+        <div class="top-title">🏆 Топ 10 пользователей</div>
+        <div class="top-list" id="topList">
+            <p style="opacity:0.5; text-align:center;">Загрузка...</p>
+        </div>
+    </div>
+
+    <div class="other-profile-page" id="otherProfilePage">
+        <button class="back-btn" id="otherBackBtn">‹</button>
+        <div class="other-profile-header" id="otherProfileHeader">
+            <div class="other-avatar" id="otherAvatar">👤</div>
+            <div class="other-name" id="otherName">Игрок</div>
+            <div class="other-id" id="otherID">ID: 00000000</div>
+            <div class="other-stats">
+                <div>
+                    <div class="other-stat-value" id="otherOpenedCount">0</div>
+                    <div class="other-stat-label">Открыто кейсов</div>
+                </div>
             </div>
         </div>
     </div>
@@ -522,6 +683,11 @@
             var savedPage = localStorage.getItem('admincase_current_page');
             if (savedPage === 'profile') {
                 showProfile();
+            } else if (savedPage === 'top') {
+                showTopPage();
+            } else if (savedPage === 'other_profile') {
+                var savedOtherID = localStorage.getItem('admincase_other_profile_id');
+                if (savedOtherID) showOtherProfile(savedOtherID);
             }
         } catch(e) {}
 
@@ -550,6 +716,8 @@
             
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.remove('active');
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
@@ -599,6 +767,147 @@
                     })(sortedHistory[j]);
                 }
             }
+            window.scrollTo(0, 0);
+        }
+
+        function showTopPage() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('topPage').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
+            
+            var list = document.getElementById('topList');
+            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
+            
+            // Загружаем все данные о пользователях
+            db.collection('taken_names').get().then(function(snapshot) {
+                var users = [];
+                snapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    if (data.name !== 'Игрок') {
+                        var existing = null;
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].userID === data.userID) {
+                                existing = users[i];
+                                break;
+                            }
+                        }
+                        if (existing) {
+                            if (data.timestamp > existing.timestamp) {
+                                existing.name = data.name;
+                                existing.timestamp = data.timestamp;
+                            }
+                        } else {
+                            users.push({
+                                name: data.name,
+                                userID: data.userID || 'Неизвестно',
+                                openedCount: 0,
+                                avatar: null,
+                                timestamp: data.timestamp || 0
+                            });
+                        }
+                    }
+                });
+                
+                // Загружаем количество открытых кейсов
+                return db.collection('case_openings').get().then(function(caseSnapshot) {
+                    caseSnapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].userID === data.userID) {
+                                users[i].openedCount++;
+                                break;
+                            }
+                        }
+                    });
+                    
+                    // Сортируем по количеству открытых кейсов
+                    users.sort(function(a, b) {
+                        return b.openedCount - a.openedCount;
+                    });
+                    
+                    // Топ 10
+                    var top10 = users.slice(0, 10);
+                    
+                    if (top10.length === 0) {
+                        list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
+                        return;
+                    }
+                    
+                    list.innerHTML = '';
+                    
+                    for (var j = 0; j < top10.length; j++) {
+                        (function(user, index) {
+                            var div = document.createElement('div');
+                            div.className = 'top-item';
+                            var avatarHtml = '<span>👤</span>';
+                            if (user.avatar) {
+                                avatarHtml = '<img src="' + user.avatar + '" alt="">';
+                            }
+                            div.innerHTML = 
+                                '<div class="top-place">' + (index + 1) + '</div>' +
+                                '<div class="top-avatar">' + avatarHtml + '</div>' +
+                                '<div class="top-info">' +
+                                    '<div class="top-name">' + user.name + '</div>' +
+                                    '<div class="top-id">ID: ' + user.userID + '</div>' +
+                                '</div>' +
+                                '<div class="top-count">' + user.openedCount + '</div>';
+                            div.onclick = function() {
+                                showOtherProfile(user.userID);
+                            };
+                            list.appendChild(div);
+                        })(top10[j], j);
+                    }
+                });
+            }).catch(function(error) {
+                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
+            });
+            
+            window.scrollTo(0, 0);
+        }
+
+        function showOtherProfile(targetUserID) {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.add('active');
+            try {
+                localStorage.setItem('admincase_current_page', 'other_profile');
+                localStorage.setItem('admincase_other_profile_id', targetUserID);
+            } catch(e) {}
+            
+            // Загружаем данные пользователя
+            db.collection('taken_names')
+                .where('userID', '==', targetUserID)
+                .orderBy('timestamp', 'desc')
+                .limit(1)
+                .get()
+                .then(function(snapshot) {
+                    var userName = 'Неизвестно';
+                    var userAvatar = null;
+                    snapshot.forEach(function(doc) {
+                        userName = doc.data().name;
+                    });
+                    
+                    document.getElementById('otherName').textContent = userName;
+                    document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                    
+                    // Количество открытых кейсов
+                    return db.collection('case_openings')
+                        .where('userID', '==', targetUserID)
+                        .get()
+                        .then(function(caseSnapshot) {
+                            document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
+                        });
+                })
+                .catch(function(error) {
+                    document.getElementById('otherName').textContent = 'Ошибка';
+                    document.getElementById('otherID').textContent = error.message;
+                });
+            
             window.scrollTo(0, 0);
         }
 
@@ -666,7 +975,6 @@
                                 localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                             } catch(e) {}
                             
-                            // Лог смены имени
                             db.collection('name_changes').add({
                                 userName: newName,
                                 userID: userID,
@@ -696,7 +1004,6 @@
                             localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                         } catch(e) {}
                         
-                        // Лог смены имени
                         db.collection('name_changes').add({
                             userName: newName,
                             userID: userID,
@@ -752,6 +1059,8 @@
         function showRoulettePage(caseType) {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.add('active');
             document.getElementById('rouletteTitle').textContent = 
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
@@ -904,7 +1213,6 @@
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                         } catch(e) {}
                         
-                        // ЛОГ ОТКРЫТИЯ КЕЙСА
                         db.collection('case_openings').add({
                             userName: userName,
                             userID: userID,
@@ -933,6 +1241,11 @@
             showProfile();
         };
 
+        document.getElementById('topBtn').onclick = function() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            showTopPage();
+        };
+
         document.getElementById('helpBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
             alert('Помощь: введите промокод для открытия кейса');
@@ -942,6 +1255,16 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+        };
+
+        document.getElementById('topBackBtn').onclick = function() {
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+        };
+
+        document.getElementById('otherBackBtn').onclick = function() {
+            showTopPage();
         };
 
         document.getElementById('cheapBox').onclick = function() {
