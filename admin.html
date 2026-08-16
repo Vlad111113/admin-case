@@ -15,22 +15,16 @@
             min-height: 100vh;
             padding: 20px;
         }
-        h1 {
-            text-align: center;
-            color: #ff6b6b;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        h1 { text-align: center; color: #ff6b6b; margin-bottom: 20px; font-size: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
         .controls {
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
         }
         .btn {
             padding: 12px 20px;
@@ -41,23 +35,52 @@
             font-weight: bold;
             transition: all 0.3s;
         }
-        .btn-filter {
+        .btn-dropdown {
             background: #16213e;
             color: #fff;
             border: 2px solid #0f3460;
         }
-        .btn-filter:hover { background: #1a2a4e; }
-        .btn-filter.active {
-            background: #4caf50;
-            border-color: #4caf50;
-            color: #fff;
-        }
+        .btn-dropdown:hover { background: #1a2a4e; }
         .btn-refresh { background: #4caf50; color: #fff; }
         .btn-refresh:hover { background: #45a049; }
         .btn-clear { background: #f44336; color: #fff; }
         .btn-clear:hover { background: #d32f2f; }
         
-        /* Поиск */
+        /* Выдвижное меню */
+        .dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 10px;
+            min-width: 200px;
+            z-index: 100;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .dropdown-content.show { display: block; }
+        .dropdown-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #fff;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            display: block;
+        }
+        .dropdown-option:hover { background: rgba(255,255,255,0.1); }
+        .dropdown-option.active { background: #4caf50; }
+        
         .search-container {
             display: flex;
             gap: 10px;
@@ -81,7 +104,6 @@
             margin-bottom: 15px;
             text-align: center;
         }
-        
         .log-item {
             background: #16213e;
             border: 1px solid #0f3460;
@@ -94,29 +116,10 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .log-left {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            flex: 1;
-        }
-        .log-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #ffd700;
-        }
-        .log-detail {
-            font-size: 0.9rem;
-            color: #fff;
-        }
-        .log-id {
-            font-size: 0.8rem;
-            color: #999;
-        }
-        .log-time {
-            font-size: 0.8rem;
-            color: #ccc;
-        }
+        .log-left { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+        .log-title { font-weight: bold; font-size: 1.1rem; color: #ffd700; }
+        .log-detail { font-size: 0.9rem; color: #fff; }
+        .log-time { font-size: 0.8rem; color: #ccc; }
         .log-type-badge {
             display: inline-block;
             padding: 3px 10px;
@@ -139,23 +142,12 @@
             font-size: 0.85rem;
         }
         .log-delete:hover { background: #d32f2f; }
-        .empty-message {
-            text-align: center;
-            opacity: 0.5;
-            padding: 40px;
-            font-size: 1.2rem;
-        }
-        .count-info {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #ccc;
-            font-size: 0.9rem;
-        }
+        .empty-message { text-align: center; opacity: 0.5; padding: 40px; font-size: 1.2rem; }
+        .count-info { text-align: center; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem; }
             .log-item { flex-direction: column; text-align: center; }
-            .controls { gap: 5px; }
-            .btn { padding: 10px 12px; font-size: 0.8rem; }
+            .dropdown-content { min-width: 180px; }
         }
     </style>
 </head>
@@ -164,18 +156,23 @@
     <div class="container">
         <h1>📋 Логи AdminCase</h1>
         
-        <div class="controls" id="filterMenu">
-            <button class="btn btn-filter active" data-filter="all" onclick="setFilter('all', this)">Все</button>
-            <button class="btn btn-filter" data-filter="cases" onclick="setFilter('cases', this)">Кейсы</button>
-            <button class="btn btn-filter" data-filter="names" onclick="setFilter('names', this)">Имена</button>
-            <button class="btn btn-filter" data-filter="changes" onclick="setFilter('changes', this)">Смена имени</button>
-            <button class="btn btn-filter" data-filter="logins" onclick="setFilter('logins', this)">Входы</button>
+        <div class="controls">
+            <div class="dropdown-wrapper">
+                <button class="btn btn-dropdown" onclick="toggleDropdown()">📂 Тип логов: <span id="currentFilterLabel">Все</span> ▼</button>
+                <div class="dropdown-content" id="dropdownContent">
+                    <button class="dropdown-option active" data-filter="all" onclick="setFilter('all', 'Все', this)">Все</button>
+                    <button class="dropdown-option" data-filter="cases" onclick="setFilter('cases', 'Кейсы', this)">Кейсы</button>
+                    <button class="dropdown-option" data-filter="names" onclick="setFilter('names', 'Имена', this)">Имена</button>
+                    <button class="dropdown-option" data-filter="changes" onclick="setFilter('changes', 'Смена имени', this)">Смена имени</button>
+                    <button class="dropdown-option" data-filter="logins" onclick="setFilter('logins', 'Входы', this)">Входы</button>
+                </div>
+            </div>
+            <button class="btn btn-refresh" onclick="loadLogs()">🔄 Обновить</button>
+            <button class="btn btn-clear" onclick="clearAllLogs()">🗑️ Очистить все</button>
         </div>
         
         <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Поиск..." oninput="applySearch()">
-            <button class="btn btn-refresh" onclick="loadLogs()">🔄</button>
-            <button class="btn btn-clear" onclick="clearAllLogs()">🗑️</button>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск..." oninput="displayLogs()">
         </div>
         <div class="search-hint">%слово% — ищет слово в тексте | слово — ищет точное совпадение</div>
         
@@ -184,7 +181,6 @@
     </div>
 
     <script>
-        // ===== FIREBASE =====
         var firebaseConfig = {
             apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
             authDomain: "admincase-27bec.firebaseapp.com",
@@ -200,7 +196,24 @@
         var currentFilter = 'all';
         var allLogsData = [];
 
-        // ===== ФУНКЦИИ =====
+        function toggleDropdown() {
+            document.getElementById('dropdownContent').classList.toggle('show');
+        }
+
+        function setFilter(filter, label, btn) {
+            currentFilter = filter;
+            document.getElementById('currentFilterLabel').textContent = label;
+            document.getElementById('dropdownContent').classList.remove('show');
+            
+            var options = document.querySelectorAll('.dropdown-option');
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.remove('active');
+            }
+            btn.classList.add('active');
+            
+            displayLogs();
+        }
+
         function formatDate(timestamp) {
             if (!timestamp) return 'Дата неизвестна';
             var d = new Date(timestamp);
@@ -214,44 +227,21 @@
             return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes + ':' + seconds;
         }
 
-        function setFilter(filter, btn) {
-            currentFilter = filter;
-            
-            // Обновляем активную кнопку
-            var buttons = document.querySelectorAll('.btn-filter');
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove('active');
-            }
-            btn.classList.add('active');
-            
-            displayLogs();
-        }
-
-        function applySearch() {
-            displayLogs();
-        }
-
-        // Функция поиска с поддержкой %
         function searchMatch(text, searchQuery) {
             if (!searchQuery) return true;
-            
             var lowerText = text.toLowerCase();
             var lowerQuery = searchQuery.toLowerCase();
             
             if (lowerQuery.startsWith('%') && lowerQuery.endsWith('%')) {
-                // %слово% — содержит слово
                 var word = lowerQuery.substring(1, lowerQuery.length - 1);
                 return lowerText.indexOf(word) !== -1;
             } else if (lowerQuery.startsWith('%')) {
-                // %слово — заканчивается на слово
                 var wordEnd = lowerQuery.substring(1);
                 return lowerText.endsWith(wordEnd);
             } else if (lowerQuery.endsWith('%')) {
-                // слово% — начинается со слова
                 var wordStart = lowerQuery.substring(0, lowerQuery.length - 1);
                 return lowerText.startsWith(wordStart);
             } else {
-                // точное совпадение слова
                 var words = lowerText.split(/\s+/);
                 for (var w = 0; w < words.length; w++) {
                     if (words[w] === lowerQuery) return true;
@@ -262,87 +252,76 @@
 
         function loadLogs() {
             var list = document.getElementById('logsList');
-            var countInfo = document.getElementById('countInfo');
             list.innerHTML = '<p class="empty-message">Загрузка...</p>';
-            
             allLogsData = [];
             
-            // Загружаем все коллекции
             var promises = [];
             
-            // taken_names (имена)
             promises.push(
-                db.collection('taken_names').get()
-                    .then(function(snapshot) {
-                        snapshot.forEach(function(doc) {
-                            var data = doc.data();
-                            allLogsData.push({
-                                id: doc.id,
-                                type: 'names',
-                                title: 'Имя: ' + data.name,
-                                detail: 'ID: ' + (data.userID || 'Неизвестно'),
-                                timestamp: data.timestamp || Date.now()
-                            });
+                db.collection('taken_names').get().then(function(snapshot) {
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        allLogsData.push({
+                            id: doc.id,
+                            type: 'names',
+                            collection: 'taken_names',
+                            title: 'Имя: ' + data.name,
+                            detail: 'ID: ' + (data.userID || 'Неизвестно'),
+                            timestamp: data.timestamp || Date.now()
                         });
-                    })
+                    });
+                })
             );
             
-            // case_openings (открытия кейсов) — если есть
             promises.push(
-                db.collection('case_openings').get()
-                    .then(function(snapshot) {
-                        snapshot.forEach(function(doc) {
-                            var data = doc.data();
-                            allLogsData.push({
-                                id: doc.id,
-                                type: 'cases',
-                                title: data.userName + ' открыл ' + data.caseType,
-                                detail: 'Награда: ' + data.reward + ' | ID: ' + (data.userID || 'Неизвестно'),
-                                timestamp: data.timestamp || Date.now()
-                            });
+                db.collection('case_openings').get().then(function(snapshot) {
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        allLogsData.push({
+                            id: doc.id,
+                            type: 'cases',
+                            collection: 'case_openings',
+                            title: data.userName + ' открыл ' + data.caseType,
+                            detail: 'Награда: ' + data.reward + ' | ID: ' + (data.userID || 'Неизвестно'),
+                            timestamp: data.timestamp || Date.now()
                         });
-                    })
-                    .catch(function() {})
+                    });
+                }).catch(function() {})
             );
             
-            // name_changes (смена имени) — если есть
             promises.push(
-                db.collection('name_changes').get()
-                    .then(function(snapshot) {
-                        snapshot.forEach(function(doc) {
-                            var data = doc.data();
-                            allLogsData.push({
-                                id: doc.id,
-                                type: 'changes',
-                                title: data.userName + ' сменил имя',
-                                detail: 'С ' + data.oldName + ' на ' + data.newName + ' | ID: ' + (data.userID || 'Неизвестно'),
-                                timestamp: data.timestamp || Date.now()
-                            });
+                db.collection('name_changes').get().then(function(snapshot) {
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        allLogsData.push({
+                            id: doc.id,
+                            type: 'changes',
+                            collection: 'name_changes',
+                            title: data.userName + ' сменил имя',
+                            detail: 'С "' + data.oldName + '" на "' + data.newName + '" | ID: ' + (data.userID || 'Неизвестно'),
+                            timestamp: data.timestamp || Date.now()
                         });
-                    })
-                    .catch(function() {})
+                    });
+                }).catch(function() {})
             );
             
-            // logins (входы) — если есть
             promises.push(
-                db.collection('logins').get()
-                    .then(function(snapshot) {
-                        snapshot.forEach(function(doc) {
-                            var data = doc.data();
-                            allLogsData.push({
-                                id: doc.id,
-                                type: 'logins',
-                                title: data.userName + ' вошёл на сайт',
-                                detail: 'Первый вход | ID: ' + (data.userID || 'Неизвестно'),
-                                timestamp: data.timestamp || Date.now()
-                            });
+                db.collection('logins').get().then(function(snapshot) {
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        allLogsData.push({
+                            id: doc.id,
+                            type: 'logins',
+                            collection: 'logins',
+                            title: data.userName + ' вошёл на сайт',
+                            detail: 'ID: ' + (data.userID || 'Неизвестно'),
+                            timestamp: data.timestamp || Date.now()
                         });
-                    })
-                    .catch(function() {})
+                    });
+                }).catch(function() {})
             );
             
             Promise.all(promises).then(function() {
-                // Сортируем по времени (новые первыми)
                 allLogsData.sort(function(a, b) {
                     return (b.timestamp || 0) - (a.timestamp || 0);
                 });
@@ -358,16 +337,10 @@
             var searchQuery = document.getElementById('searchInput').value.trim();
             
             var filtered = allLogsData.filter(function(log) {
-                // Фильтр по типу
                 if (currentFilter === 'all') return true;
-                if (currentFilter === 'cases' && log.type !== 'cases') return false;
-                if (currentFilter === 'names' && log.type !== 'names') return false;
-                if (currentFilter === 'changes' && log.type !== 'changes') return false;
-                if (currentFilter === 'logins' && log.type !== 'logins') return false;
-                return true;
+                return log.type === currentFilter;
             });
             
-            // Поиск
             if (searchQuery) {
                 filtered = filtered.filter(function(log) {
                     var searchText = log.title + ' ' + log.detail;
@@ -403,35 +376,23 @@
                             '<div class="log-detail">' + log.detail + '</div>' +
                             '<div class="log-time">' + formatDate(log.timestamp) + '</div>' +
                         '</div>' +
-                        '<button class="log-delete" onclick="deleteLog(\'' + log.id + '\', \'' + log.type + '\')">Удалить</button>';
+                        '<button class="log-delete" onclick="deleteLog(\'' + log.id + '\', \'' + log.collection + '\')">Удалить</button>';
                     list.appendChild(div);
                 })(filtered[i]);
             }
         }
 
-        function deleteLog(docId, type) {
+        function deleteLog(docId, collection) {
             if (!confirm('Удалить эту запись?')) return;
-            
-            var collectionName = 'taken_names';
-            if (type === 'cases') collectionName = 'case_openings';
-            else if (type === 'changes') collectionName = 'name_changes';
-            else if (type === 'logins') collectionName = 'logins';
-            
-            db.collection(collectionName).doc(docId).delete()
-                .then(function() {
-                    loadLogs();
-                })
-                .catch(function(error) {
-                    alert('Ошибка: ' + error.message);
-                });
+            db.collection(collection).doc(docId).delete()
+                .then(function() { loadLogs(); })
+                .catch(function(error) { alert('Ошибка: ' + error.message); });
         }
 
         function clearAllLogs() {
             if (!confirm('Удалить ВСЕ записи? Это действие необратимо!')) return;
-            
             var collections = ['taken_names', 'case_openings', 'name_changes', 'logins'];
             var promises = [];
-            
             for (var c = 0; c < collections.length; c++) {
                 (function(collectionName) {
                     promises.push(
@@ -447,13 +408,9 @@
                     );
                 })(collections[c]);
             }
-            
-            Promise.all(promises).then(function() {
-                loadLogs();
-            });
+            Promise.all(promises).then(function() { loadLogs(); });
         }
 
-        // Загрузка при открытии
         loadLogs();
     </script>
 
