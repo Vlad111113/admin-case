@@ -412,16 +412,19 @@
         }
         .theme-dropdown {
             display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #16213e;
             border: 2px solid #0f3460;
-            border-radius: 12px;
-            min-width: 200px;
-            z-index: 100;
-            margin-top: 5px;
-            overflow: hidden;
+            border-radius: 15px;
+            min-width: 220px;
+            max-width: 280px;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 500;
+            padding: 10px;
         }
         .theme-dropdown.show { display: block; }
         .theme-option {
@@ -438,10 +441,25 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            border-radius: 8px;
         }
         .theme-option:hover { background: rgba(255,255,255,0.1); }
         .theme-option.active { background: rgba(76,175,80,0.3); }
         .theme-option-icon { font-size: 1.2rem; }
+        
+        /* Затемнение фона при открытом меню тем */
+        .theme-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 499;
+        }
+        .theme-overlay.show { display: block; }
+
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 30px; margin-bottom: 30px;
@@ -758,6 +776,7 @@
         <button class="back-btn" id="backBtn">‹</button>
         <div class="theme-wrapper">
             <button class="theme-btn" id="themeBtn" title="Сменить тему">🎨</button>
+            <div class="theme-overlay" id="themeOverlay"></div>
             <div class="theme-dropdown" id="themeDropdown">
                 <button class="theme-option" data-theme="dark" onclick="setTheme('dark', this)"><span class="theme-option-icon">🌑</span> Тёмная</button>
                 <button class="theme-option" data-theme="neon" onclick="setTheme('neon', this)"><span class="theme-option-icon">💚</span> Неон</button>
@@ -882,7 +901,6 @@
 
         // ===== ДАННЫЕ =====
         var promoCodes = {
-            // Старые коды
             "A1B2C3": "cheap", "D4E5F6": "cheap", "G7H8I9": "cheap", "J1K2L3": "cheap",
             "M4N5O6": "cheap", "P7Q8R9": "cheap", "S1T2U3": "cheap", "V4W5X6": "cheap",
             "Y7Z8A9": "cheap", "B1C2D3": "cheap", "E4F5G6": "cheap", "H7I8J9": "cheap",
@@ -893,7 +911,6 @@
             "G4H5I6": "expensive", "J7K8L9": "expensive", "M1N2O3": "expensive", "P4Q5R6": "expensive",
             "S7T8U9": "expensive", "V1W2X3": "expensive", "Y4Z5A6": "expensive", "B7C8D9": "expensive",
             "E1F2G3": "expensive", "H4I5J6": "expensive", "K7L8M9": "expensive", "N1O2P3": "expensive",
-            // Новые коды - Дешевый кейс (50 кодов)
             "AC-7X2K-9Q4M": "cheap",
             "BR-3P8L-6W5N": "cheap",
             "CX-9T4R-2Y7B": "cheap",
@@ -944,7 +961,6 @@
             "ZD-8Q3T-2W7R": "cheap",
             "AE-4B9X-6C5Y": "cheap",
             "BF-7M2Z-8N3V": "cheap",
-            // Новые коды - Дорогой кейс (50 кодов)
             "CG-9X4R-5T7W": "expensive",
             "DH-2Y8Z-3B6M": "expensive",
             "EJ-6Q7P-9C4X": "expensive",
@@ -2024,7 +2040,17 @@
                 if (activeBtn) activeBtn.classList.add('active');
             }
             
+            closeThemeMenu();
+        }
+
+        function openThemeMenu() {
+            document.getElementById('themeDropdown').classList.add('show');
+            document.getElementById('themeOverlay').classList.add('show');
+        }
+
+        function closeThemeMenu() {
             document.getElementById('themeDropdown').classList.remove('show');
+            document.getElementById('themeOverlay').classList.remove('show');
         }
 
         // ===== ОБРАБОТЧИКИ КНОПОК =====
@@ -2147,12 +2173,20 @@
 
         document.getElementById('themeBtn').onclick = function(e) {
             e.stopPropagation();
-            document.getElementById('themeDropdown').classList.toggle('show');
+            if (document.getElementById('themeDropdown').classList.contains('show')) {
+                closeThemeMenu();
+            } else {
+                openThemeMenu();
+            }
+        };
+
+        document.getElementById('themeOverlay').onclick = function() {
+            closeThemeMenu();
         };
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.theme-wrapper')) {
-                document.getElementById('themeDropdown').classList.remove('show');
+            if (!e.target.closest('.theme-wrapper') && !e.target.closest('.theme-dropdown')) {
+                closeThemeMenu();
             }
         });
 
