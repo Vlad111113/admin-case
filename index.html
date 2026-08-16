@@ -39,8 +39,6 @@
             text-align: left; border: none; background: none; width: 100%;
         }
         .dropdown-item:hover { background: rgba(255,255,255,0.1); }
-
-        /* Интеграции внизу */
         .integrations {
             display: flex;
             gap: 15px;
@@ -69,24 +67,11 @@
             background: #1a2a4e;
             transform: translateY(-3px);
         }
-        .integration-icon {
-            font-size: 1.3rem;
-        }
-        .vk-btn {
-            border-color: #0077ff;
-        }
-        .vk-btn:hover {
-            border-color: #0077ff;
-            box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3);
-        }
-        .help-btn {
-            border-color: #ffd700;
-        }
-        .help-btn:hover {
-            border-color: #ffd700;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-        }
-
+        .integration-icon { font-size: 1.3rem; }
+        .vk-btn { border-color: #0077ff; }
+        .vk-btn:hover { border-color: #0077ff; box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3); }
+        .help-btn { border-color: #ffd700; }
+        .help-btn:hover { border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); }
         .boxes {
             display: flex; gap: 25px; justify-content: center;
             align-items: center; min-height: 70vh; flex-wrap: wrap;
@@ -334,22 +319,10 @@
             object-fit: cover;
             border-radius: 50%;
         }
-        .top-info {
-            flex: 1;
-        }
-        .top-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        .top-id {
-            font-size: 0.75rem;
-            color: #999;
-        }
-        .top-count {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ffd700;
-        }
+        .top-info { flex: 1; }
+        .top-name { font-weight: bold; font-size: 1.1rem; }
+        .top-id { font-size: 0.75rem; color: #999; }
+        .top-count { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
         .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .other-profile-page.active { display: block; }
         .other-profile-header {
@@ -382,16 +355,8 @@
             object-fit: cover;
             border-radius: 50%;
         }
-        .other-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .other-id {
-            font-size: 0.8rem;
-            color: #999;
-            margin-bottom: 20px;
-        }
+        .other-name { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+        .other-id { font-size: 0.8rem; color: #999; margin-bottom: 20px; }
         .other-stats {
             border-top: 1px solid #0f3460;
             padding-top: 20px;
@@ -399,17 +364,11 @@
             justify-content: center;
             gap: 30px;
         }
-        .other-stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffd700;
-        }
-        .other-stat-label {
-            font-size: 0.85rem;
-            opacity: 0.7;
-        }
-        .rarity-common { color: #fff; border-color: #fff; background: rgba(255,255,255,0.08); }
-        .rarity-rare { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
+        .other-stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
+        .other-stat-label { font-size: 0.85rem; opacity: 0.7; }
+        .rarity-common { color: #ffffff; border-color: #ffffff; background: rgba(255,255,255,0.08); }
+        .rarity-uncommon { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
+        .rarity-rare { color: #2196f3; border-color: #2196f3; background: rgba(33,150,243,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
         @media (max-width: 480px) {
@@ -464,7 +423,6 @@
             </div>
         </div>
         
-        <!-- Интеграции внизу -->
         <div class="integrations">
             <a href="https://vk.ru/ufa.blackrussia.online" target="_blank" class="integration-btn vk-btn">
                 <span class="integration-icon">🔵</span> ВКонтакте
@@ -597,18 +555,42 @@
 
         var caseContents = {
             cheap: [
-                { name: "50 репортов", chance: 95 },
-                { name: "200 репортов", chance: 30 },
-                { name: "400 репортов", chance: 14 },
-                { name: "800 репортов", chance: 3 },
-                { name: "Освобождение", chance: 0.5 }
+                { name: "50 репортов", chance: 95, rarity: "common" },
+                { name: "50.000 ИВ", chance: 90, rarity: "common" },
+                { name: "150 репортов", chance: 70, rarity: "common" },
+                { name: "150.000 ИВ", chance: 65, rarity: "common" },
+                { name: "200 репортов", chance: 50, rarity: "common" },
+                { name: "250.000 ИВ", chance: 45, rarity: "common" },
+                { name: "300 репортов", chance: 35, rarity: "uncommon" },
+                { name: "500.000 ИВ", chance: 30, rarity: "uncommon" },
+                { name: "400 репортов", chance: 20, rarity: "uncommon" },
+                { name: "1.000.000 ИВ", chance: 6, rarity: "rare" },
+                { name: "600 репортов", chance: 8, rarity: "rare" },
+                { name: "Иммунитет на предупреждение", chance: 5, rarity: "rare" },
+                { name: "900 репортов", chance: 0.8, rarity: "epic" },
+                { name: "Иммунитет на выговор", chance: 0.5, rarity: "epic" },
+                { name: "1100 репортов", chance: 0.1, rarity: "epic" },
+                { name: "Роспись от руководства сервера", chance: 0.08, rarity: "legendary" },
+                { name: "1400 репортов", chance: 0.04, rarity: "legendary" }
             ],
             expensive: [
-                { name: "300 репортов", chance: 95 },
-                { name: "500 репортов", chance: 20 },
-                { name: "800 репортов", chance: 8 },
-                { name: "1100 репортов", chance: 2 },
-                { name: "Освобождение", chance: 1 }
+                { name: "300 репортов", chance: 95, rarity: "common" },
+                { name: "250.000 ИВ", chance: 90, rarity: "common" },
+                { name: "400 репортов", chance: 70, rarity: "common" },
+                { name: "450.000 ИВ", chance: 65, rarity: "common" },
+                { name: "500 репортов", chance: 50, rarity: "common" },
+                { name: "550.000 ИВ", chance: 45, rarity: "common" },
+                { name: "600 репортов", chance: 35, rarity: "rare" },
+                { name: "650.000 ИВ", chance: 30, rarity: "rare" },
+                { name: "800 репортов", chance: 20, rarity: "rare" },
+                { name: "850.000 ИВ", chance: 16, rarity: "rare" },
+                { name: "950 репортов", chance: 10, rarity: "rare" },
+                { name: "Иммунитет на предупреждение", chance: 6, rarity: "rare" },
+                { name: "1150 репортов", chance: 2, rarity: "epic" },
+                { name: "Иммунитет на выговор", chance: 1, rarity: "epic" },
+                { name: "1400 репортов", chance: 0.7, rarity: "epic" },
+                { name: "Роспись от руководства сервера", chance: 0.1, rarity: "legendary" },
+                { name: "1800 репортов", chance: 0.08, rarity: "legendary" }
             ]
         };
 
@@ -781,10 +763,14 @@
         }
 
         // ===== ФУНКЦИИ =====
-        function getRarity(chance) {
+        function getRarity(chance, rarityOverride) {
+            if (rarityOverride) {
+                return 'rarity-' + rarityOverride;
+            }
             if (chance >= 50) return 'rarity-common';
-            if (chance >= 20) return 'rarity-rare';
-            if (chance >= 5) return 'rarity-epic';
+            if (chance >= 20) return 'rarity-uncommon';
+            if (chance >= 5) return 'rarity-rare';
+            if (chance >= 0.5) return 'rarity-epic';
             return 'rarity-legendary';
         }
 
@@ -835,7 +821,7 @@
                 for (var j = 0; j < sortedHistory.length; j++) {
                     (function(item) {
                         var div = document.createElement('div');
-                        div.className = 'history-item ' + getRarity(item.chance || 50);
+                        div.className = 'history-item ' + getRarity(item.chance || 50, item.rarity);
                         div.innerHTML = '<span class="history-name">' + item.name + '</span>';
                         var btn = document.createElement('button');
                         btn.className = 'history-info-circle';
@@ -1242,7 +1228,7 @@
             allRouletteItems = rouletteItems.concat(rouletteItems);
             for (var k = 0; k < allRouletteItems.length; k++) {
                 var div = document.createElement('div');
-                div.className = 'roulette-item';
+                div.className = 'roulette-item ' + getRarity(allRouletteItems[k].chance, allRouletteItems[k].rarity);
                 div.textContent = allRouletteItems[k].name;
                 div.setAttribute('data-name', allRouletteItems[k].name);
                 track.appendChild(div);
@@ -1268,10 +1254,10 @@
             for (var m = 0; m < caseContents[caseType].length; m++) {
                 (function(item) {
                     var div = document.createElement('div');
-                    div.className = 'reward-item';
+                    div.className = 'reward-item ' + getRarity(item.chance, item.rarity);
                     div.innerHTML = '<span class="reward-name">' + item.name + '</span>' +
                         '<button class="reward-info-circle">!</button>' +
-                        '<span class="reward-tooltip">Шанс: ' + item.chance + '%</span>';
+                        '<span class="reward-tooltip">Шанс: ' + item.chance + '% | Редкость: ' + (item.rarity || 'обычная') + '</span>';
                     var btn = div.querySelector('.reward-info-circle');
                     btn.onclick = function(e) {
                         e.stopPropagation();
@@ -1358,9 +1344,17 @@
                 } else {
                     setTimeout(function() {
                         var actualWin = getItemUnderArrow();
+                        var actualRarity = null;
+                        for (var ri = 0; ri < rouletteItems.length; ri++) {
+                            if (rouletteItems[ri].name === actualWin) {
+                                actualRarity = rouletteItems[ri].rarity;
+                                break;
+                            }
+                        }
                         openedCount++;
                         winHistory.push({ 
-                            name: actualWin, 
+                            name: actualWin,
+                            rarity: actualRarity,
                             source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             timestamp: Date.now()
                         });
@@ -1375,6 +1369,7 @@
                             avatar: avatarData,
                             caseType: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             reward: actualWin,
+                            rarity: actualRarity,
                             timestamp: Date.now()
                         }).catch(function() {});
                         
