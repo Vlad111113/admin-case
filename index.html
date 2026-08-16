@@ -20,7 +20,7 @@
         }
 
         /* ===== ТЕМЫ ===== */
-        /* Тема: Неон */
+        /* Неон */
         body.theme-neon {
             background: #0a0a0a;
             color: #00ffcc;
@@ -34,144 +34,208 @@
         body.theme-neon .dropdown-menu,
         body.theme-neon .reward-item,
         body.theme-neon .integration-btn,
-        body.theme-neon .achievements-section {
+        body.theme-neon .achievements-section,
+        body.theme-neon .theme-dropdown {
             background: #111;
             border-color: #00ffcc;
             box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
         }
         body.theme-neon h1 { color: #00ffcc; text-shadow: 0 0 20px #00ffcc; }
+        body.theme-neon .btn-open { background: #00ffcc; color: #000; }
+        body.theme-neon .stat-value { color: #00ffcc; }
 
-        /* Тема: Минимализм */
-        body.theme-minimal {
-            background: #fafafa;
-            color: #222;
+        /* Золото */
+        body.theme-gold {
+            background: #1a1608;
+            color: #fff8e1;
         }
-        body.theme-minimal .box,
-        body.theme-minimal .profile-header,
-        body.theme-minimal .history-section,
-        body.theme-minimal .top-item,
-        body.theme-minimal .other-profile-header,
-        body.theme-minimal .modal-content,
-        body.theme-minimal .dropdown-menu,
-        body.theme-minimal .reward-item,
-        body.theme-minimal .integration-btn,
-        body.theme-minimal .achievements-section {
-            background: #fff;
-            border-color: #ddd;
-            color: #222;
-            box-shadow: none;
+        body.theme-gold .box,
+        body.theme-gold .profile-header,
+        body.theme-gold .history-section,
+        body.theme-gold .top-item,
+        body.theme-gold .other-profile-header,
+        body.theme-gold .modal-content,
+        body.theme-gold .dropdown-menu,
+        body.theme-gold .reward-item,
+        body.theme-gold .integration-btn,
+        body.theme-gold .achievements-section,
+        body.theme-gold .theme-dropdown {
+            background: #241e0a;
+            border-color: #ffd700;
+            color: #fff8e1;
         }
-        body.theme-minimal h1 { color: #333; text-shadow: none; }
+        body.theme-gold h1 { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        body.theme-gold .btn-open { background: #ffd700; color: #000; }
+        body.theme-gold .stat-value { color: #ffd700; }
 
-        /* Тема: Брутализм */
-        body.theme-brutalism {
-            background: #ffdd00;
-            color: #000;
+        /* Киберпанк */
+        body.theme-cyberpunk {
+            background: #0d001a;
+            color: #00ffff;
         }
-        body.theme-brutalism .box,
-        body.theme-brutalism .profile-header,
-        body.theme-brutalism .history-section,
-        body.theme-brutalism .top-item,
-        body.theme-brutalism .other-profile-header,
-        body.theme-brutalism .modal-content,
-        body.theme-brutalism .dropdown-menu,
-        body.theme-brutalism .reward-item,
-        body.theme-brutalism .integration-btn,
-        body.theme-brutalism .achievements-section {
-            background: #fff;
-            border: 4px solid #000;
-            color: #000;
-            border-radius: 0;
-            box-shadow: 8px 8px 0 #000;
+        body.theme-cyberpunk .box,
+        body.theme-cyberpunk .profile-header,
+        body.theme-cyberpunk .history-section,
+        body.theme-cyberpunk .top-item,
+        body.theme-cyberpunk .other-profile-header,
+        body.theme-cyberpunk .modal-content,
+        body.theme-cyberpunk .dropdown-menu,
+        body.theme-cyberpunk .reward-item,
+        body.theme-cyberpunk .integration-btn,
+        body.theme-cyberpunk .achievements-section,
+        body.theme-cyberpunk .theme-dropdown {
+            background: #1a0030;
+            border-color: #ff00ff;
+            color: #00ffff;
         }
-        body.theme-brutalism h1 { color: #000; text-shadow: none; }
+        body.theme-cyberpunk h1 { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
+        body.theme-cyberpunk .btn-open { background: #ff00ff; color: #fff; }
+        body.theme-cyberpunk .stat-value { color: #ff00ff; }
 
-        /* Тема: Живые градиенты */
-        body.theme-gradient {
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
-            color: #fff;
+        /* Космос */
+        body.theme-space {
+            background: #000010;
+            color: #e8eaf6;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        body.theme-space .box,
+        body.theme-space .profile-header,
+        body.theme-space .history-section,
+        body.theme-space .top-item,
+        body.theme-space .other-profile-header,
+        body.theme-space .modal-content,
+        body.theme-space .dropdown-menu,
+        body.theme-space .reward-item,
+        body.theme-space .integration-btn,
+        body.theme-space .achievements-section,
+        body.theme-space .theme-dropdown {
+            background: #0a0a2e;
+            border-color: #7c4dff;
+            color: #e8eaf6;
         }
-        body.theme-gradient .box,
-        body.theme-gradient .profile-header,
-        body.theme-gradient .history-section,
-        body.theme-gradient .top-item,
-        body.theme-gradient .other-profile-header,
-        body.theme-gradient .modal-content,
-        body.theme-gradient .dropdown-menu,
-        body.theme-gradient .reward-item,
-        body.theme-gradient .integration-btn,
-        body.theme-gradient .achievements-section {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.4);
-            backdrop-filter: blur(10px);
-        }
+        body.theme-space h1 { color: #b388ff; text-shadow: 0 0 20px #7c4dff; }
+        body.theme-space .btn-open { background: #7c4dff; color: #fff; }
+        body.theme-space .stat-value { color: #b388ff; }
 
-        /* Тема: Лес */
-        body.theme-forest {
-            background: #1a2e1a;
-            color: #d4edda;
+        /* Кровь */
+        body.theme-blood {
+            background: #0a0000;
+            color: #ffcccc;
         }
-        body.theme-forest .box,
-        body.theme-forest .profile-header,
-        body.theme-forest .history-section,
-        body.theme-forest .top-item,
-        body.theme-forest .other-profile-header,
-        body.theme-forest .modal-content,
-        body.theme-forest .dropdown-menu,
-        body.theme-forest .reward-item,
-        body.theme-forest .integration-btn,
-        body.theme-forest .achievements-section {
-            background: #223522;
-            border-color: #4caf50;
+        body.theme-blood .box,
+        body.theme-blood .profile-header,
+        body.theme-blood .history-section,
+        body.theme-blood .top-item,
+        body.theme-blood .other-profile-header,
+        body.theme-blood .modal-content,
+        body.theme-blood .dropdown-menu,
+        body.theme-blood .reward-item,
+        body.theme-blood .integration-btn,
+        body.theme-blood .achievements-section,
+        body.theme-blood .theme-dropdown {
+            background: #1a0000;
+            border-color: #cc0000;
+            color: #ffcccc;
         }
-        body.theme-forest h1 { color: #8bc34a; text-shadow: none; }
+        body.theme-blood h1 { color: #ff3333; text-shadow: 0 0 20px #cc0000; }
+        body.theme-blood .btn-open { background: #cc0000; color: #fff; }
+        body.theme-blood .stat-value { color: #ff3333; }
 
-        /* Тема: Океан */
-        body.theme-ocean {
-            background: #0a1628;
-            color: #b3e5fc;
+        /* Изумруд */
+        body.theme-emerald {
+            background: #001a0a;
+            color: #ccffe8;
         }
-        body.theme-ocean .box,
-        body.theme-ocean .profile-header,
-        body.theme-ocean .history-section,
-        body.theme-ocean .top-item,
-        body.theme-ocean .other-profile-header,
-        body.theme-ocean .modal-content,
-        body.theme-ocean .dropdown-menu,
-        body.theme-ocean .reward-item,
-        body.theme-ocean .integration-btn,
-        body.theme-ocean .achievements-section {
-            background: #0d2137;
-            border-color: #0288d1;
+        body.theme-emerald .box,
+        body.theme-emerald .profile-header,
+        body.theme-emerald .history-section,
+        body.theme-emerald .top-item,
+        body.theme-emerald .other-profile-header,
+        body.theme-emerald .modal-content,
+        body.theme-emerald .dropdown-menu,
+        body.theme-emerald .reward-item,
+        body.theme-emerald .integration-btn,
+        body.theme-emerald .achievements-section,
+        body.theme-emerald .theme-dropdown {
+            background: #002a14;
+            border-color: #00cc88;
+            color: #ccffe8;
         }
-        body.theme-ocean h1 { color: #4fc3f7; text-shadow: none; }
+        body.theme-emerald h1 { color: #00ffaa; text-shadow: 0 0 20px #00cc88; }
+        body.theme-emerald .btn-open { background: #00cc88; color: #000; }
+        body.theme-emerald .stat-value { color: #00ffaa; }
 
-        /* Тема: Закат */
-        body.theme-sunset {
-            background: linear-gradient(180deg, #2c0a0a, #4a1a1a, #7a3a1a);
-            color: #ffe0b2;
+        /* Лёд */
+        body.theme-ice {
+            background: #000a14;
+            color: #e0f7fa;
         }
-        body.theme-sunset .box,
-        body.theme-sunset .profile-header,
-        body.theme-sunset .history-section,
-        body.theme-sunset .top-item,
-        body.theme-sunset .other-profile-header,
-        body.theme-sunset .modal-content,
-        body.theme-sunset .dropdown-menu,
-        body.theme-sunset .reward-item,
-        body.theme-sunset .integration-btn,
-        body.theme-sunset .achievements-section {
-            background: rgba(60,20,20,0.8);
-            border-color: #ff9800;
+        body.theme-ice .box,
+        body.theme-ice .profile-header,
+        body.theme-ice .history-section,
+        body.theme-ice .top-item,
+        body.theme-ice .other-profile-header,
+        body.theme-ice .modal-content,
+        body.theme-ice .dropdown-menu,
+        body.theme-ice .reward-item,
+        body.theme-ice .integration-btn,
+        body.theme-ice .achievements-section,
+        body.theme-ice .theme-dropdown {
+            background: #001a28;
+            border-color: #4dd0e1;
+            color: #e0f7fa;
         }
-        body.theme-sunset h1 { color: #ffb74d; text-shadow: none; }
+        body.theme-ice h1 { color: #80deea; text-shadow: 0 0 20px #4dd0e1; }
+        body.theme-ice .btn-open { background: #4dd0e1; color: #000; }
+        body.theme-ice .stat-value { color: #80deea; }
+
+        /* Огонь */
+        body.theme-fire {
+            background: #140000;
+            color: #ffe0cc;
+        }
+        body.theme-fire .box,
+        body.theme-fire .profile-header,
+        body.theme-fire .history-section,
+        body.theme-fire .top-item,
+        body.theme-fire .other-profile-header,
+        body.theme-fire .modal-content,
+        body.theme-fire .dropdown-menu,
+        body.theme-fire .reward-item,
+        body.theme-fire .integration-btn,
+        body.theme-fire .achievements-section,
+        body.theme-fire .theme-dropdown {
+            background: #280a00;
+            border-color: #ff4500;
+            color: #ffe0cc;
+        }
+        body.theme-fire h1 { color: #ff6b35; text-shadow: 0 0 20px #ff4500; }
+        body.theme-fire .btn-open { background: #ff4500; color: #fff; }
+        body.theme-fire .stat-value { color: #ff6b35; }
+
+        /* Сумерки */
+        body.theme-twilight {
+            background: #0a0a1a;
+            color: #e1bee7;
+        }
+        body.theme-twilight .box,
+        body.theme-twilight .profile-header,
+        body.theme-twilight .history-section,
+        body.theme-twilight .top-item,
+        body.theme-twilight .other-profile-header,
+        body.theme-twilight .modal-content,
+        body.theme-twilight .dropdown-menu,
+        body.theme-twilight .reward-item,
+        body.theme-twilight .integration-btn,
+        body.theme-twilight .achievements-section,
+        body.theme-twilight .theme-dropdown {
+            background: #1a0a2e;
+            border-color: #9c27b0;
+            color: #e1bee7;
+        }
+        body.theme-twilight h1 { color: #ce93d8; text-shadow: 0 0 20px #9c27b0; }
+        body.theme-twilight .btn-open { background: #9c27b0; color: #fff; }
+        body.theme-twilight .stat-value { color: #ce93d8; }
 
         .online-counter {
             text-align: center;
@@ -351,6 +415,45 @@
             background: none; border: none; color: #fff;
             font-size: 1.5rem; cursor: pointer; padding: 5px 10px;
         }
+        
+        /* Выдвижное меню тем */
+        .theme-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .theme-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            min-width: 200px;
+            z-index: 100;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .theme-dropdown.show { display: block; }
+        .theme-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .theme-option:hover { background: rgba(255,255,255,0.1); }
+        .theme-option.active { background: rgba(76,175,80,0.3); }
+        .theme-option-icon { font-size: 1.2rem; }
+
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 30px; margin-bottom: 30px;
@@ -666,7 +769,21 @@
 
     <div class="profile-page" id="profilePage">
         <button class="back-btn" id="backBtn">‹</button>
-        <button class="theme-btn" id="themeBtn" title="Сменить тему">🎨</button>
+        <div class="theme-wrapper">
+            <button class="theme-btn" id="themeBtn" title="Сменить тему">🎨</button>
+            <div class="theme-dropdown" id="themeDropdown">
+                <button class="theme-option" data-theme="dark" onclick="setTheme('dark', this)"><span class="theme-option-icon">🌑</span> Тёмная</button>
+                <button class="theme-option" data-theme="neon" onclick="setTheme('neon', this)"><span class="theme-option-icon">💚</span> Неон</button>
+                <button class="theme-option" data-theme="gold" onclick="setTheme('gold', this)"><span class="theme-option-icon">⭐</span> Золото</button>
+                <button class="theme-option" data-theme="cyberpunk" onclick="setTheme('cyberpunk', this)"><span class="theme-option-icon">🤖</span> Киберпанк</button>
+                <button class="theme-option" data-theme="space" onclick="setTheme('space', this)"><span class="theme-option-icon">🚀</span> Космос</button>
+                <button class="theme-option" data-theme="blood" onclick="setTheme('blood', this)"><span class="theme-option-icon">🩸</span> Кровь</button>
+                <button class="theme-option" data-theme="emerald" onclick="setTheme('emerald', this)"><span class="theme-option-icon">💎</span> Изумруд</button>
+                <button class="theme-option" data-theme="ice" onclick="setTheme('ice', this)"><span class="theme-option-icon">❄️</span> Лёд</button>
+                <button class="theme-option" data-theme="fire" onclick="setTheme('fire', this)"><span class="theme-option-icon">🔥</span> Огонь</button>
+                <button class="theme-option" data-theme="twilight" onclick="setTheme('twilight', this)"><span class="theme-option-icon">🌆</span> Сумерки</button>
+            </div>
+        </div>
         <div class="profile-header" id="profileHeader">
             <div class="profile-top-row">
                 <div class="profile-info">
@@ -870,8 +987,7 @@
         var currentTheme = 'dark';
         var visitCount = 0;
 
-        var themes = ['dark', 'neon', 'minimal', 'brutalism', 'gradient', 'forest', 'ocean', 'sunset'];
-        var themeIndex = 0;
+        var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
         // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
@@ -991,7 +1107,6 @@
             var savedTheme = localStorage.getItem('admincase_theme');
             if (savedTheme && themes.indexOf(savedTheme) !== -1) {
                 currentTheme = savedTheme;
-                themeIndex = themes.indexOf(savedTheme);
                 if (currentTheme !== 'dark') {
                     document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
                 }
@@ -1217,6 +1332,39 @@
                     }, 100);
                 }
             } catch(e) {}
+        }
+
+        // ===== СМЕНА ТЕМЫ =====
+        function setTheme(theme, btn) {
+            // Убираем все темы
+            for (var t = 0; t < themes.length; t++) {
+                document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
+            }
+            
+            currentTheme = theme;
+            
+            if (currentTheme !== 'dark') {
+                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+            }
+            
+            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
+            
+            // Обновляем активную кнопку
+            var options = document.querySelectorAll('.theme-option');
+            for (var o = 0; o < options.length; o++) {
+                options[o].classList.remove('active');
+            }
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+                if (activeBtn) activeBtn.classList.add('active');
+            }
+            
+            // Закрываем меню
+            document.getElementById('themeDropdown').classList.remove('show');
+            
+            playSound('click');
         }
 
         // ===== ФУНКЦИИ =====
@@ -1976,39 +2124,23 @@
             }
         };
 
-        document.getElementById('themeBtn').onclick = function() {
-            // Убираем текущую тему
-            for (var t = 0; t < themes.length; t++) {
-                document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
-            }
-            
-            themeIndex++;
-            if (themeIndex >= themes.length) {
-                themeIndex = 0;
-            }
-            
-            currentTheme = themes[themeIndex];
-            
-            if (currentTheme !== 'dark') {
-                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
-            }
-            
-            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
-            playSound('click');
-            
-            // Показываем название темы
-            var themeNames = {
-                'dark': 'Тёмная',
-                'neon': 'Неон',
-                'minimal': 'Минимализм',
-                'brutalism': 'Брутализм',
-                'gradient': 'Градиент',
-                'forest': 'Лес',
-                'ocean': 'Океан',
-                'sunset': 'Закат'
-            };
-            alert('Тема: ' + (themeNames[currentTheme] || currentTheme));
+        document.getElementById('themeBtn').onclick = function(e) {
+            e.stopPropagation();
+            document.getElementById('themeDropdown').classList.toggle('show');
         };
+
+        // Закрытие меню тем при клике вне
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.theme-wrapper')) {
+                document.getElementById('themeDropdown').classList.remove('show');
+            }
+        });
+
+        // Инициализация активной темы
+        (function() {
+            var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+        })();
     </script>
 
 </body>
