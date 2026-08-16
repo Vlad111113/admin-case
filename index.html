@@ -292,7 +292,7 @@
         <h2 id="roulette-title">Кейс</h2>
         <div class="roulette-wrapper">
             <div class="roulette-arrow">▼</div>
-            <div class="roulette-container">
+            <div class="roulette-container" id="roulette-container">
                 <div class="roulette-track" id="roulette-track"></div>
             </div>
         </div>
@@ -496,6 +496,7 @@
                 const div = document.createElement('div');
                 div.className = 'roulette-item';
                 div.textContent = item.name;
+                div.setAttribute('data-name', item.name);
                 track.appendChild(div);
             });
 
@@ -516,23 +517,25 @@
             window.scrollTo(0, 0);
         }
 
-        // Функция определения предмета под стрелкой
-        function getItemUnderArrow(trackPosition) {
-            const itemWidth = 180;
-            const container = document.querySelector('.roulette-container');
-            const containerWidth = container.offsetWidth;
-            const centerOffset = containerWidth / 2;
+        // Функция определения предмета под стрелкой ЧЕРЕЗ DOM КООРДИНАТЫ
+        function getItemUnderArrow() {
+            const container = document.getElementById('roulette-container');
+            const containerRect = container.getBoundingClientRect();
+            const arrowX = containerRect.left + containerRect.width / 2;
             
-            // Преобразуем позицию: trackPosition - отрицательное значение (translateX)
-            // Нам нужно узнать, какой элемент находится на расстоянии centerOffset от левого края контейнера
-            const visibleLeftEdge = Math.abs(trackPosition);
-            const arrowPosition = visibleLeftEdge + centerOffset;
-            const itemIndex = Math.floor(arrowPosition / itemWidth);
+            // Получаем все элементы рулетки
+            const items = document.querySelectorAll('.roulette-item');
             
-            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) {
-                return allRouletteItems[itemIndex];
+            // Находим элемент, который пересекает линию стрелки
+            for (let item of items) {
+                const itemRect = item.getBoundingClientRect();
+                if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
+                    return item.getAttribute('data-name');
+                }
             }
-            return allRouletteItems[0];
+            
+            // Если не нашли — возвращаем первый
+            return items.length > 0 ? items[0].getAttribute('data-name') : 'Неизвестно';
         }
 
         function spinRoulette() {
@@ -559,7 +562,7 @@
             const totalItems = rouletteItems.length;
             if (totalItems === 0) { isSpinning = false; hasSpun = false; btn.disabled = false; return; }
 
-            const containerWidth = document.querySelector('.roulette-container').offsetWidth;
+            const containerWidth = document.getElementById('roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2 - itemWidth / 2;
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
@@ -577,7 +580,6 @@
 
             const startTime = performance.now();
             const duration = 6000;
-            let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
                 const elapsed = currentTime - startTime;
@@ -601,17 +603,16 @@
                 }
 
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
-                finalTrackPosition = currentPosition;
 
                 if (elapsed < duration) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
                     // ПАУЗА 500мс ПОСЛЕ ПОЛНОЙ ОСТАНОВКИ
                     setTimeout(() => {
-                        // Определяем предмет под стрелкой ПОСЛЕ остановки
-                        const actualWinItem = getItemUnderArrow(finalTrackPosition);
+                        // Определяем предмет через DOM координаты
+                        const winName = getItemUnderArrow();
                         msg.className = 'message win';
-                        msg.textContent = '🎉 Вы выиграли: ' + actualWinItem.name + '!';
+                        msg.textContent = '🎉 Вы выиграли: ' + winName + '!';
                         isSpinning = false;
                         btn.disabled = false;
                         localStorage.removeItem('admincase_active_code');
