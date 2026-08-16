@@ -14,243 +14,400 @@
             padding: 20px;
         }
         h1 {
-            font-size: 2rem;
-            margin-bottom: 30px;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
             color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
             text-align: center;
         }
+
+        /* Бургер */
         .burger-btn {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             width: 45px;
             height: 45px;
-            background: #333;
-            border: 2px solid #555;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
-            cursor: pointer;
-            z-index: 500;
-        }
-        .burger-line {
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            margin: 4px auto;
-        }
-        .dropdown-menu {
-            position: fixed;
-            top: 70px;
-            right: 15px;
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 10px;
-            padding: 5px;
-            display: none;
-            z-index: 500;
-        }
-        .dropdown-menu.show { display: block; }
-        .dropdown-item {
-            display: block;
-            width: 100%;
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-            text-align: left;
-        }
-        .dropdown-item:hover { background: #333; }
-        .boxes {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .box {
-            width: 180px;
-            height: 240px;
-            background: #16213e;
-            border-radius: 15px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 5px;
+            z-index: 300;
+        }
+        .burger-line { width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+        .dropdown-menu {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 10px 0;
+            display: none;
+            z-index: 300;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .dropdown-menu.show { display: block; }
+        .dropdown-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            text-align: left;
+            border: none;
+            background: none;
+            width: 100%;
+        }
+        .dropdown-item:hover { background: rgba(255,255,255,0.1); }
+
+        /* Кейсы */
+        .boxes {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            flex-wrap: wrap;
+        }
+        .box {
+            width: 200px;
+            height: 260px;
+            background: #16213e;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             border: 2px solid #0f3460;
             position: relative;
+            transition: transform 0.3s;
         }
+        .box:hover { transform: translateY(-8px); }
         .box.cheap { border-color: #4caf50; }
+        .box.cheap:hover { box-shadow: 0 20px 40px rgba(76,175,80,0.3); }
         .box.expensive { border-color: #ffd700; }
-        .box-icon { font-size: 3rem; }
-        .box-name { font-size: 1.2rem; font-weight: bold; }
-        .lock-icon { font-size: 2rem; }
-        .box-price { font-size: 0.8rem; opacity: 0.7; }
+        .box.expensive:hover { box-shadow: 0 20px 40px rgba(255,215,0,0.3); }
+        .box-icon { font-size: 3.5rem; }
+        .box-name { font-size: 1.3rem; font-weight: bold; }
+        .lock-icon { font-size: 2.5rem; opacity: 0.5; }
+        .box-price { font-size: 0.85rem; opacity: 0.7; }
         .info-circle {
             position: absolute;
-            top: 8px; right: 8px;
-            width: 28px; height: 28px;
+            top: 10px; right: 10px;
+            width: 30px; height: 30px;
             background: #666;
             border-radius: 50%;
-            border: none;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1rem;
+            color: #fff;
+            z-index: 5;
+            border: none;
         }
         .case-tooltip {
             position: absolute;
-            top: 8px; right: 45px;
-            background: #333;
+            top: 10px; right: 50px;
+            background: #2a2a3e;
+            border: 1px solid #444;
             border-radius: 8px;
-            padding: 8px;
-            font-size: 0.7rem;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            color: #ccc;
             display: none;
             z-index: 10;
-            max-width: 150px;
+            max-width: 180px;
         }
         .case-tooltip.show { display: block; }
+
+        /* Модалка */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 400;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
         }
-        .modal.active { display: block; }
+        .modal.active { display: flex; }
         .modal-content {
             background: #16213e;
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            max-width: 350px;
-            margin: 100px auto;
+            border-radius: 20px;
+            padding: 25px;
+            width: 95%;
+            max-width: 400px;
             text-align: center;
             border: 2px solid #0f3460;
         }
+        .modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.5rem; }
         .modal-content input {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             border: 2px solid #0f3460;
             background: #1a1a2e;
             color: #fff;
+            font-size: 1.1rem;
             text-align: center;
-            margin: 10px 0;
+            margin-bottom: 15px;
             text-transform: uppercase;
         }
         .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 25px;
+            border-radius: 10px;
             border: none;
-            cursor: pointer;
+            font-size: 1rem;
             font-weight: bold;
+            cursor: pointer;
             margin: 5px;
         }
-        .btn-green { background: #4caf50; color: #fff; }
-        .btn-red { background: #f44336; color: #fff; }
+        .btn-open { background: #4caf50; color: #fff; font-size: 1.2rem; padding: 15px 40px; }
+        .btn-open:disabled { background: #555; cursor: not-allowed; }
+        .btn-close { background: #f44336; color: #fff; }
         .message {
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
             display: none;
             font-weight: bold;
+            font-size: 1rem;
         }
-        .message.show { display: block; }
-        .message.success { background: rgba(76,175,80,0.3); color: #4caf50; }
-        .message.error { background: rgba(244,67,54,0.3); color: #f44336; }
-        .message.win { background: rgba(255,215,0,0.3); color: #ffd700; }
+        .message.success { display: block; background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid #4caf50; }
+        .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
+        .message.win {
+            display: block;
+            background: rgba(255,215,0,0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+            font-size: 1.2rem;
+            animation: winPulse 0.5s ease 3;
+        }
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* Рулетка */
         .roulette-page {
             display: none;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
         }
-        .roulette-page.active { display: block; }
-        .roulette-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            overflow: hidden;
-            border: 3px solid #0f3460;
-            border-radius: 12px;
-        }
+        .roulette-page.active { display: flex; }
+        .roulette-page h2 { font-size: 2rem; margin-bottom: 30px; text-align: center; color: #ff6b6b; }
+        .roulette-wrapper { position: relative; width: 100%; max-width: 400px; }
         .roulette-arrow {
             text-align: center;
             font-size: 2rem;
             color: #ff6b6b;
+            margin-bottom: -5px;
+            text-shadow: 0 0 15px #ff6b6b;
+        }
+        .roulette-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 3px solid #0f3460;
+            background: #1a1a2e;
         }
         .roulette-track { display: flex; }
         .roulette-item {
             min-width: 180px;
-            padding: 25px;
+            padding: 30px 20px;
             text-align: center;
             font-weight: bold;
-            border-right: 1px solid #333;
+            font-size: 1.1rem;
+            border-right: 1px solid #0f3460;
             flex-shrink: 0;
         }
-        .profile-page { display: none; }
+        .rewards-section { width: 100%; max-width: 400px; margin-top: 30px; }
+        .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; font-size: 1.5rem; }
+        .reward-item {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #0f3460;
+            gap: 10px;
+        }
+        .reward-name { font-weight: bold; flex: 1; }
+        .reward-info-circle {
+            width: 28px; height: 28px;
+            background: #666;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            position: relative;
+        }
+        .reward-tooltip {
+            position: absolute;
+            top: 50%; right: 45px;
+            transform: translateY(-50%);
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            color: #ccc;
+            display: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .reward-tooltip.show { display: block; }
+
+        /* Профиль */
+        .profile-page {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
         .profile-page.active { display: block; }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+            padding: 5px 15px;
+            border-radius: 10px;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.1); }
         .profile-header {
             background: #16213e;
             border: 2px solid #0f3460;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
         .profile-info {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 20px;
+            margin-bottom: 25px;
         }
         .avatar {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: #4caf50;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
+            color: #fff;
+            border: 3px solid #fff;
         }
+        .profile-name { font-size: 1.5rem; font-weight: bold; }
         .profile-stats {
             display: flex;
             gap: 20px;
-            border-top: 1px solid #333;
-            padding-top: 15px;
+            border-top: 1px solid #0f3460;
+            padding-top: 25px;
+            flex-wrap: wrap;
         }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: #ffd700; }
-        .stat-label { font-size: 0.8rem; opacity: 0.7; }
+        .stat-block { flex: 1; text-align: center; min-width: 120px; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
+        .stat-label { font-size: 0.85rem; opacity: 0.7; margin-top: 5px; }
         .history-section {
             background: #16213e;
             border: 2px solid #0f3460;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .history-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
         }
         .history-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
+            justify-content: center;
         }
         .history-item {
-            background: #1a1a2e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            border: 1px solid;
         }
-        .history-info {
-            background: #666;
-            border: none;
-            color: #fff;
-            width: 22px;
-            height: 22px;
+        .history-name { font-weight: bold; font-size: 0.9rem; }
+        .history-info-circle {
+            width: 24px; height: 24px;
+            background: rgba(255,255,255,0.2);
             border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.8rem;
+            color: #fff;
+            border: none;
+            position: relative;
+        }
+        .history-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a3e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            color: #ccc;
+            display: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .history-tooltip.show { display: block; }
+
+        /* Цвета редкости */
+        .rarity-common { color: #ffffff; border-color: #ffffff; background: rgba(255,255,255,0.1); }
+        .rarity-rare { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.1); }
+        .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.1); }
+        .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.1); }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .box { width: 150px; height: 210px; }
+            .box-icon { font-size: 2.5rem; }
+            .box-name { font-size: 1rem; }
+            .lock-icon { font-size: 2rem; }
+            .roulette-item { min-width: 140px; padding: 25px 15px; font-size: 0.9rem; }
+            .boxes { gap: 10px; }
+        }
+        @media (min-width: 768px) {
+            .box { width: 220px; height: 280px; }
+            .box-icon { font-size: 4rem; }
+            .box-name { font-size: 1.5rem; }
+            .roulette-wrapper { max-width: 500px; }
+            .rewards-section { max-width: 500px; }
         }
     </style>
 </head>
@@ -272,66 +429,74 @@
         <div class="boxes">
             <div class="box cheap" id="cheapBox">
                 <button class="info-circle" id="infoCheap">!</button>
-                <div class="case-tooltip" id="tooltipCheap">Награды на форуме</div>
+                <div class="case-tooltip" id="tooltipCheap">Награды кейса вы сможете узнать на форуме</div>
                 <div class="box-icon">📦</div>
                 <div class="box-name">Дешевый</div>
                 <div class="lock-icon">🔒</div>
-                <div class="box-price">Скрыто</div>
+                <div class="box-price">Содержимое скрыто</div>
             </div>
             <div class="box expensive" id="expensiveBox">
                 <button class="info-circle" id="infoExpensive">!</button>
-                <div class="case-tooltip" id="tooltipExpensive">Награды на форуме</div>
+                <div class="case-tooltip" id="tooltipExpensive">Награды кейса вы сможете узнать на форуме</div>
                 <div class="box-icon">🎁</div>
                 <div class="box-name">Дорогой</div>
                 <div class="lock-icon">🔒</div>
-                <div class="box-price">Скрыто</div>
+                <div class="box-price">Содержимое скрыто</div>
             </div>
         </div>
     </div>
 
     <div class="profile-page" id="profilePage">
+        <button class="back-btn" id="backBtn">‹</button>
         <div class="profile-header">
             <div class="profile-info">
                 <div class="avatar">👤</div>
                 <div class="profile-name">Игрок</div>
             </div>
             <div class="profile-stats">
-                <div>
+                <div class="stat-block">
                     <div class="stat-value" id="openedCount">0</div>
                     <div class="stat-label">Открыто кейсов</div>
                 </div>
-                <div>
+                <div class="stat-block">
                     <div class="stat-value" id="bestWin">—</div>
                     <div class="stat-label">Лучший выигрыш</div>
                 </div>
             </div>
         </div>
         <div class="history-section">
-            <h3 style="color:#ffd700; text-align:center; margin-bottom:15px;">История</h3>
+            <div class="history-title">История выпавших наград</div>
             <div class="history-list" id="historyList">
-                <p style="opacity:0.5;">Пока пусто</p>
+                <p style="opacity: 0.5; width: 100%; text-align: center;">Пока пусто</p>
             </div>
         </div>
     </div>
 
     <div class="roulette-page" id="roulettePage">
         <h2 id="rouletteTitle">Кейс</h2>
-        <div class="roulette-arrow">▼</div>
-        <div class="roulette-container">
-            <div class="roulette-track" id="rouletteTrack"></div>
+        <div class="roulette-wrapper">
+            <div class="roulette-arrow">▼</div>
+            <div class="roulette-container" id="rouletteContainer">
+                <div class="roulette-track" id="rouletteTrack"></div>
+            </div>
         </div>
-        <button class="btn btn-green" id="spinBtn">Открыть</button>
+        <div style="position: relative; display: inline-block; margin-top: 20px;">
+            <button class="btn btn-open" id="spinBtn">Открыть</button>
+        </div>
         <div class="message" id="resultMessage"></div>
-        <div id="rewardsList"></div>
+        <div class="rewards-section">
+            <h3>Награды кейса:</h3>
+            <div id="rewardsList"></div>
+        </div>
     </div>
 
     <div class="modal" id="promoModal">
         <div class="modal-content">
             <h2 id="promoTitle">Введите промокод</h2>
-            <input type="text" id="promoInput" placeholder="КОД" maxlength="20">
+            <input type="text" id="promoInput" placeholder="ВВЕДИТЕ КОД" maxlength="20" autocomplete="off">
             <br>
-            <button class="btn btn-green" id="activateBtn">Активировать</button>
-            <button class="btn btn-red" id="closeModalBtn">Закрыть</button>
+            <button class="btn btn-open" id="activateBtn">Активировать</button>
+            <button class="btn btn-close" id="closeModalBtn">Закрыть</button>
             <div class="message" id="promoMessage"></div>
         </div>
     </div>
@@ -375,10 +540,16 @@
         var isSpinning = false;
         var hasSpun = false;
         var rouletteItems = [];
+        var allRouletteItems = [];
+        var bgAnimFrame = null;
+        var bgPosition = 0;
+        var bgLastTime = null;
+        var spinAnimFrame = null;
 
+        // ЗАГРУЗКА ДАННЫХ
         try {
-            var saved = localStorage.getItem('admincase_used_codes');
-            if (saved) usedCodes = JSON.parse(saved);
+            var savedCodes = localStorage.getItem('admincase_used_codes');
+            if (savedCodes) usedCodes = JSON.parse(savedCodes);
         } catch(e) {}
 
         try {
@@ -391,64 +562,49 @@
             if (savedCount) openedCount = parseInt(savedCount);
         } catch(e) {}
 
-        // ===== КНОПКИ =====
+        // ПРОВЕРКА ПРИ ЗАГРУЗКЕ
+        try {
+            var savedPage = localStorage.getItem('admincase_current_page');
+            if (savedPage === 'profile') {
+                showProfile();
+            }
+        } catch(e) {}
 
+        // РЕДКОСТЬ
+        function getRarity(chance) {
+            if (chance >= 50) return 'rarity-common';
+            if (chance >= 20) return 'rarity-rare';
+            if (chance >= 5) return 'rarity-epic';
+            return 'rarity-legendary';
+        }
+
+        // КНОПКИ
         document.getElementById('burgerBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.toggle('show');
         };
 
         document.getElementById('profileBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('profilePage').classList.add('active');
-            
-            document.getElementById('openedCount').textContent = openedCount;
-            
-            if (winHistory.length > 0) {
-                var best = winHistory[0];
-                for (var i = 0; i < winHistory.length; i++) {
-                    if (parseInt(winHistory[i].name) > parseInt(best.name)) best = winHistory[i];
-                }
-                document.getElementById('bestWin').textContent = best.name;
-            } else {
-                document.getElementById('bestWin').textContent = '—';
-            }
-            
-            var list = document.getElementById('historyList');
-            list.innerHTML = '';
-            if (winHistory.length === 0) {
-                list.innerHTML = '<p style="opacity:0.5;">Пока пусто</p>';
-            } else {
-                for (var j = 0; j < winHistory.length; j++) {
-                    var item = winHistory[j];
-                    var div = document.createElement('div');
-                    div.className = 'history-item';
-                    div.innerHTML = '<span>' + item.name + '</span>';
-                    var btn = document.createElement('button');
-                    btn.className = 'history-info';
-                    btn.textContent = '!';
-                    btn.title = item.source;
-                    btn.onclick = function() {
-                        alert(this.title);
-                    };
-                    div.appendChild(btn);
-                    list.appendChild(div);
-                }
-            }
+            showProfile();
         };
 
         document.getElementById('helpBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
-            alert('Введите промокод для открытия кейса');
+            alert('Помощь: введите промокод для открытия кейса');
+        };
+
+        document.getElementById('backBtn').onclick = function() {
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
         };
 
         document.getElementById('cheapBox').onclick = function() {
-            openModal('cheap');
+            openPromoModal('cheap');
         };
 
         document.getElementById('expensiveBox').onclick = function() {
-            openModal('expensive');
+            openPromoModal('expensive');
         };
 
         document.getElementById('infoCheap').onclick = function(e) {
@@ -473,9 +629,57 @@
             spinRoulette();
         };
 
-        // ===== ФУНКЦИИ =====
+        document.getElementById('promoModal').onclick = function(e) {
+            if (e.target === this) document.getElementById('promoModal').classList.remove('active');
+        };
 
-        function openModal(caseType) {
+        // ПРОФИЛЬ
+        function showProfile() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('profilePage').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
+            
+            document.getElementById('openedCount').textContent = openedCount;
+            
+            if (winHistory.length > 0) {
+                var best = winHistory[0];
+                for (var i = 0; i < winHistory.length; i++) {
+                    if (parseInt(winHistory[i].name) > parseInt(best.name)) best = winHistory[i];
+                }
+                document.getElementById('bestWin').textContent = best.name;
+            } else {
+                document.getElementById('bestWin').textContent = '—';
+            }
+            
+            var list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            if (winHistory.length === 0) {
+                list.innerHTML = '<p style="opacity: 0.5; width: 100%; text-align: center;">Пока пусто</p>';
+            } else {
+                for (var j = 0; j < winHistory.length; j++) {
+                    (function(item) {
+                        var div = document.createElement('div');
+                        div.className = 'history-item ' + getRarity(item.chance || 50);
+                        div.innerHTML = '<span class="history-name">' + item.name + '</span>' +
+                            '<button class="history-info-circle">!<span class="history-tooltip">' + item.source + '</span></button>';
+                        var btn = div.querySelector('.history-info-circle');
+                        btn.onclick = function(e) {
+                            e.stopPropagation();
+                            var tip = this.querySelector('.history-tooltip');
+                            tip.classList.toggle('show');
+                            setTimeout(function() { tip.classList.remove('show'); }, 2000);
+                        };
+                        list.appendChild(div);
+                    })(winHistory[j]);
+                }
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // ПРОМОКОД
+        function openPromoModal(caseType) {
             currentCase = caseType;
             document.getElementById('promoModal').classList.add('active');
             document.getElementById('promoTitle').textContent = 
@@ -488,43 +692,29 @@
         function checkPromo() {
             var input = document.getElementById('promoInput').value.trim().toUpperCase();
             var msg = document.getElementById('promoMessage');
-            
-            if (!input) {
-                msg.className = 'message error show';
-                msg.textContent = 'Введите промокод!';
-                return;
-            }
-            if (promoCodes[input] === undefined) {
-                msg.className = 'message error show';
-                msg.textContent = 'Неверный промокод!';
-                return;
-            }
-            if (usedCodes[input]) {
-                msg.className = 'message error show';
-                msg.textContent = 'Код уже использован!';
-                return;
-            }
-            if (promoCodes[input] !== currentCase) {
-                msg.className = 'message error show';
-                msg.textContent = 'Этот код для другого кейса!';
-                return;
-            }
-            
+            msg.className = 'message';
+            msg.textContent = '';
+
+            if (!input) { msg.className = 'message error'; msg.textContent = 'Введите промокод!'; return; }
+            if (promoCodes[input] === undefined) { msg.className = 'message error'; msg.textContent = 'Неверный промокод!'; return; }
+            if (usedCodes[input]) { msg.className = 'message error'; msg.textContent = 'Этот код уже использован!'; return; }
+            if (promoCodes[input] !== currentCase) { msg.className = 'message error'; msg.textContent = 'Этот код для другого кейса!'; return; }
+
             usedCodes[input] = true;
             try {
                 localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes));
             } catch(e) {}
-            
-            msg.className = 'message success show';
+
+            msg.className = 'message success';
             msg.textContent = '✅ Код активирован!';
-            
             setTimeout(function() {
                 document.getElementById('promoModal').classList.remove('active');
-                showRoulette(currentCase);
+                showRoulettePage(currentCase);
             }, 500);
         }
 
-        function showRoulette(caseType) {
+        // РУЛЕТКА
+        function showRoulettePage(caseType) {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.add('active');
@@ -546,24 +736,67 @@
             
             var track = document.getElementById('rouletteTrack');
             track.innerHTML = '';
-            var allItems = rouletteItems.concat(rouletteItems);
-            for (var k = 0; k < allItems.length; k++) {
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+            
+            allRouletteItems = rouletteItems.concat(rouletteItems);
+            for (var k = 0; k < allRouletteItems.length; k++) {
                 var div = document.createElement('div');
                 div.className = 'roulette-item';
-                div.textContent = allItems[k].name;
-                div.setAttribute('data-name', allItems[k].name);
+                div.textContent = allRouletteItems[k].name;
+                div.setAttribute('data-name', allRouletteItems[k].name);
                 track.appendChild(div);
             }
             
-            var rewards = document.getElementById('rewardsList');
-            rewards.innerHTML = '<h3 style="color:#ffd700; text-align:center; margin-top:20px;">Награды:</h3>';
-            for (var m = 0; m < caseContents[caseType].length; m++) {
-                var item = caseContents[caseType][m];
-                var div = document.createElement('div');
-                div.style.cssText = 'background:#1a1a2e; padding:10px; border-radius:8px; margin:5px 0; border:1px solid #333;';
-                div.innerHTML = '<span>' + item.name + '</span> <span style="color:#ffd700; font-size:0.8rem;">' + item.chance + '%</span>';
-                rewards.appendChild(div);
+            // Фоновая анимация 1 кл/с
+            if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
+            bgPosition = 0;
+            bgLastTime = null;
+            function bgAnim(currentTime) {
+                if (bgLastTime === null) bgLastTime = currentTime;
+                var delta = currentTime - bgLastTime;
+                bgLastTime = currentTime;
+                bgPosition -= 180 * (delta / 1000);
+                var half = allRouletteItems.length * 180 / 2;
+                if (bgPosition <= -half) bgPosition += half;
+                track.style.transform = 'translateX(' + bgPosition + 'px)';
+                bgAnimFrame = requestAnimationFrame(bgAnim);
             }
+            bgAnimFrame = requestAnimationFrame(bgAnim);
+            
+            var rewardsList = document.getElementById('rewardsList');
+            rewardsList.innerHTML = '';
+            for (var m = 0; m < caseContents[caseType].length; m++) {
+                (function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'reward-item ' + getRarity(item.chance);
+                    div.innerHTML = '<span class="reward-name">' + item.name + '</span>' +
+                        '<button class="reward-info-circle">!<span class="reward-tooltip">Шанс: ' + item.chance + '%</span></button>';
+                    var btn = div.querySelector('.reward-info-circle');
+                    btn.onclick = function(e) {
+                        e.stopPropagation();
+                        var tip = this.querySelector('.reward-tooltip');
+                        tip.classList.toggle('show');
+                        setTimeout(function() { tip.classList.remove('show'); }, 2000);
+                    };
+                    rewardsList.appendChild(div);
+                })(caseContents[caseType][m]);
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function getItemUnderArrow() {
+            var container = document.getElementById('rouletteContainer');
+            var rect = container.getBoundingClientRect();
+            var arrowX = rect.left + rect.width / 2;
+            var items = document.querySelectorAll('.roulette-item');
+            for (var i = 0; i < items.length; i++) {
+                var itemRect = items[i].getBoundingClientRect();
+                if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
+                    return items[i].getAttribute('data-name');
+                }
+            }
+            return items.length > 0 ? items[0].getAttribute('data-name') : 'Неизвестно';
         }
 
         function spinRoulette() {
@@ -575,8 +808,13 @@
             isSpinning = true;
             hasSpun = true;
             
+            if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
+            
             var btn = document.getElementById('spinBtn');
             btn.disabled = true;
+            var msg = document.getElementById('resultMessage');
+            msg.className = 'message';
+            msg.textContent = '';
             
             var track = document.getElementById('rouletteTrack');
             var itemWidth = 180;
@@ -584,59 +822,7 @@
             if (items.length > 0) itemWidth = items[0].getBoundingClientRect().width;
             
             var totalItems = rouletteItems.length;
-            var winIndex = Math.floor(Math.random() * totalItems);
-            var container = track.parentElement;
-            var containerWidth = container.offsetWidth;
+            var containerWidth = document.getElementById('rouletteContainer').offsetWidth;
             var centerOffset = containerWidth / 2 - itemWidth / 2;
-            var stopPosition = -(winIndex * itemWidth) + centerOffset;
-            var totalDistance = 8 * itemWidth;
-            var finalPosition = stopPosition - totalDistance;
-            
-            track.style.transition = 'none';
-            track.style.transform = 'translateX(0)';
-            
-            var startTime = performance.now();
-            var duration = 6000;
-            
-            function animate(currentTime) {
-                var elapsed = currentTime - startTime;
-                var progress = Math.min(elapsed / duration, 1);
-                
-                var eased;
-                if (progress < 0.33) {
-                    eased = progress * progress / 0.33;
-                } else if (progress < 0.66) {
-                    eased = 1 + (progress - 0.33) * 1.5;
-                } else {
-                    eased = 2 - (1 - progress) * (1 - progress) / 0.33;
-                }
-                
-                var position = -totalDistance * Math.min(eased, 1);
-                track.style.transform = 'translateX(' + (position - (winIndex * itemWidth) + centerOffset) + 'px)';
-                
-                if (progress < 1) {
-                    requestAnimationFrame(animate);
-                } else {
-                    var winItem = rouletteItems[winIndex];
-                    openedCount++;
-                    winHistory.push({ name: winItem.name, source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс' });
-                    try {
-                        localStorage.setItem('admincase_opened_count', openedCount);
-                        localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
-                    } catch(e) {}
-                    
-                    var msg = document.getElementById('resultMessage');
-                    msg.className = 'message win show';
-                    msg.textContent = '🎉 Вы выиграли: ' + winItem.name + '!';
-                    
-                    isSpinning = false;
-                    btn.disabled = false;
-                }
-            }
-            
-            requestAnimationFrame(animate);
-        }
-    </script>
-
-</body>
-</html>
+            var winIndex = Math.floor(Math.random() * totalItems);
+            var stopPosition = -(winIndex
