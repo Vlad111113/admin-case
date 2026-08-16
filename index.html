@@ -662,33 +662,6 @@
             timestamp: Date.now()
         }).catch(function() {});
 
-        // ===== СОХРАНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ ПРИ ВХОДЕ =====
-        if (userName !== 'Игрок') {
-            db.collection('taken_names')
-                .where('uid', '==', userUID)
-                .get()
-                .then(function(snapshot) {
-                    if (snapshot.empty) {
-                        db.collection('taken_names').add({
-                            name: userName,
-                            uid: userUID,
-                            userID: userID,
-                            avatar: avatarData,
-                            timestamp: Date.now()
-                        }).catch(function() {});
-                    } else {
-                        // Обновляем аватар если он изменился
-                        snapshot.forEach(function(doc) {
-                            doc.ref.update({
-                                avatar: avatarData,
-                                timestamp: Date.now()
-                            }).catch(function() {});
-                        });
-                    }
-                })
-                .catch(function() {});
-        }
-
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
@@ -803,52 +776,62 @@
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            db.collection('taken_names').get().then(function(snapshot) {
+            // Загружаем ВСЕХ пользователей из case_openings (там есть все, кто открывал кейсы)
+            db.collection('case_openings').get().then(function(caseSnapshot) {
                 var users = [];
-                snapshot.forEach(function(doc) {
+                
+                caseSnapshot.forEach(function(doc) {
                     var data = doc.data();
-                    if (!data.name || data.name === 'Игрок') return;
-                    
-                    var existing = null;
+                    var found = false;
                     for (var i = 0; i < users.length; i++) {
                         if (users[i].userID === data.userID) {
-                            existing = users[i];
+                            users[i].openedCount++;
+                            if (data.avatar && !users[i].avatar) {
+                                users[i].avatar = data.avatar;
+                            }
+                            if (data.userName && users[i].name === 'Неизвестно') {
+                                users[i].name = data.userName;
+                            }
+                            found = true;
                             break;
                         }
                     }
-                    if (existing) {
-                        if ((data.timestamp || 0) > existing.timestamp) {
-                            existing.name = data.name;
-                            existing.timestamp = data.timestamp || 0;
-                            existing.avatar = data.avatar || existing.avatar;
-                        }
-                    } else {
+                    if (!found) {
                         users.push({
-                            name: data.name,
+                            name: data.userName || 'Неизвестно',
                             userID: data.userID || 'Неизвестно',
-                            openedCount: 0,
+                            openedCount: 1,
                             avatar: data.avatar || null,
                             timestamp: data.timestamp || 0
                         });
                     }
                 });
                 
-                return db.collection('case_openings').get().then(function(caseSnapshot) {
-                    caseSnapshot.forEach(function(doc) {
+                // Теперь добавляем из taken_names (для тех, кто менял имя но не открывал кейсы)
+                return db.collection('taken_names').get().then(function(nameSnapshot) {
+                    nameSnapshot.forEach(function(doc) {
                         var data = doc.data();
+                        if (!data.name || data.name === 'Игрок') return;
+                        
                         var found = false;
                         for (var i = 0; i < users.length; i++) {
                             if (users[i].userID === data.userID) {
-                                users[i].openedCount++;
+                                if ((data.timestamp || 0) > users[i].timestamp) {
+                                    users[i].name = data.name;
+                                    users[i].timestamp = data.timestamp || 0;
+                                }
+                                if (data.avatar && !users[i].avatar) {
+                                    users[i].avatar = data.avatar;
+                                }
                                 found = true;
                                 break;
                             }
                         }
                         if (!found) {
                             users.push({
-                                name: data.userName || 'Неизвестно',
+                                name: data.name,
                                 userID: data.userID || 'Неизвестно',
-                                openedCount: 1,
+                                openedCount: 0,
                                 avatar: data.avatar || null,
                                 timestamp: data.timestamp || 0
                             });
@@ -913,51 +896,22 @@
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
             document.getElementById('otherOpenedCount').textContent = '...';
             
-            db.collection('taken_names')
+            db.collection('case_openings')
                 .where('userID', '==', targetUserID)
                 .get()
-                .then(function(snapshot) {
+                .then(function(caseSnapshot) {
                     var foundName = 'Неизвестно';
                     var foundAvatar = null;
-                    var latestTimestamp = 0;
                     
-                    snapshot.forEach(function(doc) {
+                    caseSnapshot.forEach(function(doc) {
                         var data = doc.data();
-                        var ts = data.timestamp || 0;
-                        if (ts > latestTimestamp) {
-                            latestTimestamp = ts;
-                            foundName = data.name;
-                            foundAvatar = data.avatar || null;
-                        }
+                        if (data.userName) foundName = data.userName;
+                        if (data.avatar && !foundAvatar) foundAvatar = data.avatar;
                     });
-                    
-                    if (foundName === 'Неизвестно') {
-                        return db.collection('case_openings')
-                            .where('userID', '==', targetUserID)
-                            .get()
-                            .then(function(caseSnapshot) {
-                                caseSnapshot.forEach(function(doc) {
-                                    var data = doc.data();
-                                    if (data.userName) foundName = data.userName;
-                                    if (data.avatar && !foundAvatar) foundAvatar = data.avatar;
-                                });
-                                
-                                document.getElementById('otherName').textContent = foundName;
-                                document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
-                                
-                                var otherAvatar = document.getElementById('otherAvatar');
-                                if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
-                                    otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-                                } else {
-                                    otherAvatar.innerHTML = '👤';
-                                }
-                                
-                                document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
-                            });
-                    }
                     
                     document.getElementById('otherName').textContent = foundName;
                     document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                    document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
                     
                     var otherAvatar = document.getElementById('otherAvatar');
                     if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
@@ -966,11 +920,28 @@
                         otherAvatar.innerHTML = '👤';
                     }
                     
-                    return db.collection('case_openings')
+                    // Проверяем taken_names для актуального имени
+                    return db.collection('taken_names')
                         .where('userID', '==', targetUserID)
                         .get()
-                        .then(function(caseSnapshot) {
-                            document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
+                        .then(function(nameSnapshot) {
+                            var latestTimestamp = 0;
+                            nameSnapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                var ts = data.timestamp || 0;
+                                if (ts > latestTimestamp && data.name) {
+                                    latestTimestamp = ts;
+                                    foundName = data.name;
+                                    if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
+                                        foundAvatar = data.avatar;
+                                    }
+                                }
+                            });
+                            
+                            document.getElementById('otherName').textContent = foundName;
+                            if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
+                                otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                            }
                         });
                 })
                 .catch(function(error) {
@@ -1415,32 +1386,6 @@
                         document.getElementById('avatarImg').style.display = 'block';
                         document.getElementById('avatarEmoji').style.display = 'none';
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
-                        
-                        // СОХРАНЕНИЕ АВАТАРА В FIREBASE
-                        if (userName !== 'Игрок') {
-                            db.collection('taken_names')
-                                .where('uid', '==', userUID)
-                                .get()
-                                .then(function(snapshot) {
-                                    if (snapshot.empty) {
-                                        db.collection('taken_names').add({
-                                            name: userName,
-                                            uid: userUID,
-                                            userID: userID,
-                                            avatar: avatarData,
-                                            timestamp: Date.now()
-                                        }).catch(function() {});
-                                    } else {
-                                        snapshot.forEach(function(doc) {
-                                            doc.ref.update({
-                                                avatar: avatarData,
-                                                timestamp: Date.now()
-                                            }).catch(function() {});
-                                        });
-                                    }
-                                })
-                                .catch(function() {});
-                        }
                     };
                     img.src = ev.target.result;
                 };
