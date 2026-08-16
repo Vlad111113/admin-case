@@ -408,6 +408,7 @@
         var lastNameChangeTime = 0;
         var serverTakenNames = [];
         var namesLoaded = false;
+        var userUID = '';
 
         // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
@@ -415,7 +416,7 @@
                 serverTakenNames = [];
                 snapshot.forEach(function(doc) {
                     var name = doc.data().name;
-                    if (serverTakenNames.indexOf(name) === -1) {
+                    if (name !== 'Игрок' && serverTakenNames.indexOf(name) === -1) {
                         serverTakenNames.push(name);
                     }
                 });
@@ -454,6 +455,19 @@
             var savedName = localStorage.getItem('admincase_user_name');
             if (savedName) userName = savedName;
         } catch(e) {}
+
+        try {
+            var savedUID = localStorage.getItem('admincase_user_uid');
+            if (savedUID) {
+                userUID = savedUID;
+            } else {
+                userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('admincase_user_uid', userUID);
+            }
+        } catch(e) {
+            userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            try { localStorage.setItem('admincase_user_uid', userUID); } catch(e2) {}
+        }
 
         try {
             var savedAvatar = localStorage.getItem('admincase_user_avatar');
@@ -590,23 +604,44 @@
                     return;
                 }
                 
-                db.collection('taken_names')
-                    .where('name', '==', userName)
-                    .get()
-                    .then(function(snapshot) {
-                        var deletePromises = [];
-                        snapshot.forEach(function(doc) {
-                            deletePromises.push(doc.ref.delete());
+                if (userName !== 'Игрок') {
+                    db.collection('taken_names')
+                        .where('uid', '==', userUID)
+                        .get()
+                        .then(function(snapshot) {
+                            var deletePromises = [];
+                            snapshot.forEach(function(doc) {
+                                deletePromises.push(doc.ref.delete());
+                            });
+                            return Promise.all(deletePromises);
+                        })
+                        .then(function() {
+                            return db.collection('taken_names').add({
+                                name: newName,
+                                uid: userUID,
+                                timestamp: now
+                            });
+                        })
+                        .then(function() {
+                            userName = newName;
+                            lastNameChangeTime = now;
+                            serverTakenNames.push(newName);
+                            try {
+                                localStorage.setItem('admincase_user_name', userName);
+                                localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                            } catch(e) {}
+                            applyProfileData();
+                            exitEditMode();
+                        })
+                        .catch(function() {
+                            alert('Ошибка при сохранении имени');
                         });
-                        return Promise.all(deletePromises);
-                    })
-                    .then(function() {
-                        return db.collection('taken_names').add({
-                            name: newName,
-                            timestamp: now
-                        });
-                    })
-                    .then(function() {
+                } else {
+                    db.collection('taken_names').add({
+                        name: newName,
+                        uid: userUID,
+                        timestamp: now
+                    }).then(function() {
                         userName = newName;
                         lastNameChangeTime = now;
                         serverTakenNames.push(newName);
@@ -616,10 +651,10 @@
                         } catch(e) {}
                         applyProfileData();
                         exitEditMode();
-                    })
-                    .catch(function() {
+                    }).catch(function() {
                         alert('Ошибка при сохранении имени');
                     });
+                }
                 return;
             }
             applyProfileData();
