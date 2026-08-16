@@ -178,6 +178,11 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
+        .profile-id {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
         .profile-name { font-size: 1.5rem; font-weight: bold; }
         .profile-stats {
             display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 25px;
@@ -287,6 +292,7 @@
                         <img id="avatarImg" style="display:none;" alt="">
                     </div>
                     <div>
+                        <div class="profile-id" id="profileIDDisplay">ID: 00000000</div>
                         <div class="profile-name" id="profileNameDisplay">Игрок</div>
                         <input type="text" class="edit-name-input" id="editNameInput" placeholder="Введите имя" maxlength="20">
                     </div>
@@ -409,6 +415,7 @@
         var serverTakenNames = [];
         var namesLoaded = false;
         var userUID = '';
+        var userID = '';
 
         // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
@@ -470,6 +477,19 @@
         }
 
         try {
+            var savedID = localStorage.getItem('admincase_user_id');
+            if (savedID) {
+                userID = savedID;
+            } else {
+                userID = String(Math.floor(10000000 + Math.random() * 90000000));
+                localStorage.setItem('admincase_user_id', userID);
+            }
+        } catch(e) {
+            userID = String(Math.floor(10000000 + Math.random() * 90000000));
+            try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
+        }
+
+        try {
             var savedAvatar = localStorage.getItem('admincase_user_avatar');
             if (savedAvatar) avatarData = savedAvatar;
         } catch(e) {}
@@ -482,6 +502,7 @@
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
+            document.getElementById('profileIDDisplay').textContent = 'ID: ' + userID;
             if (avatarData) {
                 document.getElementById('avatarImg').src = avatarData;
                 document.getElementById('avatarImg').style.display = 'block';
@@ -619,6 +640,7 @@
                             return db.collection('taken_names').add({
                                 name: newName,
                                 uid: userUID,
+                                userID: userID,
                                 timestamp: now
                             });
                         })
@@ -640,6 +662,7 @@
                     db.collection('taken_names').add({
                         name: newName,
                         uid: userUID,
+                        userID: userID,
                         timestamp: now
                     }).then(function() {
                         userName = newName;
