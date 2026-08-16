@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminCase - Логи</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-refresh { background: #4caf50; color: #fff; }
+        .btn-refresh:hover { background: #45a049; }
+        .btn-clear { background: #f44336; color: #fff; }
+        .btn-clear:hover { background: #d32f2f; }
+        .log-item {
+            background: #16213e;
+            border: 1px solid #0f3460;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .log-left {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .log-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ffd700;
+        }
+        .log-id {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .log-time {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        .log-delete {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .log-delete:hover { background: #d32f2f; }
+        .empty-message {
+            text-align: center;
+            opacity: 0.5;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        .count-info {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5rem; }
+            .log-item { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📋 Логи AdminCase</h1>
+        
+        <div class="controls">
+            <button class="btn btn-refresh" onclick="loadLogs()">🔄 Обновить</button>
+            <button class="btn btn-clear" onclick="clearAllLogs()">🗑️ Очистить все</button>
+        </div>
+        
+        <div class="count-info" id="countInfo">Загрузка...</div>
+        <div id="logsList"></div>
+    </div>
+
+    <script>
+        // ===== FIREBASE =====
+        var firebaseConfig = {
+            apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
+            authDomain: "admincase-27bec.firebaseapp.com",
+            projectId: "admincase-27bec",
+            storageBucket: "admincase-27bec.firebasestorage.app",
+            messagingSenderId: "802045043260",
+            appId: "1:802045043260:web:8bd05c612e3dd1db801939"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        // ===== ФУНКЦИИ =====
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Дата неизвестна';
+            var d = new Date(timestamp);
+            if (isNaN(d.getTime())) return 'Дата неизвестна';
+            var day = String(d.getDate()).padStart(2, '0');
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var year = d.getFullYear();
+            var hours = String(d.getHours()).padStart(2, '0');
+            var minutes = String(d.getMinutes()).padStart(2, '0');
+            var seconds = String(d.getSeconds()).padStart(2, '0');
+            return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
+
+        function loadLogs() {
+            var list = document.getElementById('logsList');
+            var countInfo = document.getElementById('countInfo');
+            list.innerHTML = '<p class="empty-message">Загрузка...</p>';
+            
+            db.collection('taken_names')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then(function(snapshot) {
+                    if (snapshot.empty) {
+                        list.innerHTML = '<p class="empty-message">Нет данных</p>';
+                        countInfo.textContent = 'Всего записей: 0';
+                        return;
+                    }
+                    
+                    countInfo.textContent = 'Всего записей: ' + snapshot.size;
+                    list.innerHTML = '';
+                    
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        var div = document.createElement('div');
+                        div.className = 'log-item';
+                        div.innerHTML = 
+                            '<div class="log-left">' +
+                                '<div class="log-name">Имя: ' + (data.name || 'Неизвестно') + '</div>' +
+                                '<div class="log-id">ID: ' + (data.userID || 'Неизвестно') + '</div>' +
+                                '<div class="log-time">Время: ' + formatDate(data.timestamp) + '</div>' +
+                            '</div>' +
+                            '<button class="log-delete" onclick="deleteLog(\'' + doc.id + '\')">Удалить</button>';
+                        list.appendChild(div);
+                    });
+                })
+                .catch(function(error) {
+                    list.innerHTML = '<p class="empty-message" style="color:#f44336;">Ошибка: ' + error.message + '</p>';
+                    countInfo.textContent = 'Ошибка загрузки';
+                });
+        }
+
+        function deleteLog(docId) {
+            if (!confirm('Удалить эту запись?')) return;
+            
+            db.collection('taken_names').doc(docId).delete()
+                .then(function() {
+                    loadLogs();
+                })
+                .catch(function(error) {
+                    alert('Ошибка: ' + error.message);
+                });
+        }
+
+        function clearAllLogs() {
+            if (!confirm('Удалить ВСЕ записи? Это действие необратимо!')) return;
+            
+            db.collection('taken_names').get()
+                .then(function(snapshot) {
+                    var deletePromises = [];
+                    snapshot.forEach(function(doc) {
+                        deletePromises.push(doc.ref.delete());
+                    });
+                    return Promise.all(deletePromises);
+                })
+                .then(function() {
+                    loadLogs();
+                })
+                .catch(function(error) {
+                    alert('Ошибка: ' + error.message);
+                });
+        }
+
+        // Загрузка при открытии
+        loadLogs();
+    </script>
+
+</body>
+</html>
