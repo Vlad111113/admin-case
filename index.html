@@ -196,7 +196,7 @@
         }
         .roulette-track {
             display: flex;
-            animation: slowScroll 60s linear infinite;
+            animation: slowScroll 90s linear infinite;
         }
         .roulette-track.spinning { animation: none; }
         .roulette-item {
@@ -521,20 +521,10 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
 
-            // ТРЁХФАЗНАЯ АНИМАЦИЯ
-            // Фаза 1 (0-2 сек): разгон от 0 до 2 кл/с
-            // Фаза 2 (2-4 сек): постоянная скорость 2 кл/с
-            // Фаза 3 (4-6 сек): замедление от 2 кл/с до 0
-            const itemWidth_px = itemWidth;
-            const maxSpeed = 2 * itemWidth_px; // 360 px/сек
-            
-            // Расстояние за фазу 1 (разгон 0 -> 360px/с): средняя скорость 180px/с * 2с = 360px
-            const phase1Distance = maxSpeed * 1; // 360px
-            // Расстояние за фазу 2 (360px/с * 2с): 720px
-            const phase2Distance = maxSpeed * 2; // 720px
-            // Расстояние за фазу 3 (замедление 360 -> 0): средняя скорость 180px/с * 2с = 360px
-            const phase3Distance = maxSpeed * 1; // 360px
-            
+            const maxSpeed = 2 * itemWidth;
+            const phase1Distance = maxSpeed * 1;
+            const phase2Distance = maxSpeed * 2;
+            const phase3Distance = maxSpeed * 1;
             const totalDistance = phase1Distance + phase2Distance + phase3Distance;
             const finalPosition = stopPosition - totalDistance;
 
@@ -543,7 +533,7 @@
             track.style.transform = 'translateX(0)';
 
             const startTime = performance.now();
-            const duration = 6000; // 6 секунд
+            const duration = 6000;
             let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
@@ -551,21 +541,16 @@
                 let currentPosition;
 
                 if (elapsed <= 2000) {
-                    // ФАЗА 1: разгон от 0 до 2 кл/с
-                    // Используем easeOut (ускорение)
                     const progress = elapsed / 2000;
                     const distance = phase1Distance * progress * progress;
                     currentPosition = -distance;
                 } else if (elapsed <= 4000) {
-                    // ФАЗА 2: постоянная скорость 2 кл/с
                     const phase2Elapsed = elapsed - 2000;
                     const secondsElapsed = phase2Elapsed / 1000;
                     currentPosition = -(phase1Distance + secondsElapsed * maxSpeed);
                 } else if (elapsed <= 6000) {
-                    // ФАЗА 3: замедление от 2 кл/с до 0
                     const phase3Elapsed = elapsed - 4000;
                     const progress = phase3Elapsed / 2000;
-                    // easeIn (замедление)
                     const eased = 1 - (1 - progress) * (1 - progress);
                     currentPosition = -(phase1Distance + phase2Distance + phase3Distance * eased);
                 } else {
