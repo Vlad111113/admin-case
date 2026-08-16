@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdminCase</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -344,6 +347,19 @@
     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
 
     <script>
+        // ===== FIREBASE КОНФИГУРАЦИЯ =====
+        var firebaseConfig = {
+            apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
+            authDomain: "admincase-27bec.firebaseapp.com",
+            projectId: "admincase-27bec",
+            storageBucket: "admincase-27bec.firebasestorage.app",
+            messagingSenderId: "802045043260",
+            appId: "1:802045043260:web:8bd05c612e3dd1db801939"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
         // ===== ДАННЫЕ =====
         var promoCodes = {
             "A1B2C3": "cheap", "D4E5F6": "cheap", "G7H8I9": "cheap", "J1K2L3": "cheap",
@@ -391,9 +407,24 @@
         var userName = 'Игрок';
         var avatarData = null;
         var lastNameChangeTime = 0;
-        var takenNames = [];
+        var serverTakenNames = [];
+        var namesLoaded = false;
 
-        // ===== ЗАГРУЗКА =====
+        // ===== ЗАГРУЗКА ИМЁН С СЕРВЕРА =====
+        function loadServerNames() {
+            db.collection('taken_names').get().then(function(snapshot) {
+                serverTakenNames = [];
+                snapshot.forEach(function(doc) {
+                    serverTakenNames.push(doc.data().name);
+                });
+                namesLoaded = true;
+            }).catch(function() {
+                namesLoaded = true;
+            });
+        }
+        loadServerNames();
+
+        // ===== ЗАГРУЗКА ЛОКАЛЬНЫХ ДАННЫХ =====
         try {
             var saved = localStorage.getItem('admincase_used_codes');
             if (saved) usedCodes = JSON.parse(saved);
@@ -431,18 +462,6 @@
             var savedNameTime = localStorage.getItem('admincase_name_change_time');
             if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
         } catch(e) {}
-
-        try {
-            var savedTaken = localStorage.getItem('admincase_taken_names');
-            if (savedTaken) takenNames = JSON.parse(savedTaken);
-            if (userName && takenNames.indexOf(userName) === -1) {
-                takenNames.push(userName);
-                try { localStorage.setItem('admincase_taken_names', JSON.stringify(takenNames)); } catch(e) {}
-            }
-        } catch(e) {
-            takenNames = [userName];
-            try { localStorage.setItem('admincase_taken_names', JSON.stringify(takenNames)); } catch(e) {}
-        }
 
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
@@ -557,25 +576,33 @@
                     return;
                 }
                 
-                if (takenNames.indexOf(newName) !== -1 && newName !== userName) {
+                if (!namesLoaded) {
+                    alert('Подождите, идёт загрузка списка имён...');
+                    return;
+                }
+                
+                if (serverTakenNames.indexOf(newName) !== -1) {
                     alert('Это имя уже занято!');
                     return;
                 }
                 
-                var oldNameIndex = takenNames.indexOf(userName);
-                if (oldNameIndex > -1) {
-                    takenNames.splice(oldNameIndex, 1);
-                }
-                
-                userName = newName;
-                takenNames.push(userName);
-                lastNameChangeTime = now;
-                
-                try {
-                    localStorage.setItem('admincase_user_name', userName);
-                    localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
-                    localStorage.setItem('admincase_taken_names', JSON.stringify(takenNames));
-                } catch(e) {}
+                db.collection('taken_names').add({
+                    name: newName,
+                    timestamp: now
+                }).then(function() {
+                    userName = newName;
+                    lastNameChangeTime = now;
+                    serverTakenNames.push(newName);
+                    try {
+                        localStorage.setItem('admincase_user_name', userName);
+                        localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                    } catch(e) {}
+                    applyProfileData();
+                    exitEditMode();
+                }).catch(function() {
+                    alert('Ошибка при сохранении имени');
+                });
+                return;
             }
             applyProfileData();
             exitEditMode();
