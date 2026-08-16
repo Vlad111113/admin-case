@@ -196,7 +196,7 @@
         }
         .roulette-track {
             display: flex;
-            animation: slowScroll 120s linear infinite;
+            animation: slowScroll 60s linear infinite;
         }
         .roulette-track.spinning { animation: none; }
         .roulette-item {
@@ -521,18 +521,16 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
 
-            // СКОРОСТЬ: 45px/сек = 0.25 клетки/сек
-            // За 6 секунд = 270px
-            // Первые 5 секунд: 45px/сек = 225px
-            // Последняя секунда: ещё 45px с замедлением
-            const speedPerSecond = 45;
+            // СКОРОСТЬ ПОСЛЕ ОТКРЫТИЯ: 2 клетки/сек = 360px/сек
+            // За 6 секунд = 12 клеток = 2160px
+            // Первые 5 секунд: 360px/сек = 1800px
+            // Последняя секунда: ещё 360px с замедлением
+            const speedPerSecond = 360;
             const normalDuration = 5000;
             const slowdownDuration = 1000;
-            const normalDistance = speedPerSecond * 5; // 225px
-            const slowdownDistance = speedPerSecond * 1; // 45px
-            const totalDistance = normalDistance + slowdownDistance; // 270px
-
-            const finalPosition = stopPosition - totalDistance;
+            const normalDistance = speedPerSecond * 5;
+            const slowdownDistance = speedPerSecond * 1;
+            const finalPosition = stopPosition - (normalDistance + slowdownDistance);
 
             track.classList.add('spinning');
             track.style.transition = 'none';
@@ -546,17 +544,14 @@
                 let currentPosition;
 
                 if (elapsed <= normalDuration) {
-                    // Первые 5 секунд — равномерно 45px/сек
                     const secondsElapsed = elapsed / 1000;
                     currentPosition = -(secondsElapsed * speedPerSecond);
                 } else if (elapsed <= normalDuration + slowdownDuration) {
-                    // Последняя секунда — плавное замедление
                     const slowdownElapsed = (elapsed - normalDuration) / 1000;
                     const slowdownProgress = slowdownElapsed / 1;
                     const eased = 1 - Math.pow(1 - slowdownProgress, 3);
                     currentPosition = -(normalDistance + slowdownDistance * eased);
                 } else {
-                    // Остановлено
                     currentPosition = -(normalDistance + slowdownDistance);
                 }
 
