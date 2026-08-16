@@ -18,7 +18,6 @@
         h1 { text-align: center; color: #ff6b6b; margin-bottom: 20px; font-size: 2rem; }
         .container { max-width: 800px; margin: 0 auto; }
 
-        /* Экран входа */
         .login-screen {
             display: none;
             background: #16213e;
@@ -51,7 +50,6 @@
         }
         .login-error.show { display: block; }
 
-        /* Основной контент */
         .main-content { display: none; }
         .main-content.active { display: block; }
 
@@ -80,8 +78,6 @@
         .btn-dropdown:hover { background: #1a2a4e; }
         .btn-refresh { background: #4caf50; color: #fff; }
         .btn-refresh:hover { background: #45a049; }
-        .btn-clear { background: #f44336; color: #fff; }
-        .btn-clear:hover { background: #d32f2f; }
         .btn-logout { background: #ff9800; color: #fff; }
         .btn-logout:hover { background: #e68900; }
 
@@ -150,10 +146,8 @@
             padding: 15px 20px;
             margin-bottom: 10px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            flex-direction: column;
+            gap: 5px;
         }
         .log-left { display: flex; flex-direction: column; gap: 5px; flex: 1; }
         .log-title { font-weight: bold; font-size: 1.1rem; color: #ffd700; }
@@ -166,21 +160,12 @@
             font-size: 0.7rem;
             font-weight: bold;
             margin-bottom: 5px;
+            width: fit-content;
         }
         .badge-case { background: #4caf50; color: #fff; }
         .badge-name { background: #2196f3; color: #fff; }
         .badge-change { background: #ff9800; color: #fff; }
         .badge-login { background: #9b59b6; color: #fff; }
-        .log-delete {
-            background: #f44336;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .log-delete:hover { background: #d32f2f; }
         .empty-message { text-align: center; opacity: 0.5; padding: 40px; font-size: 1.2rem; }
         .count-info { text-align: center; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
 
@@ -193,7 +178,6 @@
 
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem; }
-            .log-item { flex-direction: column; text-align: center; }
             .dropdown-content { min-width: 180px; }
             .login-screen { padding: 25px; }
         }
@@ -229,7 +213,6 @@
                     </div>
                 </div>
                 <button class="btn btn-refresh" onclick="loadLogs()">🔄 Обновить</button>
-                <button class="btn btn-clear" onclick="clearAllLogs()">🗑️ Очистить</button>
                 <button class="btn btn-logout" onclick="logout()">🚪 Выйти</button>
             </div>
             
@@ -258,11 +241,14 @@
         var db = firebase.firestore();
 
         // ===== АККАУНТЫ АДМИНОВ =====
-        // Добавляй своих админов сюда:
         var adminAccounts = [
             { username: "Vasek_Mayor", password: "GrozkaTop228", name: "Главный Администратор" },
             { username: "Grozka_Irons", password: "VladTop228", name: "Куратор Администрации" },
-            { username: "Vladislav_Smith", password: "123QAZplm098", name: "Куратор Организаций" }
+            { username: "Vladislav_Smith", password: "123QAZplm098", name: "Куратор Организаций" },
+            // Добавляй новых админов сюда:
+            { username: "admin4", password: "password4", name: "Новый админ 4" },
+            { username: "admin5", password: "password5", name: "Новый админ 5" },
+            { username: "admin6", password: "password6", name: "Новый админ 6" }
         ];
 
         var currentFilter = 'all';
@@ -275,7 +261,6 @@
                 if (savedLogin) {
                     var data = JSON.parse(savedLogin);
                     var now = Date.now();
-                    // 14 дней = 14 * 24 * 60 * 60 * 1000 = 1209600000 мс
                     if (data.timestamp && (now - data.timestamp) < 1209600000) {
                         showMainContent(data.username, data.name);
                         return true;
@@ -294,7 +279,6 @@
             
             for (var i = 0; i < adminAccounts.length; i++) {
                 if (adminAccounts[i].username === username && adminAccounts[i].password === password) {
-                    // Успешный вход
                     var loginData = {
                         username: username,
                         name: adminAccounts[i].name,
@@ -510,40 +494,10 @@
                             '<div class="log-title">' + log.title + '</div>' +
                             '<div class="log-detail">' + log.detail + '</div>' +
                             '<div class="log-time">' + formatDate(log.timestamp) + '</div>' +
-                        '</div>' +
-                        '<button class="log-delete" onclick="deleteLog(\'' + log.id + '\', \'' + log.collection + '\')">Удалить</button>';
+                        '</div>';
                     list.appendChild(div);
                 })(filtered[i]);
             }
-        }
-
-        function deleteLog(docId, collection) {
-            if (!confirm('Удалить эту запись?')) return;
-            db.collection(collection).doc(docId).delete()
-                .then(function() { loadLogs(); })
-                .catch(function(error) { alert('Ошибка: ' + error.message); });
-        }
-
-        function clearAllLogs() {
-            if (!confirm('Удалить ВСЕ записи? Это действие необратимо!')) return;
-            var collections = ['taken_names', 'case_openings', 'name_changes', 'logins'];
-            var promises = [];
-            for (var c = 0; c < collections.length; c++) {
-                (function(collectionName) {
-                    promises.push(
-                        db.collection(collectionName).get()
-                            .then(function(snapshot) {
-                                var deletePromises = [];
-                                snapshot.forEach(function(doc) {
-                                    deletePromises.push(doc.ref.delete());
-                                });
-                                return Promise.all(deletePromises);
-                            })
-                            .catch(function() {})
-                    );
-                })(collections[c]);
-            }
-            Promise.all(promises).then(function() { loadLogs(); });
         }
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
