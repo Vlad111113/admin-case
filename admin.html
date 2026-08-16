@@ -17,7 +17,44 @@
         }
         h1 { text-align: center; color: #ff6b6b; margin-bottom: 20px; font-size: 2rem; }
         .container { max-width: 800px; margin: 0 auto; }
-        
+
+        /* Экран входа */
+        .login-screen {
+            display: none;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .login-screen.active { display: block; }
+        .login-screen h2 { color: #ff6b6b; margin-bottom: 20px; }
+        .login-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        .login-input:focus { border-color: #4caf50; }
+        .login-error {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .login-error.show { display: block; }
+
+        /* Основной контент */
+        .main-content { display: none; }
+        .main-content.active { display: block; }
+
         .controls {
             display: flex;
             gap: 10px;
@@ -45,8 +82,9 @@
         .btn-refresh:hover { background: #45a049; }
         .btn-clear { background: #f44336; color: #fff; }
         .btn-clear:hover { background: #d32f2f; }
-        
-        /* Выдвижное меню */
+        .btn-logout { background: #ff9800; color: #fff; }
+        .btn-logout:hover { background: #e68900; }
+
         .dropdown-wrapper {
             position: relative;
             display: inline-block;
@@ -80,7 +118,7 @@
         }
         .dropdown-option:hover { background: rgba(255,255,255,0.1); }
         .dropdown-option.active { background: #4caf50; }
-        
+
         .search-container {
             display: flex;
             gap: 10px;
@@ -104,6 +142,7 @@
             margin-bottom: 15px;
             text-align: center;
         }
+
         .log-item {
             background: #16213e;
             border: 1px solid #0f3460;
@@ -144,10 +183,19 @@
         .log-delete:hover { background: #d32f2f; }
         .empty-message { text-align: center; opacity: 0.5; padding: 40px; font-size: 1.2rem; }
         .count-info { text-align: center; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem; }
             .log-item { flex-direction: column; text-align: center; }
             .dropdown-content { min-width: 180px; }
+            .login-screen { padding: 25px; }
         }
     </style>
 </head>
@@ -155,32 +203,48 @@
 
     <div class="container">
         <h1>📋 Логи AdminCase</h1>
-        
-        <div class="controls">
-            <div class="dropdown-wrapper">
-                <button class="btn btn-dropdown" onclick="toggleDropdown()">📂 Тип логов: <span id="currentFilterLabel">Все</span> ▼</button>
-                <div class="dropdown-content" id="dropdownContent">
-                    <button class="dropdown-option active" data-filter="all" onclick="setFilter('all', 'Все', this)">Все</button>
-                    <button class="dropdown-option" data-filter="cases" onclick="setFilter('cases', 'Кейсы', this)">Кейсы</button>
-                    <button class="dropdown-option" data-filter="names" onclick="setFilter('names', 'Имена', this)">Имена</button>
-                    <button class="dropdown-option" data-filter="changes" onclick="setFilter('changes', 'Смена имени', this)">Смена имени</button>
-                    <button class="dropdown-option" data-filter="logins" onclick="setFilter('logins', 'Входы', this)">Входы</button>
+
+        <!-- Экран входа -->
+        <div class="login-screen" id="loginScreen">
+            <h2>🔐 Вход в логи</h2>
+            <input type="text" class="login-input" id="loginUsername" placeholder="Логин" autocomplete="off">
+            <input type="password" class="login-input" id="loginPassword" placeholder="Пароль">
+            <div class="login-error" id="loginError">Неверный логин или пароль!</div>
+            <button class="btn btn-refresh" onclick="handleLogin()">Войти</button>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="main-content" id="mainContent">
+            <div class="user-info" id="userInfo"></div>
+            
+            <div class="controls">
+                <div class="dropdown-wrapper">
+                    <button class="btn btn-dropdown" onclick="toggleDropdown()">📂 Тип логов: <span id="currentFilterLabel">Все</span> ▼</button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <button class="dropdown-option active" data-filter="all" onclick="setFilter('all', 'Все', this)">Все</button>
+                        <button class="dropdown-option" data-filter="cases" onclick="setFilter('cases', 'Кейсы', this)">Кейсы</button>
+                        <button class="dropdown-option" data-filter="names" onclick="setFilter('names', 'Имена', this)">Имена</button>
+                        <button class="dropdown-option" data-filter="changes" onclick="setFilter('changes', 'Смена имени', this)">Смена имени</button>
+                        <button class="dropdown-option" data-filter="logins" onclick="setFilter('logins', 'Входы', this)">Входы</button>
+                    </div>
                 </div>
+                <button class="btn btn-refresh" onclick="loadLogs()">🔄 Обновить</button>
+                <button class="btn btn-clear" onclick="clearAllLogs()">🗑️ Очистить</button>
+                <button class="btn btn-logout" onclick="logout()">🚪 Выйти</button>
             </div>
-            <button class="btn btn-refresh" onclick="loadLogs()">🔄 Обновить</button>
-            <button class="btn btn-clear" onclick="clearAllLogs()">🗑️ Очистить все</button>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Поиск..." oninput="displayLogs()">
+            </div>
+            <div class="search-hint">%слово% — ищет слово в тексте | слово — ищет точное совпадение</div>
+            
+            <div class="count-info" id="countInfo">Загрузка...</div>
+            <div id="logsList"></div>
         </div>
-        
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Поиск..." oninput="displayLogs()">
-        </div>
-        <div class="search-hint">%слово% — ищет слово в тексте | слово — ищет точное совпадение</div>
-        
-        <div class="count-info" id="countInfo">Загрузка...</div>
-        <div id="logsList"></div>
     </div>
 
     <script>
+        // ===== FIREBASE =====
         var firebaseConfig = {
             apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
             authDomain: "admincase-27bec.firebaseapp.com",
@@ -193,9 +257,80 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
+        // ===== АККАУНТЫ АДМИНОВ =====
+        // Добавляй своих админов сюда:
+        var adminAccounts = [
+            { username: "admin", password: "admin123", name: "Главный админ" },
+            { username: "moderator", password: "moder123", name: "Модератор" },
+            { username: "helper", password: "helper123", name: "Помощник" }
+        ];
+
         var currentFilter = 'all';
         var allLogsData = [];
 
+        // ===== ПРОВЕРКА ВХОДА =====
+        function checkSavedLogin() {
+            try {
+                var savedLogin = localStorage.getItem('admincase_logs_login');
+                if (savedLogin) {
+                    var data = JSON.parse(savedLogin);
+                    var now = Date.now();
+                    // 14 дней = 14 * 24 * 60 * 60 * 1000 = 1209600000 мс
+                    if (data.timestamp && (now - data.timestamp) < 1209600000) {
+                        showMainContent(data.username, data.name);
+                        return true;
+                    }
+                }
+            } catch(e) {}
+            return false;
+        }
+
+        function handleLogin() {
+            var username = document.getElementById('loginUsername').value.trim();
+            var password = document.getElementById('loginPassword').value;
+            var errorEl = document.getElementById('loginError');
+            
+            errorEl.classList.remove('show');
+            
+            for (var i = 0; i < adminAccounts.length; i++) {
+                if (adminAccounts[i].username === username && adminAccounts[i].password === password) {
+                    // Успешный вход
+                    var loginData = {
+                        username: username,
+                        name: adminAccounts[i].name,
+                        timestamp: Date.now()
+                    };
+                    try {
+                        localStorage.setItem('admincase_logs_login', JSON.stringify(loginData));
+                    } catch(e) {}
+                    
+                    showMainContent(username, adminAccounts[i].name);
+                    return;
+                }
+            }
+            
+            errorEl.classList.add('show');
+        }
+
+        function showMainContent(username, name) {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('mainContent').classList.add('active');
+            document.getElementById('userInfo').textContent = 'Вы вошли как: ' + name + ' (@' + username + ')';
+            loadLogs();
+        }
+
+        function logout() {
+            try {
+                localStorage.removeItem('admincase_logs_login');
+            } catch(e) {}
+            document.getElementById('mainContent').classList.remove('active');
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+        }
+
+        // ===== ФУНКЦИИ ЛОГОВ =====
         function toggleDropdown() {
             document.getElementById('dropdownContent').classList.toggle('show');
         }
@@ -411,7 +546,10 @@
             Promise.all(promises).then(function() { loadLogs(); });
         }
 
-        loadLogs();
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        if (!checkSavedLogin()) {
+            document.getElementById('loginScreen').classList.add('active');
+        }
     </script>
 
 </body>
