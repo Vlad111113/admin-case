@@ -423,7 +423,9 @@
         }
 
         function formatDate(timestamp) {
+            if (!timestamp) return 'Дата неизвестна';
             var d = new Date(timestamp);
+            if (isNaN(d.getTime())) return 'Дата неизвестна';
             var day = String(d.getDate()).padStart(2, '0');
             var month = String(d.getMonth() + 1).padStart(2, '0');
             var year = d.getFullYear();
@@ -466,7 +468,9 @@
                         btn.textContent = '!';
                         var tooltip = document.createElement('span');
                         tooltip.className = 'history-tooltip';
-                        tooltip.textContent = item.source + ' • ' + formatDate(item.timestamp);
+                        var tooltipText = item.source || 'Неизвестный кейс';
+                        tooltipText += ' • ' + formatDate(item.timestamp);
+                        tooltip.textContent = tooltipText;
                         btn.appendChild(tooltip);
                         btn.onclick = function(e) {
                             e.stopPropagation();
