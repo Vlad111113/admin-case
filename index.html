@@ -681,4 +681,140 @@
                     position = -totalDistance * (1 + p2 * 0.5);
                 } else {
                     var p3 = (progress - 0.66) / 0.34;
-                    position = -total
+                    position = -totalDistance * (1.5 + p3 * 0.5);
+                }
+                
+                track.style.transform = 'translateX(' + (position - (winIndex * itemWidth) + centerOffset) + 'px)';
+                
+                if (progress < 1) {
+                    spinAnimFrame = requestAnimationFrame(animateSpin);
+                } else {
+                    setTimeout(function() {
+                        var actualWin = getItemUnderArrow();
+                        openedCount++;
+                        winHistory.push({ 
+                            name: actualWin, 
+                            source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                            timestamp: Date.now()
+                        });
+                        try {
+                            localStorage.setItem('admincase_opened_count', openedCount);
+                            localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
+                        } catch(e) {}
+                        
+                        msg.className = 'message win';
+                        msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
+                        isSpinning = false;
+                        btn.disabled = false;
+                    }, 500);
+                }
+            }
+            spinAnimFrame = requestAnimationFrame(animateSpin);
+        }
+
+        // ===== ОБРАБОТЧИКИ КНОПОК =====
+        document.getElementById('burgerBtn').onclick = function() {
+            document.getElementById('dropdownMenu').classList.toggle('show');
+        };
+
+        document.getElementById('profileBtn').onclick = function() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            showProfile();
+        };
+
+        document.getElementById('helpBtn').onclick = function() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            alert('Помощь: введите промокод для открытия кейса');
+        };
+
+        document.getElementById('backBtn').onclick = function() {
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+        };
+
+        document.getElementById('cheapBox').onclick = function() {
+            openPromoModal('cheap');
+        };
+
+        document.getElementById('expensiveBox').onclick = function() {
+            openPromoModal('expensive');
+        };
+
+        document.getElementById('infoCheap').onclick = function(e) {
+            e.stopPropagation();
+            document.getElementById('tooltipCheap').classList.toggle('show');
+        };
+
+        document.getElementById('infoExpensive').onclick = function(e) {
+            e.stopPropagation();
+            document.getElementById('tooltipExpensive').classList.toggle('show');
+        };
+
+        document.getElementById('closeModalBtn').onclick = function() {
+            document.getElementById('promoModal').classList.remove('active');
+        };
+
+        document.getElementById('activateBtn').onclick = function() {
+            checkPromo();
+        };
+
+        document.getElementById('spinBtn').onclick = function() {
+            spinRoulette();
+        };
+
+        document.getElementById('promoModal').onclick = function(e) {
+            if (e.target === this) {
+                document.getElementById('promoModal').classList.remove('active');
+            }
+        };
+
+        document.getElementById('settingsBtn').onclick = function() {
+            enterEditMode();
+        };
+
+        document.getElementById('confirmEditBtn').onclick = function() {
+            confirmEdit();
+        };
+
+        document.getElementById('cancelEditBtn').onclick = function() {
+            exitEditMode();
+        };
+
+        document.getElementById('avatar').onclick = function() {
+            if (isEditMode) {
+                document.getElementById('avatarFileInput').click();
+            }
+        };
+
+        document.getElementById('avatarFileInput').onchange = function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    var img = new Image();
+                    img.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        var size = 200;
+                        canvas.width = size;
+                        canvas.height = size;
+                        var ctx = canvas.getContext('2d');
+                        var minDim = Math.min(img.width, img.height);
+                        var sx = (img.width - minDim) / 2;
+                        var sy = (img.height - minDim) / 2;
+                        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+                        avatarData = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('avatarImg').src = avatarData;
+                        document.getElementById('avatarImg').style.display = 'block';
+                        document.getElementById('avatarEmoji').style.display = 'none';
+                        try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    </script>
+
+</body>
+</html>
