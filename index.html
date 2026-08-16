@@ -466,6 +466,15 @@
             }
         }
 
+        // Функция получения РЕАЛЬНОЙ ширины элемента рулетки
+        function getItemWidth() {
+            const items = document.querySelectorAll('.roulette-item');
+            if (items.length > 0) {
+                return items[0].getBoundingClientRect().width;
+            }
+            return 180;
+        }
+
         function showRoulettePage(caseType) {
             document.getElementById('main-page').style.display = 'none';
             document.getElementById('roulette-page').classList.add('active');
@@ -517,16 +526,14 @@
             window.scrollTo(0, 0);
         }
 
-        // Функция определения предмета под стрелкой ЧЕРЕЗ DOM КООРДИНАТЫ
+        // Определение предмета через DOM координаты
         function getItemUnderArrow() {
             const container = document.getElementById('roulette-container');
             const containerRect = container.getBoundingClientRect();
             const arrowX = containerRect.left + containerRect.width / 2;
             
-            // Получаем все элементы рулетки
             const items = document.querySelectorAll('.roulette-item');
             
-            // Находим элемент, который пересекает линию стрелки
             for (let item of items) {
                 const itemRect = item.getBoundingClientRect();
                 if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
@@ -534,7 +541,6 @@
                 }
             }
             
-            // Если не нашли — возвращаем первый
             return items.length > 0 ? items[0].getAttribute('data-name') : 'Неизвестно';
         }
 
@@ -558,7 +564,7 @@
             msg.textContent = '';
 
             const track = document.getElementById('roulette-track');
-            const itemWidth = 180;
+            const itemWidth = getItemWidth();
             const totalItems = rouletteItems.length;
             if (totalItems === 0) { isSpinning = false; hasSpun = false; btn.disabled = false; return; }
 
@@ -607,9 +613,7 @@
                 if (elapsed < duration) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
-                    // ПАУЗА 500мс ПОСЛЕ ПОЛНОЙ ОСТАНОВКИ
                     setTimeout(() => {
-                        // Определяем предмет через DOM координаты
                         const winName = getItemUnderArrow();
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + winName + '!';
