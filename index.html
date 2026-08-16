@@ -20,8 +20,6 @@
             text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
             text-align: center;
         }
-
-        /* Бургер-кнопка */
         .burger-btn {
             position: fixed;
             top: 20px;
@@ -41,8 +39,6 @@
         }
         .burger-btn:hover { background: rgba(255, 255, 255, 0.2); }
         .burger-line { width: 22px; height: 2px; background: #fff; border-radius: 2px; }
-
-        /* Выпадающее меню */
         .dropdown-menu {
             position: fixed;
             top: 75px;
@@ -69,8 +65,6 @@
             display: block;
         }
         .dropdown-item:hover { background: rgba(255, 255, 255, 0.1); }
-
-        /* Главная */
         .boxes {
             display: flex;
             gap: 25px;
@@ -129,8 +123,6 @@
             max-width: 180px;
         }
         .case-tooltip.show { display: block; }
-
-        /* Профиль */
         .profile-page {
             display: none;
             width: 100%;
@@ -175,8 +167,6 @@
         .stat-block { flex: 1; text-align: center; min-width: 120px; }
         .stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .stat-label { font-size: 0.85rem; opacity: 0.7; margin-top: 5px; }
-
-        /* История */
         .history-section {
             background: #16213e;
             border: 2px solid #0f3460;
@@ -237,8 +227,6 @@
             z-index: 10;
         }
         .history-tooltip.show { display: block; }
-
-        /* Модалка */
         .modal {
             display: none;
             position: fixed;
@@ -323,8 +311,6 @@
             font-weight: normal;
         }
         .btn-tooltip.show { display: block; }
-
-        /* Рулетка */
         .roulette-page {
             display: none;
             min-height: 100vh;
@@ -409,7 +395,6 @@
         .rarity-rare { color: #4caf50; }
         .rarity-epic { color: #9b59b6; }
         .rarity-legendary { color: #ffd700; }
-
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .box { width: 150px; height: 210px; }
@@ -429,20 +414,17 @@
 </head>
 <body>
 
-    <!-- Бургер-кнопка -->
     <button class="burger-btn" id="burger-btn">
         <div class="burger-line"></div>
         <div class="burger-line"></div>
         <div class="burger-line"></div>
     </button>
 
-    <!-- Выпадающее меню -->
     <div class="dropdown-menu" id="dropdown-menu">
         <button class="dropdown-item" id="btn-profile">Профиль</button>
         <button class="dropdown-item" id="btn-help">Помощь</button>
     </div>
 
-    <!-- Главная страница -->
     <div id="main-page">
         <h1>AdminCase</h1>
         <div class="boxes">
@@ -465,7 +447,6 @@
         </div>
     </div>
 
-    <!-- Профиль -->
     <div class="profile-page" id="profile-page">
         <div class="profile-header">
             <div class="profile-info">
@@ -491,7 +472,6 @@
         </div>
     </div>
 
-    <!-- Рулетка -->
     <div class="roulette-page" id="roulette-page">
         <h2 id="roulette-title">Кейс</h2>
         <div class="roulette-wrapper">
@@ -511,7 +491,6 @@
         </div>
     </div>
 
-    <!-- Модалка -->
     <div class="modal" id="promo-modal">
         <div class="modal-content">
             <h2 id="promo-title">Введите промокод</h2>
@@ -524,10 +503,7 @@
     </div>
 
     <script>
-        // ============================================
-        // ДАННЫЕ
-        // ============================================
-
+        // ===== ДАННЫЕ =====
         const promoCodes = {
             "A1B2C3": "cheap", "D4E5F6": "cheap", "G7H8I9": "cheap", "J1K2L3": "cheap",
             "M4N5O6": "cheap", "P7Q8R9": "cheap", "S1T2U3": "cheap", "V4W5X6": "cheap",
@@ -558,121 +534,38 @@
             ]
         };
 
-        // ============================================
-        // СОСТОЯНИЕ
-        // ============================================
+        // ===== СОСТОЯНИЕ =====
+        var currentCase = null;
+        var isSpinning = false;
+        var hasSpun = false;
+        var rouletteItems = [];
+        var usedCodes = {};
+        var activeCode = null;
+        var animationFrame = null;
+        var backgroundAnimationFrame = null;
+        var allRouletteItems = [];
+        var backgroundPosition = 0;
+        var backgroundLastTime = null;
+        var winHistory = [];
+        var openedCount = 0;
 
-        let currentCase = null;
-        let isSpinning = false;
-        let hasSpun = false;
-        let rouletteItems = [];
-        let usedCodes = {};
-        let activeCode = null;
-        let animationFrame = null;
-        let backgroundAnimationFrame = null;
-        let allRouletteItems = [];
-        let backgroundPosition = 0;
-        let backgroundLastTime = null;
-        let winHistory = [];
-        let openedCount = 0;
-
-        // ============================================
-        // ЗАГРУЗКА ДАННЫХ
-        // ============================================
-
+        // ===== ЗАГРУЗКА =====
         try {
-            const saved = localStorage.getItem('admincase_used_codes');
-            if (saved) usedCodes = JSON.parse(saved);
+            var savedCodes = localStorage.getItem('admincase_used_codes');
+            if (savedCodes) usedCodes = JSON.parse(savedCodes);
         } catch(e) { usedCodes = {}; }
 
         try {
-            const savedHistory = localStorage.getItem('admincase_win_history');
+            var savedHistory = localStorage.getItem('admincase_win_history');
             if (savedHistory) winHistory = JSON.parse(savedHistory);
         } catch(e) { winHistory = []; }
 
         try {
-            const savedCount = localStorage.getItem('admincase_opened_count');
+            var savedCount = localStorage.getItem('admincase_opened_count');
             if (savedCount) openedCount = parseInt(savedCount);
         } catch(e) { openedCount = 0; }
 
-        // ============================================
-        // ОБРАБОТЧИКИ СОБЫТИЙ (ВСЕ КНОПКИ)
-        // ============================================
-
-        // Бургер-меню
-        document.getElementById('burger-btn').addEventListener('click', function() {
-            document.getElementById('dropdown-menu').classList.toggle('show');
-        });
-
-        // Профиль
-        document.getElementById('btn-profile').addEventListener('click', function() {
-            document.getElementById('dropdown-menu').classList.remove('show');
-            showProfile();
-        });
-
-        // Помощь
-        document.getElementById('btn-help').addEventListener('click', function() {
-            document.getElementById('dropdown-menu').classList.remove('show');
-            alert('Помощь: введите промокод для открытия кейса');
-        });
-
-        // Дешевый кейс
-        document.getElementById('box-cheap').addEventListener('click', function() {
-            openPromoModal('cheap');
-        });
-
-        // Дорогой кейс
-        document.getElementById('box-expensive').addEventListener('click', function() {
-            openPromoModal('expensive');
-        });
-
-        // Инфо-кнопки на кейсах
-        document.getElementById('info-cheap').addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleTooltip('tooltip-cheap');
-        });
-        document.getElementById('info-expensive').addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleTooltip('tooltip-expensive');
-        });
-
-        // Кнопка "Открыть" на рулетке
-        document.getElementById('btn-spin').addEventListener('click', function() {
-            spinRoulette();
-        });
-
-        // Кнопка "Активировать" в модалке
-        document.getElementById('btn-activate').addEventListener('click', function() {
-            checkPromo();
-        });
-
-        // Кнопка "Закрыть" в модалке
-        document.getElementById('btn-close-modal').addEventListener('click', function() {
-            closePromoModal();
-        });
-
-        // Закрытие модалки по клику вне
-        document.getElementById('promo-modal').addEventListener('click', function(e) {
-            if (e.target === this) closePromoModal();
-        });
-
-        // Закрытие тултипов по клику вне
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.info-circle') && !e.target.closest('.case-tooltip')) {
-                document.querySelectorAll('.case-tooltip').forEach(t => t.classList.remove('show'));
-            }
-            if (!e.target.closest('.reward-info-circle')) {
-                document.querySelectorAll('.reward-tooltip').forEach(t => t.classList.remove('show'));
-            }
-            if (!e.target.closest('.history-info-circle')) {
-                document.querySelectorAll('.history-tooltip').forEach(t => t.classList.remove('show'));
-            }
-        });
-
-        // ============================================
-        // ФУНКЦИИ
-        // ============================================
-
+        // ===== ФУНКЦИИ =====
         function getRarity(chance) {
             if (chance >= 50) return 'rarity-common';
             if (chance >= 20) return 'rarity-rare';
@@ -681,11 +574,12 @@
         }
 
         function toggleTooltip(id) {
-            const tooltip = document.getElementById(id);
+            var tooltip = document.getElementById(id);
             tooltip.classList.toggle('show');
-            document.querySelectorAll('.case-tooltip').forEach(t => {
-                if (t.id !== id) t.classList.remove('show');
-            });
+            var allTooltips = document.querySelectorAll('.case-tooltip');
+            for (var i = 0; i < allTooltips.length; i++) {
+                if (allTooltips[i].id !== id) allTooltips[i].classList.remove('show');
+            }
         }
 
         function showProfile() {
@@ -696,10 +590,10 @@
             document.getElementById('stat-opened').textContent = openedCount;
             
             if (winHistory.length > 0) {
-                let bestWin = winHistory[0];
-                for (let item of winHistory) {
-                    if (parseInt(item.name) > parseInt(bestWin.name)) {
-                        bestWin = item;
+                var bestWin = winHistory[0];
+                for (var i = 0; i < winHistory.length; i++) {
+                    if (parseInt(winHistory[i].name) > parseInt(bestWin.name)) {
+                        bestWin = winHistory[i];
                     }
                 }
                 document.getElementById('stat-best').textContent = bestWin.name;
@@ -707,31 +601,28 @@
                 document.getElementById('stat-best').textContent = '—';
             }
             
-            const historyList = document.getElementById('history-list');
+            var historyList = document.getElementById('history-list');
             historyList.innerHTML = '';
             
             if (winHistory.length === 0) {
                 historyList.innerHTML = '<p style="opacity: 0.5; width: 100%; text-align: center;">Пока пусто</p>';
             } else {
-                winHistory.forEach((item) => {
-                    const div = document.createElement('div');
-                    div.className = 'history-item';
-                    div.innerHTML = `
-                        <span class="history-name">${item.name}</span>
-                        <button class="history-info-circle">
-                            !
-                            <span class="history-tooltip">${item.source}</span>
-                        </button>
-                    `;
-                    const btn = div.querySelector('.history-info-circle');
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const tooltip = this.querySelector('.history-tooltip');
-                        tooltip.classList.toggle('show');
-                        setTimeout(() => tooltip.classList.remove('show'), 2000);
-                    });
-                    historyList.appendChild(div);
-                });
+                for (var j = 0; j < winHistory.length; j++) {
+                    (function(item) {
+                        var div = document.createElement('div');
+                        div.className = 'history-item';
+                        div.innerHTML = '<span class="history-name">' + item.name + '</span>' +
+                            '<button class="history-info-circle">!<span class="history-tooltip">' + item.source + '</span></button>';
+                        var btn = div.querySelector('.history-info-circle');
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            var tooltip = this.querySelector('.history-tooltip');
+                            tooltip.classList.toggle('show');
+                            setTimeout(function() { tooltip.classList.remove('show'); }, 2000);
+                        });
+                        historyList.appendChild(div);
+                    })(winHistory[j]);
+                }
             }
             
             window.scrollTo(0, 0);
@@ -752,8 +643,8 @@
         }
 
         function checkPromo() {
-            const input = document.getElementById('promo-input').value.trim().toUpperCase();
-            const msg = document.getElementById('promo-message');
+            var input = document.getElementById('promo-input').value.trim().toUpperCase();
+            var msg = document.getElementById('promo-message');
             msg.className = 'message';
             msg.textContent = '';
 
@@ -771,42 +662,12 @@
 
             msg.className = 'message success';
             msg.textContent = '✅ Код активирован!';
-            setTimeout(() => { closePromoModal(); showRoulettePage(currentCase); }, 600);
-        }
-
-        function startBackgroundAnimation(track) {
-            if (backgroundAnimationFrame) cancelAnimationFrame(backgroundAnimationFrame);
-            backgroundPosition = 0;
-            backgroundLastTime = null;
-            
-            function animateBackground(currentTime) {
-                if (backgroundLastTime === null) backgroundLastTime = currentTime;
-                const deltaTime = currentTime - backgroundLastTime;
-                backgroundLastTime = currentTime;
-                const speed = 180;
-                const deltaSeconds = deltaTime / 1000;
-                backgroundPosition -= speed * deltaSeconds;
-                const totalWidth = allRouletteItems.length * 180;
-                const halfWidth = totalWidth / 2;
-                if (backgroundPosition <= -halfWidth) backgroundPosition += halfWidth;
-                track.style.transform = 'translateX(' + backgroundPosition + 'px)';
-                backgroundAnimationFrame = requestAnimationFrame(animateBackground);
-            }
-            backgroundAnimationFrame = requestAnimationFrame(animateBackground);
-        }
-
-        function stopBackgroundAnimation() {
-            if (backgroundAnimationFrame) {
-                cancelAnimationFrame(backgroundAnimationFrame);
-                backgroundAnimationFrame = null;
-            }
+            setTimeout(function() { closePromoModal(); showRoulettePage(currentCase); }, 600);
         }
 
         function getItemWidth() {
-            const items = document.querySelectorAll('.roulette-item');
-            if (items.length > 0) {
-                return items[0].getBoundingClientRect().width;
-            }
+            var items = document.querySelectorAll('.roulette-item');
+            if (items.length > 0) return items[0].getBoundingClientRect().width;
             return 180;
         }
 
@@ -824,46 +685,143 @@
             hasSpun = false;
 
             rouletteItems = [];
-            caseContents[caseType].forEach(item => {
-                const count = Math.max(1, Math.round(item.chance));
-                for (let i = 0; i < count; i++) rouletteItems.push(item);
-            });
-            rouletteItems.sort(() => Math.random() - 0.5);
+            for (var i = 0; i < caseContents[caseType].length; i++) {
+                var item = caseContents[caseType][i];
+                var count = Math.max(1, Math.round(item.chance));
+                for (var j = 0; j < count; j++) rouletteItems.push(item);
+            }
+            rouletteItems.sort(function() { return Math.random() - 0.5; });
 
-            const track = document.getElementById('roulette-track');
+            var track = document.getElementById('roulette-track');
             track.innerHTML = '';
             track.classList.remove('spinning');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            allRouletteItems = [...rouletteItems, ...rouletteItems];
-            allRouletteItems.forEach(item => {
-                const div = document.createElement('div');
+            allRouletteItems = rouletteItems.concat(rouletteItems);
+            for (var k = 0; k < allRouletteItems.length; k++) {
+                var div = document.createElement('div');
                 div.className = 'roulette-item';
-                div.textContent = item.name;
-                div.setAttribute('data-name', item.name);
+                div.textContent = allRouletteItems[k].name;
+                div.setAttribute('data-name', allRouletteItems[k].name);
                 track.appendChild(div);
-            });
+            }
 
-            startBackgroundAnimation(track);
-
-            const rewardsList = document.getElementById('rewards-list');
+            var rewardsList = document.getElementById('rewards-list');
             rewardsList.innerHTML = '';
-            caseContents[caseType].forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'reward-item';
-                const rarityClass = getRarity(item.chance);
-                div.innerHTML = `<span class="reward-name ${rarityClass}">${item.name}</span>
-                    <button class="reward-info-circle">!
-                        <span class="reward-tooltip">Шанс: ${item.chance}%</span>
-                    </button>`;
-                const btn = div.querySelector('.reward-info-circle');
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const tooltip = this.querySelector('.reward-tooltip');
-                    tooltip.classList.toggle('show');
-                    setTimeout(() => tooltip.classList.remove('show'), 2000);
-                });
-                rewardsList.appendChild(div);
-            });
-            window.scrollTo
+            for (var m = 0; m < caseContents[caseType].length; m++) {
+                (function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'reward-item';
+                    div.innerHTML = '<span class="reward-name ' + getRarity(item.chance) + '">' + item.name + '</span>' +
+                        '<button class="reward-info-circle">!<span class="reward-tooltip">Шанс: ' + item.chance + '%</span></button>';
+                    var btn = div.querySelector('.reward-info-circle');
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var tooltip = this.querySelector('.reward-tooltip');
+                        tooltip.classList.toggle('show');
+                        setTimeout(function() { tooltip.classList.remove('show'); }, 2000);
+                    });
+                    rewardsList.appendChild(div);
+                })(caseContents[caseType][m]);
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function startBackgroundAnimation(track) {
+            if (backgroundAnimationFrame) cancelAnimationFrame(backgroundAnimationFrame);
+            backgroundPosition = 0;
+            backgroundLastTime = null;
+            
+            function animateBackground(currentTime) {
+                if (backgroundLastTime === null) backgroundLastTime = currentTime;
+                var deltaTime = currentTime - backgroundLastTime;
+                backgroundLastTime = currentTime;
+                var speed = 180;
+                var deltaSeconds = deltaTime / 1000;
+                backgroundPosition -= speed * deltaSeconds;
+                var totalWidth = allRouletteItems.length * 180;
+                var halfWidth = totalWidth / 2;
+                if (backgroundPosition <= -halfWidth) backgroundPosition += halfWidth;
+                track.style.transform = 'translateX(' + backgroundPosition + 'px)';
+                backgroundAnimationFrame = requestAnimationFrame(animateBackground);
+            }
+            backgroundAnimationFrame = requestAnimationFrame(animateBackground);
+        }
+
+        function stopBackgroundAnimation() {
+            if (backgroundAnimationFrame) {
+                cancelAnimationFrame(backgroundAnimationFrame);
+                backgroundAnimationFrame = null;
+            }
+        }
+
+        function getItemUnderArrow() {
+            var container = document.getElementById('roulette-container');
+            var containerRect = container.getBoundingClientRect();
+            var arrowX = containerRect.left + containerRect.width / 2;
+            var items = document.querySelectorAll('.roulette-item');
+            for (var i = 0; i < items.length; i++) {
+                var itemRect = items[i].getBoundingClientRect();
+                if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
+                    return items[i].getAttribute('data-name');
+                }
+            }
+            return items.length > 0 ? items[0].getAttribute('data-name') : 'Неизвестно';
+        }
+
+        function spinRoulette() {
+            if (hasSpun) {
+                var tooltip = document.getElementById('btn-tooltip');
+                tooltip.classList.add('show');
+                setTimeout(function() { tooltip.classList.remove('show'); }, 2000);
+                return;
+            }
+            if (isSpinning) return;
+            isSpinning = true;
+            hasSpun = true;
+
+            stopBackgroundAnimation();
+
+            var btn = document.getElementById('btn-spin');
+            btn.disabled = true;
+            var msg = document.getElementById('result-message');
+            msg.className = 'message';
+            msg.textContent = '';
+
+            var track = document.getElementById('roulette-track');
+            var itemWidth = getItemWidth();
+            var totalItems = rouletteItems.length;
+            if (totalItems === 0) { isSpinning = false; hasSpun = false; btn.disabled = false; return; }
+
+            var containerWidth = document.getElementById('roulette-container').offsetWidth;
+            var centerOffset = containerWidth / 2 - itemWidth / 2;
+            var winIndex = Math.floor(Math.random() * totalItems);
+            var stopPosition = -(winIndex * itemWidth) + centerOffset;
+
+            var maxSpeed = 2 * itemWidth;
+            var phase1Distance = maxSpeed * 1;
+            var phase2Distance = maxSpeed * 2;
+            var phase3Distance = maxSpeed * 1;
+            var totalDistance = phase1Distance + phase2Distance + phase3Distance;
+            var finalPosition = stopPosition - totalDistance;
+
+            track.classList.add('spinning');
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+
+            var startTime = performance.now();
+            var duration = 6000;
+
+            function animateSpin(currentTime) {
+                var elapsed = currentTime - startTime;
+                var currentPosition;
+
+                if (elapsed <= 2000) {
+                    var progress = elapsed / 2000;
+                    var distance = phase1Distance * progress * progress;
+                    currentPosition = -distance;
+                } else if (elapsed <= 4000) {
+                    var phase2Elapsed = elapsed - 2000;
+                    var secondsElapsed = phase2Elapsed / 1000;
+                    currentPosition = -(phase1
