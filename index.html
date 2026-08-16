@@ -14,6 +14,8 @@
             color: #fff;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         h1 { font-size: 2.5rem; margin-bottom: 40px; color: #ff6b6b; text-align: center; }
         .burger-btn {
@@ -37,6 +39,54 @@
             text-align: left; border: none; background: none; width: 100%;
         }
         .dropdown-item:hover { background: rgba(255,255,255,0.1); }
+
+        /* Интеграции внизу */
+        .integrations {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            padding: 20px 0;
+        }
+        .integration-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid #0f3460;
+            background: #16213e;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .integration-btn:hover {
+            border-color: #4caf50;
+            background: #1a2a4e;
+            transform: translateY(-3px);
+        }
+        .integration-icon {
+            font-size: 1.3rem;
+        }
+        .vk-btn {
+            border-color: #0077ff;
+        }
+        .vk-btn:hover {
+            border-color: #0077ff;
+            box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3);
+        }
+        .help-btn {
+            border-color: #ffd700;
+        }
+        .help-btn:hover {
+            border-color: #ffd700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
         .boxes {
             display: flex; gap: 25px; justify-content: center;
             align-items: center; min-height: 70vh; flex-wrap: wrap;
@@ -376,6 +426,7 @@
                 max-height: 60px;
                 flex-shrink: 0;
             }
+            .integrations { flex-direction: column; }
         }
     </style>
 </head>
@@ -390,7 +441,6 @@
     <div class="dropdown-menu" id="dropdownMenu">
         <button class="dropdown-item" id="profileBtn">Профиль</button>
         <button class="dropdown-item" id="topBtn">Топ</button>
-        <button class="dropdown-item" id="helpBtn">Помощь</button>
     </div>
 
     <div id="mainPage">
@@ -412,6 +462,16 @@
                 <div class="lock-icon">🔒</div>
                 <div class="box-price">Содержимое скрыто</div>
             </div>
+        </div>
+        
+        <!-- Интеграции внизу -->
+        <div class="integrations">
+            <a href="https://vk.ru/ufa.blackrussia.online" target="_blank" class="integration-btn vk-btn">
+                <span class="integration-icon">🔵</span> ВКонтакте
+            </a>
+            <a href="https://vk.ru/club240893213" target="_blank" class="integration-btn help-btn">
+                <span class="integration-icon">❓</span> Помощь
+            </a>
         </div>
     </div>
 
@@ -686,9 +746,8 @@
             }
         } catch(e) {}
 
-        // ===== ФУНКЦИЯ ОБНОВЛЕНИЯ ДАННЫХ ПОЛЬЗОВАТЕЛЯ В FIREBASE =====
+        // ===== ФУНКЦИЯ ОБНОВЛЕНИЯ ДАННЫХ В FIREBASE =====
         function updateUserDataInFirebase() {
-            // Обновляем case_openings
             db.collection('case_openings')
                 .where('userID', '==', userID)
                 .get()
@@ -704,7 +763,6 @@
                 })
                 .catch(function() {});
 
-            // Обновляем taken_names
             db.collection('taken_names')
                 .where('userID', '==', userID)
                 .get()
@@ -812,7 +870,6 @@
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            // Загружаем ВСЕХ из case_openings
             db.collection('case_openings').get().then(function(caseSnapshot) {
                 var users = [];
                 
@@ -843,7 +900,6 @@
                     }
                 });
                 
-                // Добавляем из taken_names
                 return db.collection('taken_names').get().then(function(nameSnapshot) {
                     nameSnapshot.forEach(function(doc) {
                         var data = doc.data();
@@ -932,7 +988,6 @@
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
             document.getElementById('otherOpenedCount').textContent = '...';
             
-            // Сначала ищем в taken_names (актуальные данные)
             db.collection('taken_names')
                 .where('userID', '==', targetUserID)
                 .get()
@@ -953,7 +1008,6 @@
                         }
                     });
                     
-                    // Если не нашли в taken_names — ищем в case_openings
                     if (foundName === 'Неизвестно' || !foundAvatar) {
                         return db.collection('case_openings')
                             .where('userID', '==', targetUserID)
@@ -1080,7 +1134,6 @@
                                 timestamp: now
                             }).catch(function() {});
                             
-                            // Обновляем все записи пользователя
                             updateUserDataInFirebase();
                             
                             applyProfileData();
@@ -1113,7 +1166,6 @@
                             timestamp: now
                         }).catch(function() {});
                         
-                        // Обновляем все записи пользователя
                         updateUserDataInFirebase();
                         
                         applyProfileData();
@@ -1351,11 +1403,6 @@
             showTopPage();
         };
 
-        document.getElementById('helpBtn').onclick = function() {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            alert('Помощь: введите промокод для открытия кейса');
-        };
-
         document.getElementById('backBtn').onclick = function() {
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
@@ -1448,7 +1495,6 @@
                         document.getElementById('avatarEmoji').style.display = 'none';
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
                         
-                        // Обновляем аватар в Firebase
                         updateUserDataInFirebase();
                     };
                     img.src = ev.target.result;
