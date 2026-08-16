@@ -226,8 +226,6 @@
             border: 2px solid #0f3460; background: #1a1a2e;
             color: #fff; font-size: 1.2rem; margin-top: 10px; display: none;
         }
-
-        /* Топ */
         .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .top-page.active { display: block; }
         .top-title {
@@ -302,8 +300,6 @@
             font-weight: bold;
             color: #ffd700;
         }
-
-        /* Чужой профиль */
         .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .other-profile-page.active { display: block; }
         .other-profile-header {
@@ -362,7 +358,6 @@
             font-size: 0.85rem;
             opacity: 0.7;
         }
-
         .rarity-common { color: #fff; border-color: #fff; background: rgba(255,255,255,0.08); }
         .rarity-rare { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
@@ -781,7 +776,6 @@
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            // Загружаем все данные о пользователях
             db.collection('taken_names').get().then(function(snapshot) {
                 var users = [];
                 snapshot.forEach(function(doc) {
@@ -795,23 +789,23 @@
                             }
                         }
                         if (existing) {
-                            if (data.timestamp > existing.timestamp) {
+                            if ((data.timestamp || 0) > existing.timestamp) {
                                 existing.name = data.name;
-                                existing.timestamp = data.timestamp;
+                                existing.timestamp = data.timestamp || 0;
+                                existing.avatar = data.avatar || existing.avatar;
                             }
                         } else {
                             users.push({
                                 name: data.name,
                                 userID: data.userID || 'Неизвестно',
                                 openedCount: 0,
-                                avatar: null,
+                                avatar: data.avatar || null,
                                 timestamp: data.timestamp || 0
                             });
                         }
                     }
                 });
                 
-                // Загружаем количество открытых кейсов
                 return db.collection('case_openings').get().then(function(caseSnapshot) {
                     caseSnapshot.forEach(function(doc) {
                         var data = doc.data();
@@ -823,12 +817,10 @@
                         }
                     });
                     
-                    // Сортируем по количеству открытых кейсов
                     users.sort(function(a, b) {
                         return b.openedCount - a.openedCount;
                     });
                     
-                    // Топ 10
                     var top10 = users.slice(0, 10);
                     
                     if (top10.length === 0) {
@@ -879,23 +871,38 @@
                 localStorage.setItem('admincase_other_profile_id', targetUserID);
             } catch(e) {}
             
-            // Загружаем данные пользователя
+            document.getElementById('otherName').textContent = 'Загрузка...';
+            document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+            document.getElementById('otherOpenedCount').textContent = '...';
+            
             db.collection('taken_names')
                 .where('userID', '==', targetUserID)
-                .orderBy('timestamp', 'desc')
-                .limit(1)
                 .get()
                 .then(function(snapshot) {
-                    var userName = 'Неизвестно';
-                    var userAvatar = null;
+                    var foundName = 'Неизвестно';
+                    var foundAvatar = null;
+                    var latestTimestamp = 0;
+                    
                     snapshot.forEach(function(doc) {
-                        userName = doc.data().name;
+                        var data = doc.data();
+                        var ts = data.timestamp || 0;
+                        if (ts > latestTimestamp) {
+                            latestTimestamp = ts;
+                            foundName = data.name;
+                            foundAvatar = data.avatar || null;
+                        }
                     });
                     
-                    document.getElementById('otherName').textContent = userName;
+                    document.getElementById('otherName').textContent = foundName;
                     document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
                     
-                    // Количество открытых кейсов
+                    var otherAvatar = document.getElementById('otherAvatar');
+                    if (foundAvatar) {
+                        otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                    } else {
+                        otherAvatar.innerHTML = '👤';
+                    }
+                    
                     return db.collection('case_openings')
                         .where('userID', '==', targetUserID)
                         .get()
@@ -963,6 +970,7 @@
                                 name: newName,
                                 uid: userUID,
                                 userID: userID,
+                                avatar: avatarData,
                                 timestamp: now
                             });
                         })
@@ -994,6 +1002,7 @@
                         name: newName,
                         uid: userUID,
                         userID: userID,
+                        avatar: avatarData,
                         timestamp: now
                     }).then(function() {
                         userName = newName;
