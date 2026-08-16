@@ -13,76 +13,38 @@
             min-height: 100vh;
             padding: 20px;
         }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            color: #ff6b6b;
-            text-align: center;
-        }
+        h1 { font-size: 2.5rem; margin-bottom: 40px; color: #ff6b6b; text-align: center; }
         .burger-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 45px;
-            height: 45px;
+            position: fixed; top: 20px; right: 20px;
+            width: 45px; height: 45px;
             background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            cursor: pointer;
-            z-index: 300;
+            border-radius: 10px; cursor: pointer; z-index: 300;
         }
-        .burger-line {
-            width: 22px;
-            height: 2px;
-            background: #fff;
-            margin: 4px auto;
-        }
+        .burger-line { width: 22px; height: 2px; background: #fff; margin: 4px auto; }
         .dropdown-menu {
-            position: fixed;
-            top: 75px;
-            right: 20px;
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 12px;
-            padding: 10px 0;
-            display: none;
-            z-index: 300;
-            min-width: 180px;
+            position: fixed; top: 75px; right: 20px;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 12px; padding: 10px 0;
+            display: none; z-index: 300; min-width: 180px;
         }
         .dropdown-menu.show { display: block; }
         .dropdown-item {
-            padding: 14px 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            text-align: left;
-            border: none;
-            background: none;
-            width: 100%;
+            padding: 14px 20px; cursor: pointer;
+            font-size: 1rem; font-weight: bold; color: #fff;
+            text-align: left; border: none; background: none; width: 100%;
         }
         .dropdown-item:hover { background: rgba(255,255,255,0.1); }
         .boxes {
-            display: flex;
-            gap: 25px;
-            justify-content: center;
-            align-items: center;
-            min-height: 70vh;
-            flex-wrap: wrap;
+            display: flex; gap: 25px; justify-content: center;
+            align-items: center; min-height: 70vh; flex-wrap: wrap;
         }
         .box {
-            width: 200px;
-            height: 260px;
-            background: #16213e;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            border: 2px solid #0f3460;
-            position: relative;
+            width: 200px; height: 260px;
+            background: #16213e; border-radius: 20px;
+            cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 12px;
+            border: 2px solid #0f3460; position: relative;
             transition: transform 0.3s;
         }
         .box:hover { transform: translateY(-8px); }
@@ -93,309 +55,156 @@
         .lock-icon { font-size: 2.5rem; opacity: 0.5; }
         .box-price { font-size: 0.85rem; opacity: 0.7; }
         .info-circle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            background: #666;
-            border-radius: 50%;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            z-index: 5;
+            position: absolute; top: 10px; right: 10px;
+            width: 30px; height: 30px; background: #666;
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold; font-size: 1rem; z-index: 5;
         }
         .case-tooltip {
-            position: absolute;
-            top: 10px;
-            right: 50px;
-            background: #2a2a3e;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.75rem;
-            color: #ccc;
-            display: none;
-            z-index: 10;
-            max-width: 180px;
+            position: absolute; top: 10px; right: 50px;
+            background: #2a2a3e; border: 1px solid #444;
+            border-radius: 8px; padding: 8px 12px;
+            font-size: 0.75rem; color: #ccc; display: none; z-index: 10; max-width: 180px;
         }
         .case-tooltip.show { display: block; }
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 200;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200;
         }
         .modal.active { display: block; }
         .modal-content {
-            background: #16213e;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 400px;
-            margin: 80px auto;
-            text-align: center;
-            border: 2px solid #0f3460;
+            background: #16213e; border-radius: 20px; padding: 25px;
+            width: 90%; max-width: 400px; margin: 80px auto;
+            text-align: center; border: 2px solid #0f3460;
         }
         .modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.5rem; }
         .modal-content input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 2px solid #0f3460;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: 2px solid #0f3460; background: #1a1a2e;
+            color: #fff; font-size: 1.1rem; text-align: center;
+            margin-bottom: 15px; text-transform: uppercase;
         }
         .btn {
-            padding: 12px 25px;
-            border-radius: 10px;
-            border: none;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 5px;
+            padding: 12px 25px; border-radius: 10px; border: none;
+            font-size: 1rem; font-weight: bold; cursor: pointer; margin: 5px;
         }
         .btn-open { background: #4caf50; color: #fff; font-size: 1.2rem; padding: 15px 40px; }
         .btn-open:disabled { background: #555; cursor: not-allowed; }
         .btn-close { background: #f44336; color: #fff; }
         .message {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px;
-            display: none;
-            font-weight: bold;
+            margin: 15px 0; padding: 15px; border-radius: 10px;
+            display: none; font-weight: bold;
         }
         .message.success { display: block; background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid #4caf50; }
         .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win { display: block; background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; font-size: 1.2rem; }
-        .roulette-page {
-            display: none;
-            padding: 20px;
-        }
+        .roulette-page { display: none; padding: 20px; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
         .roulette-arrow { text-align: center; font-size: 2rem; color: #ff6b6b; }
         .roulette-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 10px auto;
-            overflow: hidden;
-            border-radius: 15px;
-            border: 3px solid #0f3460;
-            background: #1a1a2e;
+            position: relative; width: 100%; max-width: 400px;
+            margin: 10px auto; overflow: hidden;
+            border-radius: 15px; border: 3px solid #0f3460; background: #1a1a2e;
         }
         .roulette-track { display: flex; }
         .roulette-item {
-            min-width: 180px;
-            padding: 30px 20px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            border-right: 1px solid #0f3460;
-            flex-shrink: 0;
+            min-width: 180px; padding: 30px 20px; text-align: center;
+            font-weight: bold; font-size: 1.1rem;
+            border-right: 1px solid #0f3460; flex-shrink: 0;
         }
         .rewards-section { width: 100%; max-width: 400px; margin: 30px auto; }
         .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; }
         .reward-item {
-            background: #1a1a2e;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #0f3460;
+            background: #1a1a2e; padding: 15px; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid #0f3460;
         }
         .reward-name { font-weight: bold; }
         .reward-info-circle {
-            width: 28px;
-            height: 28px;
-            background: #666;
-            border-radius: 50%;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-weight: bold;
+            width: 28px; height: 28px; background: #666;
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold;
         }
         .reward-tooltip {
-            display: none;
-            background: #2a2a3e;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.75rem;
-            color: #ccc;
-            margin-left: 10px;
+            display: none; background: #2a2a3e; border: 1px solid #444;
+            border-radius: 8px; padding: 8px 12px;
+            font-size: 0.75rem; color: #ccc; margin-left: 10px;
         }
         .reward-tooltip.show { display: inline-block; }
-
-        /* Профиль */
-        .profile-page {
-            display: none;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .profile-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .profile-page.active { display: block; }
         .back-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 2.5rem;
-            cursor: pointer;
-            margin-bottom: 20px;
-            padding: 5px 15px;
+            background: none; border: none; color: #fff;
+            font-size: 2.5rem; cursor: pointer; margin-bottom: 20px; padding: 5px 15px;
         }
         .settings-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            margin-left: auto;
-            padding: 5px 10px;
+            background: none; border: none; color: #fff;
+            font-size: 2rem; cursor: pointer; margin-left: auto; padding: 5px 10px;
         }
         .profile-header {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 20px; padding: 30px; margin-bottom: 30px;
             position: relative;
         }
         .profile-top-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
         }
-        .profile-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex: 1;
-        }
+        .profile-info { display: flex; align-items: center; gap: 20px; flex: 1; }
         .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+            width: 80px; height: 80px; border-radius: 50%;
             background: linear-gradient(135deg, #4caf50, #ffd700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            overflow: hidden;
-            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; overflow: hidden; cursor: pointer;
         }
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .profile-name { font-size: 1.5rem; font-weight: bold; }
         .profile-stats {
-            display: flex;
-            gap: 20px;
-            border-top: 1px solid #0f3460;
-            padding-top: 25px;
+            display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 25px;
         }
         .stat-block { flex: 1; text-align: center; }
         .stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .stat-label { font-size: 0.85rem; opacity: 0.7; }
         .history-section {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 20px;
-            padding: 25px;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 20px; padding: 25px;
         }
         .history-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 20px;
-            text-align: center;
+            font-size: 1.3rem; font-weight: bold; color: #ffd700;
+            margin-bottom: 20px; text-align: center;
         }
         .history-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
         }
         .history-item {
-            padding: 10px 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid;
-            position: relative;
+            padding: 10px 15px; border-radius: 10px;
+            display: flex; align-items: center; gap: 10px;
+            border: 1px solid; position: relative;
         }
         .history-name { font-weight: bold; }
         .history-info-circle {
-            width: 24px;
-            height: 24px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            font-weight: bold;
-            position: relative;
+            width: 24px; height: 24px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold; position: relative;
         }
         .history-tooltip {
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2a2a3e;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.7rem;
-            color: #ccc;
-            display: none;
-            white-space: nowrap;
-            z-index: 10;
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%); background: #2a2a3e;
+            border: 1px solid #444; border-radius: 8px; padding: 8px 12px;
+            font-size: 0.7rem; color: #ccc; display: none;
+            white-space: nowrap; z-index: 10;
         }
         .history-tooltip.show { display: block; }
-
-        /* Редактирование профиля */
-        .edit-mode .avatar {
-            cursor: pointer;
-            border: 3px dashed #ffd700;
-        }
+        .edit-actions { display: none; gap: 10px; margin-top: 20px; justify-content: center; }
         .edit-name-input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #0f3460;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 1.2rem;
-            margin-top: 10px;
-        }
-        .edit-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: center;
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 2px solid #0f3460; background: #1a1a2e;
+            color: #fff; font-size: 1.2rem; margin-top: 10px; display: none;
         }
         .rarity-common { color: #fff; border-color: #fff; background: rgba(255,255,255,0.08); }
         .rarity-rare { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
-
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .box { width: 150px; height: 210px; }
@@ -450,7 +259,7 @@
                     </div>
                     <div>
                         <div class="profile-name" id="profileNameDisplay">Игрок</div>
-                        <input type="text" class="edit-name-input" id="editNameInput" style="display:none;" placeholder="Введите имя" maxlength="20">
+                        <input type="text" class="edit-name-input" id="editNameInput" placeholder="Введите имя" maxlength="20">
                     </div>
                 </div>
                 <button class="settings-btn" id="settingsBtn">⚙️</button>
@@ -465,7 +274,7 @@
                     <div class="stat-label">Лучший выигрыш</div>
                 </div>
             </div>
-            <div class="edit-actions" id="editActions" style="display:none;">
+            <div class="edit-actions" id="editActions">
                 <button class="btn btn-open" id="confirmEditBtn">Готово</button>
                 <button class="btn btn-close" id="cancelEditBtn">Отмена</button>
             </div>
@@ -674,7 +483,6 @@
 
         function enterEditMode() {
             isEditMode = true;
-            document.getElementById('profileHeader').classList.add('edit-mode');
             document.getElementById('profileNameDisplay').style.display = 'none';
             document.getElementById('editNameInput').style.display = 'block';
             document.getElementById('editNameInput').value = userName;
@@ -683,7 +491,6 @@
 
         function exitEditMode() {
             isEditMode = false;
-            document.getElementById('profileHeader').classList.remove('edit-mode');
             document.getElementById('profileNameDisplay').style.display = 'block';
             document.getElementById('editNameInput').style.display = 'none';
             document.getElementById('editActions').style.display = 'none';
@@ -848,4 +655,30 @@
             if (items.length > 0) itemWidth = items[0].getBoundingClientRect().width;
             
             var totalItems = rouletteItems.length;
-            var containerWidth = document.getElementById('rouletteContainer').offsetWidth
+            var containerWidth = document.getElementById('rouletteContainer').offsetWidth;
+            var centerOffset = containerWidth / 2 - itemWidth / 2;
+            var winIndex = Math.floor(Math.random() * totalItems);
+            var stopPosition = -(winIndex * itemWidth) + centerOffset;
+            var totalDistance = 8 * itemWidth;
+            var finalPosition = stopPosition - totalDistance;
+            
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+            
+            var startTime = performance.now();
+            var duration = 6000;
+            
+            function animateSpin(currentTime) {
+                var elapsed = currentTime - startTime;
+                var progress = Math.min(elapsed / duration, 1);
+                
+                var position;
+                if (progress < 0.33) {
+                    var p = progress / 0.33;
+                    position = -totalDistance * (p * p);
+                } else if (progress < 0.66) {
+                    var p2 = (progress - 0.33) / 0.33;
+                    position = -totalDistance * (1 + p2 * 0.5);
+                } else {
+                    var p3 = (progress - 0.66) / 0.34;
+                    position = -total
