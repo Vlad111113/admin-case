@@ -521,44 +521,61 @@
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
 
-            // СКОРОСТЬ ПОСЛЕ ОТКРЫТИЯ: 2 клетки/сек = 360px/сек
-            // За 6 секунд = 12 клеток = 2160px
-            // Первые 5 секунд: 360px/сек = 1800px
-            // Последняя секунда: ещё 360px с замедлением
-            const speedPerSecond = 360;
-            const normalDuration = 5000;
-            const slowdownDuration = 1000;
-            const normalDistance = speedPerSecond * 5;
-            const slowdownDistance = speedPerSecond * 1;
-            const finalPosition = stopPosition - (normalDistance + slowdownDistance);
+            // ТРЁХФАЗНАЯ АНИМАЦИЯ
+            // Фаза 1 (0-2 сек): разгон от 0 до 2 кл/с
+            // Фаза 2 (2-4 сек): постоянная скорость 2 кл/с
+            // Фаза 3 (4-6 сек): замедление от 2 кл/с до 0
+            const itemWidth_px = itemWidth;
+            const maxSpeed = 2 * itemWidth_px; // 360 px/сек
+            
+            // Расстояние за фазу 1 (разгон 0 -> 360px/с): средняя скорость 180px/с * 2с = 360px
+            const phase1Distance = maxSpeed * 1; // 360px
+            // Расстояние за фазу 2 (360px/с * 2с): 720px
+            const phase2Distance = maxSpeed * 2; // 720px
+            // Расстояние за фазу 3 (замедление 360 -> 0): средняя скорость 180px/с * 2с = 360px
+            const phase3Distance = maxSpeed * 1; // 360px
+            
+            const totalDistance = phase1Distance + phase2Distance + phase3Distance;
+            const finalPosition = stopPosition - totalDistance;
 
             track.classList.add('spinning');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
             const startTime = performance.now();
+            const duration = 6000; // 6 секунд
             let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
                 const elapsed = currentTime - startTime;
                 let currentPosition;
 
-                if (elapsed <= normalDuration) {
-                    const secondsElapsed = elapsed / 1000;
-                    currentPosition = -(secondsElapsed * speedPerSecond);
-                } else if (elapsed <= normalDuration + slowdownDuration) {
-                    const slowdownElapsed = (elapsed - normalDuration) / 1000;
-                    const slowdownProgress = slowdownElapsed / 1;
-                    const eased = 1 - Math.pow(1 - slowdownProgress, 3);
-                    currentPosition = -(normalDistance + slowdownDistance * eased);
+                if (elapsed <= 2000) {
+                    // ФАЗА 1: разгон от 0 до 2 кл/с
+                    // Используем easeOut (ускорение)
+                    const progress = elapsed / 2000;
+                    const distance = phase1Distance * progress * progress;
+                    currentPosition = -distance;
+                } else if (elapsed <= 4000) {
+                    // ФАЗА 2: постоянная скорость 2 кл/с
+                    const phase2Elapsed = elapsed - 2000;
+                    const secondsElapsed = phase2Elapsed / 1000;
+                    currentPosition = -(phase1Distance + secondsElapsed * maxSpeed);
+                } else if (elapsed <= 6000) {
+                    // ФАЗА 3: замедление от 2 кл/с до 0
+                    const phase3Elapsed = elapsed - 4000;
+                    const progress = phase3Elapsed / 2000;
+                    // easeIn (замедление)
+                    const eased = 1 - (1 - progress) * (1 - progress);
+                    currentPosition = -(phase1Distance + phase2Distance + phase3Distance * eased);
                 } else {
-                    currentPosition = -(normalDistance + slowdownDistance);
+                    currentPosition = -(phase1Distance + phase2Distance + phase3Distance);
                 }
 
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
                 finalTrackPosition = currentPosition;
 
-                if (elapsed < normalDuration + slowdownDuration) {
+                if (elapsed < duration) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
                     setTimeout(() => {
