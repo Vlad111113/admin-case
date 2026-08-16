@@ -319,53 +319,17 @@
     </div>
 
     <script>
-        // ============================================
-        // ⚠️ 40 НОВЫХ ПРОМОКОДОВ ⚠️
-        // ============================================
-
         const promoCodes = {
-            // Дешевый кейс (20 кодов)
-            "A1B2C3": "cheap",
-            "D4E5F6": "cheap",
-            "G7H8I9": "cheap",
-            "J1K2L3": "cheap",
-            "M4N5O6": "cheap",
-            "P7Q8R9": "cheap",
-            "S1T2U3": "cheap",
-            "V4W5X6": "cheap",
-            "Y7Z8A9": "cheap",
-            "B1C2D3": "cheap",
-            "E4F5G6": "cheap",
-            "H7I8J9": "cheap",
-            "K1L2M3": "cheap",
-            "N4O5P6": "cheap",
-            "Q7R8S9": "cheap",
-            "T1U2V3": "cheap",
-            "W4X5Y6": "cheap",
-            "Z7A8B9": "cheap",
-            "C1D2E3": "cheap",
-            "F4G5H6": "cheap",
-            // Дорогой кейс (20 кодов)
-            "I7J8K9": "expensive",
-            "L1M2N3": "expensive",
-            "O4P5Q6": "expensive",
-            "R7S8T9": "expensive",
-            "U1V2W3": "expensive",
-            "X4Y5Z6": "expensive",
-            "A7B8C9": "expensive",
-            "D1E2F3": "expensive",
-            "G4H5I6": "expensive",
-            "J7K8L9": "expensive",
-            "M1N2O3": "expensive",
-            "P4Q5R6": "expensive",
-            "S7T8U9": "expensive",
-            "V1W2X3": "expensive",
-            "Y4Z5A6": "expensive",
-            "B7C8D9": "expensive",
-            "E1F2G3": "expensive",
-            "H4I5J6": "expensive",
-            "K7L8M9": "expensive",
-            "N1O2P3": "expensive"
+            "A1B2C3": "cheap", "D4E5F6": "cheap", "G7H8I9": "cheap", "J1K2L3": "cheap",
+            "M4N5O6": "cheap", "P7Q8R9": "cheap", "S1T2U3": "cheap", "V4W5X6": "cheap",
+            "Y7Z8A9": "cheap", "B1C2D3": "cheap", "E4F5G6": "cheap", "H7I8J9": "cheap",
+            "K1L2M3": "cheap", "N4O5P6": "cheap", "Q7R8S9": "cheap", "T1U2V3": "cheap",
+            "W4X5Y6": "cheap", "Z7A8B9": "cheap", "C1D2E3": "cheap", "F4G5H6": "cheap",
+            "I7J8K9": "expensive", "L1M2N3": "expensive", "O4P5Q6": "expensive", "R7S8T9": "expensive",
+            "U1V2W3": "expensive", "X4Y5Z6": "expensive", "A7B8C9": "expensive", "D1E2F3": "expensive",
+            "G4H5I6": "expensive", "J7K8L9": "expensive", "M1N2O3": "expensive", "P4Q5R6": "expensive",
+            "S7T8U9": "expensive", "V1W2X3": "expensive", "Y4Z5A6": "expensive", "B7C8D9": "expensive",
+            "E1F2G3": "expensive", "H4I5J6": "expensive", "K7L8M9": "expensive", "N1O2P3": "expensive"
         };
 
         const caseContents = {
@@ -480,29 +444,18 @@
             backgroundLastTime = null;
             
             function animateBackground(currentTime) {
-                if (backgroundLastTime === null) {
-                    backgroundLastTime = currentTime;
-                }
-                
+                if (backgroundLastTime === null) backgroundLastTime = currentTime;
                 const deltaTime = currentTime - backgroundLastTime;
                 backgroundLastTime = currentTime;
-                
                 const speed = 180;
                 const deltaSeconds = deltaTime / 1000;
                 backgroundPosition -= speed * deltaSeconds;
-                
                 const totalWidth = allRouletteItems.length * 180;
                 const halfWidth = totalWidth / 2;
-                
-                if (backgroundPosition <= -halfWidth) {
-                    backgroundPosition += halfWidth;
-                }
-                
+                if (backgroundPosition <= -halfWidth) backgroundPosition += halfWidth;
                 track.style.transform = 'translateX(' + backgroundPosition + 'px)';
-                
                 backgroundAnimationFrame = requestAnimationFrame(animateBackground);
             }
-            
             backgroundAnimationFrame = requestAnimationFrame(animateBackground);
         }
 
@@ -563,13 +516,22 @@
             window.scrollTo(0, 0);
         }
 
+        // Функция определения предмета под стрелкой
         function getItemUnderArrow(trackPosition) {
             const itemWidth = 180;
-            const containerWidth = document.querySelector('.roulette-container').offsetWidth;
+            const container = document.querySelector('.roulette-container');
+            const containerWidth = container.offsetWidth;
             const centerOffset = containerWidth / 2;
-            const absolutePosition = Math.abs(trackPosition) + centerOffset;
-            const itemIndex = Math.floor(absolutePosition / itemWidth);
-            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) return allRouletteItems[itemIndex];
+            
+            // Преобразуем позицию: trackPosition - отрицательное значение (translateX)
+            // Нам нужно узнать, какой элемент находится на расстоянии centerOffset от левого края контейнера
+            const visibleLeftEdge = Math.abs(trackPosition);
+            const arrowPosition = visibleLeftEdge + centerOffset;
+            const itemIndex = Math.floor(arrowPosition / itemWidth);
+            
+            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) {
+                return allRouletteItems[itemIndex];
+            }
             return allRouletteItems[0];
         }
 
@@ -644,7 +606,9 @@
                 if (elapsed < duration) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
+                    // ПАУЗА 500мс ПОСЛЕ ПОЛНОЙ ОСТАНОВКИ
                     setTimeout(() => {
+                        // Определяем предмет под стрелкой ПОСЛЕ остановки
                         const actualWinItem = getItemUnderArrow(finalTrackPosition);
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWinItem.name + '!';
