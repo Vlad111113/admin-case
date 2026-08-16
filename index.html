@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdminCase</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
             background: #1a1a2e;
@@ -18,7 +13,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-
         h1 {
             font-size: 2.5rem;
             margin-bottom: 40px;
@@ -26,7 +20,6 @@
             text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
             text-align: center;
         }
-
         .boxes {
             display: flex;
             gap: 20px;
@@ -35,14 +28,12 @@
             min-height: 70vh;
             flex-wrap: nowrap;
         }
-
         .box {
             width: 180px;
             height: 230px;
             background: #16213e;
             border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,66 +42,29 @@
             border: 2px solid #0f3460;
             position: relative;
         }
-
-        .box:hover {
-            transform: translateY(-5px);
-        }
-
-        .box.cheap {
-            border-color: #4caf50;
-        }
-
-        .box.expensive {
-            border-color: #ffd700;
-        }
-
-        .box-icon {
-            font-size: 3rem;
-        }
-
-        .box-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .lock-icon {
-            font-size: 2.5rem;
-            opacity: 0.5;
-        }
-
-        .box-price {
-            font-size: 0.85rem;
-            opacity: 0.7;
-        }
-
+        .box.cheap { border-color: #4caf50; }
+        .box.expensive { border-color: #ffd700; }
+        .box-icon { font-size: 3rem; }
+        .box-name { font-size: 1.2rem; font-weight: bold; }
+        .lock-icon { font-size: 2.5rem; opacity: 0.5; }
+        .box-price { font-size: 0.85rem; opacity: 0.7; }
         .info-circle {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 28px;
-            height: 28px;
+            top: 10px; right: 10px;
+            width: 28px; height: 28px;
             background: #666;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             font-weight: bold;
             font-size: 1rem;
             color: #fff;
             z-index: 5;
             border: none;
-            transition: background 0.3s;
         }
-
-        .info-circle:hover {
-            background: #888;
-        }
-
         .case-tooltip {
             position: absolute;
-            top: 10px;
-            right: 45px;
+            top: 10px; right: 45px;
             background: #2a2a3e;
             border: 1px solid #444;
             border-radius: 8px;
@@ -118,33 +72,22 @@
             font-size: 0.75rem;
             color: #ccc;
             display: none;
-            white-space: normal;
             z-index: 10;
             max-width: 180px;
             line-height: 1.3;
         }
-
-        .case-tooltip.show {
-            display: block;
-        }
-
+        .case-tooltip.show { display: block; }
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
             z-index: 100;
             align-items: center;
             justify-content: center;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
             background: #16213e;
             border-radius: 20px;
@@ -154,13 +97,7 @@
             text-align: center;
             border: 2px solid #0f3460;
         }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: #ff6b6b;
-            font-size: 1.5rem;
-        }
-
+        .modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.5rem; }
         .modal-content input {
             width: 100%;
             padding: 14px;
@@ -173,12 +110,6 @@
             margin-bottom: 15px;
             text-transform: uppercase;
         }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: #4caf50;
-        }
-
         .btn {
             padding: 12px 25px;
             border-radius: 10px;
@@ -186,10 +117,8 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
             margin: 5px;
         }
-
         .btn-open {
             background: #4caf50;
             color: #fff;
@@ -197,17 +126,8 @@
             padding: 15px 40px;
             position: relative;
         }
-
-        .btn-open:disabled {
-            background: #555;
-            cursor: not-allowed;
-        }
-
-        .btn-close {
-            background: #f44336;
-            color: #fff;
-        }
-
+        .btn-open:disabled { background: #555; cursor: not-allowed; }
+        .btn-close { background: #f44336; color: #fff; }
         .message {
             margin: 15px 0;
             padding: 15px;
@@ -216,35 +136,20 @@
             font-weight: bold;
             font-size: 1rem;
         }
-
-        .message.success {
-            display: block;
-            background: rgba(76, 175, 80, 0.2);
-            color: #4caf50;
-            border: 1px solid #4caf50;
-        }
-
-        .message.error {
-            display: block;
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-            border: 1px solid #f44336;
-        }
-
+        .message.success { display: block; background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid #4caf50; }
+        .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win {
             display: block;
-            background: rgba(255, 215, 0, 0.2);
+            background: rgba(255,215,0,0.2);
             color: #ffd700;
             border: 1px solid #ffd700;
             font-size: 1.2rem;
             animation: winPulse 0.5s ease 3;
         }
-
         @keyframes winPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.08); }
         }
-
         .btn-tooltip {
             position: absolute;
             bottom: calc(100% + 10px);
@@ -259,17 +164,9 @@
             display: none;
             white-space: nowrap;
             z-index: 20;
-            width: max-content;
-            max-width: 200px;
-            text-align: center;
-            line-height: 1.3;
             font-weight: normal;
         }
-
-        .btn-tooltip.show {
-            display: block;
-        }
-
+        .btn-tooltip.show { display: block; }
         .roulette-page {
             display: none;
             min-height: 100vh;
@@ -277,24 +174,9 @@
             align-items: center;
             padding: 20px;
         }
-
-        .roulette-page.active {
-            display: flex;
-        }
-
-        .roulette-page h2 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #ff6b6b;
-        }
-
-        .roulette-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-        }
-
+        .roulette-page.active { display: flex; }
+        .roulette-page h2 { font-size: 2rem; margin-bottom: 30px; text-align: center; color: #ff6b6b; }
+        .roulette-wrapper { position: relative; width: 100%; max-width: 400px; }
         .roulette-arrow {
             text-align: center;
             font-size: 2rem;
@@ -304,7 +186,6 @@
             z-index: 10;
             text-shadow: 0 0 15px #ff6b6b;
         }
-
         .roulette-container {
             position: relative;
             width: 100%;
@@ -313,16 +194,11 @@
             border: 3px solid #0f3460;
             background: #1a1a2e;
         }
-
         .roulette-track {
             display: flex;
             animation: slowScroll 120s linear infinite;
         }
-
-        .roulette-track.spinning {
-            animation: none;
-        }
-
+        .roulette-track.spinning { animation: none; }
         .roulette-item {
             min-width: 180px;
             padding: 30px 20px;
@@ -332,25 +208,12 @@
             border-right: 1px solid #0f3460;
             flex-shrink: 0;
         }
-
         @keyframes slowScroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-
-        .rewards-section {
-            width: 100%;
-            max-width: 400px;
-            margin-top: 30px;
-        }
-
-        .rewards-section h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #ffd700;
-            font-size: 1.5rem;
-        }
-
+        .rewards-section { width: 100%; max-width: 400px; margin-top: 30px; }
+        .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; font-size: 1.5rem; }
         .reward-item {
             background: #1a1a2e;
             padding: 15px;
@@ -363,39 +226,23 @@
             gap: 10px;
             position: relative;
         }
-
-        .reward-name {
-            font-weight: bold;
-            flex: 1;
-            font-size: 1.1rem;
-        }
-
+        .reward-name { font-weight: bold; flex: 1; font-size: 1.1rem; }
         .reward-info-circle {
             position: relative;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             background: #666;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             font-weight: bold;
             font-size: 1rem;
             color: #fff;
             border: none;
             flex-shrink: 0;
-            transition: background 0.3s;
         }
-
-        .reward-info-circle:hover {
-            background: #888;
-        }
-
         .reward-tooltip {
             position: absolute;
-            top: 50%;
-            right: 45px;
+            top: 50%; right: 45px;
             transform: translateY(-50%);
             background: #2a2a3e;
             border: 1px solid #444;
@@ -407,54 +254,18 @@
             white-space: nowrap;
             z-index: 10;
         }
-
-        .reward-tooltip.show {
-            display: block;
-        }
-
-        .rarity-common {
-            color: #ffffff;
-        }
-
-        .rarity-rare {
-            color: #4caf50;
-        }
-
-        .rarity-epic {
-            color: #9b59b6;
-        }
-
-        .rarity-legendary {
-            color: #ffd700;
-        }
-
+        .reward-tooltip.show { display: block; }
+        .rarity-common { color: #ffffff; }
+        .rarity-rare { color: #4caf50; }
+        .rarity-epic { color: #9b59b6; }
+        .rarity-legendary { color: #ffd700; }
         @media (max-width: 480px) {
-            .box {
-                width: 150px;
-                height: 200px;
-            }
-
-            .box-icon {
-                font-size: 2.5rem;
-            }
-
-            .box-name {
-                font-size: 1rem;
-            }
-
-            .lock-icon {
-                font-size: 2rem;
-            }
-
-            .roulette-item {
-                min-width: 140px;
-                padding: 25px 15px;
-                font-size: 0.9rem;
-            }
-
-            .boxes {
-                gap: 10px;
-            }
+            .box { width: 150px; height: 200px; }
+            .box-icon { font-size: 2.5rem; }
+            .box-name { font-size: 1rem; }
+            .lock-icon { font-size: 2rem; }
+            .roulette-item { min-width: 140px; padding: 25px 15px; font-size: 0.9rem; }
+            .boxes { gap: 10px; }
         }
     </style>
 </head>
@@ -462,7 +273,6 @@
 
     <div id="main-page">
         <h1>AdminCase</h1>
-
         <div class="boxes">
             <div class="box cheap" onclick="openPromoModal('cheap')">
                 <button class="info-circle" onclick="event.stopPropagation(); toggleTooltip('cheap-tooltip')">!</button>
@@ -472,7 +282,6 @@
                 <div class="lock-icon">🔒</div>
                 <div class="box-price">Содержимое скрыто</div>
             </div>
-
             <div class="box expensive" onclick="openPromoModal('expensive')">
                 <button class="info-circle" onclick="event.stopPropagation(); toggleTooltip('expensive-tooltip')">!</button>
                 <div class="case-tooltip" id="expensive-tooltip">Награды кейса вы сможете узнать на форуме</div>
@@ -486,21 +295,17 @@
 
     <div class="roulette-page" id="roulette-page">
         <h2 id="roulette-title">Кейс</h2>
-
         <div class="roulette-wrapper">
             <div class="roulette-arrow">▼</div>
             <div class="roulette-container">
                 <div class="roulette-track" id="roulette-track"></div>
             </div>
         </div>
-
         <div style="position: relative; display: inline-block; margin-top: 20px;">
             <button class="btn btn-open" id="btn-spin" onclick="spinRoulette()">Открыть</button>
             <div class="btn-tooltip" id="btn-tooltip">У вас нету бесплатных открытий</div>
         </div>
-
         <div class="message" id="result-message"></div>
-
         <div class="rewards-section">
             <h3>Награды кейса:</h3>
             <div id="rewards-list"></div>
@@ -520,26 +325,12 @@
 
     <script>
         const promoCodes = {
-            "K5J8H2": "cheap",
-            "R9T4Y6": "cheap",
-            "W2U7I3": "cheap",
-            "S8A4D1": "cheap",
-            "F6G9H5": "cheap",
-            "X3C7V2": "cheap",
-            "B8N5M1": "cheap",
-            "Q4W6E9": "cheap",
-            "Z7X3C5": "cheap",
-            "L2K9J4": "cheap",
-            "P8O3I6": "expensive",
-            "M5N2B7": "expensive",
-            "V9C4X1": "expensive",
-            "H3J8K6": "expensive",
-            "G5F2D9": "expensive",
-            "T7Y4U8": "expensive",
-            "E2R6W3": "expensive",
-            "A9S5D7": "expensive",
-            "Q1Z8X4": "expensive",
-            "N6M3B9": "expensive"
+            "K5J8H2": "cheap", "R9T4Y6": "cheap", "W2U7I3": "cheap", "S8A4D1": "cheap",
+            "F6G9H5": "cheap", "X3C7V2": "cheap", "B8N5M1": "cheap", "Q4W6E9": "cheap",
+            "Z7X3C5": "cheap", "L2K9J4": "cheap",
+            "P8O3I6": "expensive", "M5N2B7": "expensive", "V9C4X1": "expensive", "H3J8K6": "expensive",
+            "G5F2D9": "expensive", "T7Y4U8": "expensive", "E2R6W3": "expensive", "A9S5D7": "expensive",
+            "Q1Z8X4": "expensive", "N6M3B9": "expensive"
         };
 
         const caseContents = {
@@ -625,51 +416,24 @@
         function checkPromo() {
             const input = document.getElementById('promo-input').value.trim().toUpperCase();
             const msg = document.getElementById('promo-message');
-
             msg.className = 'message';
             msg.textContent = '';
 
-            if (!input) {
-                msg.className = 'message error';
-                msg.textContent = 'Введите промокод!';
-                return;
-            }
-
-            if (promoCodes[input] === undefined) {
-                msg.className = 'message error';
-                msg.textContent = 'Неверный промокод!';
-                return;
-            }
-
-            if (usedCodes[input]) {
-                msg.className = 'message error';
-                msg.textContent = 'Этот код уже использован!';
-                return;
-            }
-
-            if (promoCodes[input] !== currentCase) {
-                msg.className = 'message error';
-                msg.textContent = 'Этот код для другого кейса!';
-                return;
-            }
+            if (!input) { msg.className = 'message error'; msg.textContent = 'Введите промокод!'; return; }
+            if (promoCodes[input] === undefined) { msg.className = 'message error'; msg.textContent = 'Неверный промокод!'; return; }
+            if (usedCodes[input]) { msg.className = 'message error'; msg.textContent = 'Этот код уже использован!'; return; }
+            if (promoCodes[input] !== currentCase) { msg.className = 'message error'; msg.textContent = 'Этот код для другого кейса!'; return; }
 
             usedCodes[input] = true;
             activeCode = input;
             try {
                 localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes));
-                localStorage.setItem('admincase_active_code', JSON.stringify({
-                    code: input,
-                    caseType: currentCase
-                }));
+                localStorage.setItem('admincase_active_code', JSON.stringify({ code: input, caseType: currentCase }));
             } catch(e) {}
 
             msg.className = 'message success';
             msg.textContent = '✅ Код активирован!';
-
-            setTimeout(() => {
-                closePromoModal();
-                showRoulettePage(currentCase);
-            }, 600);
+            setTimeout(() => { closePromoModal(); showRoulettePage(currentCase); }, 600);
         }
 
         function showRoulettePage(caseType) {
@@ -687,11 +451,8 @@
             rouletteItems = [];
             caseContents[caseType].forEach(item => {
                 const count = Math.max(1, Math.round(item.chance));
-                for (let i = 0; i < count; i++) {
-                    rouletteItems.push(item);
-                }
+                for (let i = 0; i < count; i++) rouletteItems.push(item);
             });
-
             rouletteItems.sort(() => Math.random() - 0.5);
 
             const track = document.getElementById('roulette-track');
@@ -701,7 +462,6 @@
             track.style.transform = 'translateX(0)';
 
             allRouletteItems = [...rouletteItems, ...rouletteItems];
-            
             allRouletteItems.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'roulette-item';
@@ -711,21 +471,16 @@
 
             const rewardsList = document.getElementById('rewards-list');
             rewardsList.innerHTML = '';
-
             caseContents[caseType].forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'reward-item';
                 const rarityClass = getRarity(item.chance);
-                div.innerHTML = `
-                    <span class="reward-name ${rarityClass}">${item.name}</span>
-                    <div class="reward-info-circle" onclick="toggleRewardTooltip(event, ${item.chance})">
-                        !
+                div.innerHTML = `<span class="reward-name ${rarityClass}">${item.name}</span>
+                    <div class="reward-info-circle" onclick="toggleRewardTooltip(event, ${item.chance})">!
                         <div class="reward-tooltip"></div>
-                    </div>
-                `;
+                    </div>`;
                 rewardsList.appendChild(div);
             });
-
             window.scrollTo(0, 0);
         }
 
@@ -733,13 +488,9 @@
             const itemWidth = 180;
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2;
-            
             const absolutePosition = Math.abs(trackPosition) + centerOffset;
             const itemIndex = Math.floor(absolutePosition / itemWidth);
-            
-            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) {
-                return allRouletteItems[itemIndex];
-            }
+            if (itemIndex >= 0 && itemIndex < allRouletteItems.length) return allRouletteItems[itemIndex];
             return allRouletteItems[0];
         }
 
@@ -750,14 +501,12 @@
                 setTimeout(() => { tooltip.classList.remove('show'); }, 2000);
                 return;
             }
-
             if (isSpinning) return;
             isSpinning = true;
             hasSpun = true;
 
             const btn = document.getElementById('btn-spin');
             btn.disabled = true;
-
             const msg = document.getElementById('result-message');
             msg.className = 'message';
             msg.textContent = '';
@@ -765,60 +514,60 @@
             const track = document.getElementById('roulette-track');
             const itemWidth = 180;
             const totalItems = rouletteItems.length;
-
-            if (totalItems === 0) {
-                isSpinning = false;
-                hasSpun = false;
-                btn.disabled = false;
-                return;
-            }
+            if (totalItems === 0) { isSpinning = false; hasSpun = false; btn.disabled = false; return; }
 
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const centerOffset = containerWidth / 2 - itemWidth / 2;
-            
             const winIndex = Math.floor(Math.random() * totalItems);
             const stopPosition = -(winIndex * itemWidth) + centerOffset;
-            
-            // 0.5 клетки в секунду = 90px/сек
-            // За 6 секунд = 3 клетки = 540px
-            const totalDistance = 3 * itemWidth;
+
+            // СКОРОСТЬ: 45px/сек = 0.25 клетки/сек
+            // За 6 секунд = 270px
+            // Первые 5 секунд: 45px/сек = 225px
+            // Последняя секунда: ещё 45px с замедлением
+            const speedPerSecond = 45;
+            const normalDuration = 5000;
+            const slowdownDuration = 1000;
+            const normalDistance = speedPerSecond * 5; // 225px
+            const slowdownDistance = speedPerSecond * 1; // 45px
+            const totalDistance = normalDistance + slowdownDistance; // 270px
+
             const finalPosition = stopPosition - totalDistance;
 
             track.classList.add('spinning');
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
 
-            const duration = 6000;
             const startTime = performance.now();
-            const startPosition = 0;
             let finalTrackPosition = 0;
 
             function animateSpin(currentTime) {
                 const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
                 let currentPosition;
-                if (progress < 5/6) {
-                    // Первые 5 секунд — ровно 0.5 клетки в секунду (90px/сек)
-                    const secondsElapsed = progress * duration / 1000;
-                    currentPosition = startPosition - (secondsElapsed * 90);
-                } else {
+
+                if (elapsed <= normalDuration) {
+                    // Первые 5 секунд — равномерно 45px/сек
+                    const secondsElapsed = elapsed / 1000;
+                    currentPosition = -(secondsElapsed * speedPerSecond);
+                } else if (elapsed <= normalDuration + slowdownDuration) {
                     // Последняя секунда — плавное замедление
-                    const stopProgress = (progress - 5/6) * 6;
-                    const eased = 1 - Math.pow(1 - stopProgress, 3);
-                    // Прошли 5 секунд * 90px/сек = 450px, потом замедляемся на 90px
-                    currentPosition = startPosition - 450 - (90 * eased);
+                    const slowdownElapsed = (elapsed - normalDuration) / 1000;
+                    const slowdownProgress = slowdownElapsed / 1;
+                    const eased = 1 - Math.pow(1 - slowdownProgress, 3);
+                    currentPosition = -(normalDistance + slowdownDistance * eased);
+                } else {
+                    // Остановлено
+                    currentPosition = -(normalDistance + slowdownDistance);
                 }
 
                 track.style.transform = 'translateX(' + currentPosition + 'px)';
                 finalTrackPosition = currentPosition;
 
-                if (progress < 1) {
+                if (elapsed < normalDuration + slowdownDuration) {
                     animationFrame = requestAnimationFrame(animateSpin);
                 } else {
                     setTimeout(() => {
                         const actualWinItem = getItemUnderArrow(finalTrackPosition);
-                        
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWinItem.name + '!';
                         isSpinning = false;
@@ -835,7 +584,6 @@
         document.getElementById('promo-modal').addEventListener('click', function(e) {
             if (e.target === this) closePromoModal();
         });
-
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.info-circle') && !e.target.closest('.case-tooltip')) {
                 document.querySelectorAll('.case-tooltip').forEach(t => t.classList.remove('show'));
