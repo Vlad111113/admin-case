@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdminCase</title>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
@@ -347,7 +346,7 @@
     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
 
     <script>
-        // ===== FIREBASE КОНФИГУРАЦИЯ =====
+        // ===== FIREBASE =====
         var firebaseConfig = {
             apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
             authDomain: "admincase-27bec.firebaseapp.com",
@@ -410,12 +409,15 @@
         var serverTakenNames = [];
         var namesLoaded = false;
 
-        // ===== ЗАГРУЗКА ИМЁН С СЕРВЕРА =====
+        // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
             db.collection('taken_names').get().then(function(snapshot) {
                 serverTakenNames = [];
                 snapshot.forEach(function(doc) {
-                    serverTakenNames.push(doc.data().name);
+                    var name = doc.data().name;
+                    if (serverTakenNames.indexOf(name) === -1) {
+                        serverTakenNames.push(name);
+                    }
                 });
                 namesLoaded = true;
             }).catch(function() {
@@ -502,6 +504,8 @@
         }
 
         function showProfile() {
+            loadServerNames();
+            
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('profilePage').classList.add('active');
@@ -586,22 +590,36 @@
                     return;
                 }
                 
-                db.collection('taken_names').add({
-                    name: newName,
-                    timestamp: now
-                }).then(function() {
-                    userName = newName;
-                    lastNameChangeTime = now;
-                    serverTakenNames.push(newName);
-                    try {
-                        localStorage.setItem('admincase_user_name', userName);
-                        localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
-                    } catch(e) {}
-                    applyProfileData();
-                    exitEditMode();
-                }).catch(function() {
-                    alert('Ошибка при сохранении имени');
-                });
+                db.collection('taken_names')
+                    .where('name', '==', userName)
+                    .get()
+                    .then(function(snapshot) {
+                        var deletePromises = [];
+                        snapshot.forEach(function(doc) {
+                            deletePromises.push(doc.ref.delete());
+                        });
+                        return Promise.all(deletePromises);
+                    })
+                    .then(function() {
+                        return db.collection('taken_names').add({
+                            name: newName,
+                            timestamp: now
+                        });
+                    })
+                    .then(function() {
+                        userName = newName;
+                        lastNameChangeTime = now;
+                        serverTakenNames.push(newName);
+                        try {
+                            localStorage.setItem('admincase_user_name', userName);
+                            localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                        } catch(e) {}
+                        applyProfileData();
+                        exitEditMode();
+                    })
+                    .catch(function() {
+                        alert('Ошибка при сохранении имени');
+                    });
                 return;
             }
             applyProfileData();
