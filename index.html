@@ -564,7 +564,12 @@
             if (winHistory.length === 0) {
                 list.innerHTML = '<p style="opacity:0.5; width:100%; text-align:center;">Пока пусто</p>';
             } else {
-                for (var j = 0; j < winHistory.length; j++) {
+                // Сортировка: новые первыми
+                var sortedHistory = winHistory.slice().sort(function(a, b) {
+                    return (b.timestamp || 0) - (a.timestamp || 0);
+                });
+                
+                for (var j = 0; j < sortedHistory.length; j++) {
                     (function(item) {
                         var div = document.createElement('div');
                         div.className = 'history-item ' + getRarity(item.chance || 50);
@@ -585,7 +590,7 @@
                         };
                         div.appendChild(btn);
                         list.appendChild(div);
-                    })(winHistory[j]);
+                    })(sortedHistory[j]);
                 }
             }
             window.scrollTo(0, 0);
