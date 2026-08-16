@@ -196,7 +196,6 @@
         }
         .roulette-track {
             display: flex;
-            animation: slowScroll 90s linear infinite;
         }
         .roulette-track.spinning { animation: none; }
         .roulette-item {
@@ -207,10 +206,6 @@
             font-size: 1.1rem;
             border-right: 1px solid #0f3460;
             flex-shrink: 0;
-        }
-        @keyframes slowScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
         .rewards-section { width: 100%; max-width: 400px; margin-top: 30px; }
         .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; font-size: 1.5rem; }
@@ -324,13 +319,53 @@
     </div>
 
     <script>
+        // ============================================
+        // ⚠️ 40 НОВЫХ ПРОМОКОДОВ ⚠️
+        // ============================================
+
         const promoCodes = {
-            "K5J8H2": "cheap", "R9T4Y6": "cheap", "W2U7I3": "cheap", "S8A4D1": "cheap",
-            "F6G9H5": "cheap", "X3C7V2": "cheap", "B8N5M1": "cheap", "Q4W6E9": "cheap",
-            "Z7X3C5": "cheap", "L2K9J4": "cheap",
-            "P8O3I6": "expensive", "M5N2B7": "expensive", "V9C4X1": "expensive", "H3J8K6": "expensive",
-            "G5F2D9": "expensive", "T7Y4U8": "expensive", "E2R6W3": "expensive", "A9S5D7": "expensive",
-            "Q1Z8X4": "expensive", "N6M3B9": "expensive"
+            // Дешевый кейс (20 кодов)
+            "A1B2C3": "cheap",
+            "D4E5F6": "cheap",
+            "G7H8I9": "cheap",
+            "J1K2L3": "cheap",
+            "M4N5O6": "cheap",
+            "P7Q8R9": "cheap",
+            "S1T2U3": "cheap",
+            "V4W5X6": "cheap",
+            "Y7Z8A9": "cheap",
+            "B1C2D3": "cheap",
+            "E4F5G6": "cheap",
+            "H7I8J9": "cheap",
+            "K1L2M3": "cheap",
+            "N4O5P6": "cheap",
+            "Q7R8S9": "cheap",
+            "T1U2V3": "cheap",
+            "W4X5Y6": "cheap",
+            "Z7A8B9": "cheap",
+            "C1D2E3": "cheap",
+            "F4G5H6": "cheap",
+            // Дорогой кейс (20 кодов)
+            "I7J8K9": "expensive",
+            "L1M2N3": "expensive",
+            "O4P5Q6": "expensive",
+            "R7S8T9": "expensive",
+            "U1V2W3": "expensive",
+            "X4Y5Z6": "expensive",
+            "A7B8C9": "expensive",
+            "D1E2F3": "expensive",
+            "G4H5I6": "expensive",
+            "J7K8L9": "expensive",
+            "M1N2O3": "expensive",
+            "P4Q5R6": "expensive",
+            "S7T8U9": "expensive",
+            "V1W2X3": "expensive",
+            "Y4Z5A6": "expensive",
+            "B7C8D9": "expensive",
+            "E1F2G3": "expensive",
+            "H4I5J6": "expensive",
+            "K7L8M9": "expensive",
+            "N1O2P3": "expensive"
         };
 
         const caseContents = {
@@ -357,7 +392,10 @@
         let usedCodes = {};
         let activeCode = null;
         let animationFrame = null;
+        let backgroundAnimationFrame = null;
         let allRouletteItems = [];
+        let backgroundPosition = 0;
+        let backgroundLastTime = null;
 
         try {
             const saved = localStorage.getItem('admincase_used_codes');
@@ -436,6 +474,45 @@
             setTimeout(() => { closePromoModal(); showRoulettePage(currentCase); }, 600);
         }
 
+        function startBackgroundAnimation(track) {
+            if (backgroundAnimationFrame) cancelAnimationFrame(backgroundAnimationFrame);
+            backgroundPosition = 0;
+            backgroundLastTime = null;
+            
+            function animateBackground(currentTime) {
+                if (backgroundLastTime === null) {
+                    backgroundLastTime = currentTime;
+                }
+                
+                const deltaTime = currentTime - backgroundLastTime;
+                backgroundLastTime = currentTime;
+                
+                const speed = 180;
+                const deltaSeconds = deltaTime / 1000;
+                backgroundPosition -= speed * deltaSeconds;
+                
+                const totalWidth = allRouletteItems.length * 180;
+                const halfWidth = totalWidth / 2;
+                
+                if (backgroundPosition <= -halfWidth) {
+                    backgroundPosition += halfWidth;
+                }
+                
+                track.style.transform = 'translateX(' + backgroundPosition + 'px)';
+                
+                backgroundAnimationFrame = requestAnimationFrame(animateBackground);
+            }
+            
+            backgroundAnimationFrame = requestAnimationFrame(animateBackground);
+        }
+
+        function stopBackgroundAnimation() {
+            if (backgroundAnimationFrame) {
+                cancelAnimationFrame(backgroundAnimationFrame);
+                backgroundAnimationFrame = null;
+            }
+        }
+
         function showRoulettePage(caseType) {
             document.getElementById('main-page').style.display = 'none';
             document.getElementById('roulette-page').classList.add('active');
@@ -468,6 +545,8 @@
                 div.textContent = item.name;
                 track.appendChild(div);
             });
+
+            startBackgroundAnimation(track);
 
             const rewardsList = document.getElementById('rewards-list');
             rewardsList.innerHTML = '';
@@ -504,6 +583,8 @@
             if (isSpinning) return;
             isSpinning = true;
             hasSpun = true;
+
+            stopBackgroundAnimation();
 
             const btn = document.getElementById('btn-spin');
             btn.disabled = true;
