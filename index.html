@@ -16,8 +16,176 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
         }
-        h1 { font-size: 2.5rem; margin-bottom: 40px; color: #ff6b6b; text-align: center; }
+
+        /* ===== ТЕМЫ ===== */
+        /* Тема: Неон */
+        body.theme-neon {
+            background: #0a0a0a;
+            color: #00ffcc;
+        }
+        body.theme-neon .box,
+        body.theme-neon .profile-header,
+        body.theme-neon .history-section,
+        body.theme-neon .top-item,
+        body.theme-neon .other-profile-header,
+        body.theme-neon .modal-content,
+        body.theme-neon .dropdown-menu,
+        body.theme-neon .reward-item,
+        body.theme-neon .integration-btn,
+        body.theme-neon .achievements-section {
+            background: #111;
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+        }
+        body.theme-neon h1 { color: #00ffcc; text-shadow: 0 0 20px #00ffcc; }
+
+        /* Тема: Минимализм */
+        body.theme-minimal {
+            background: #fafafa;
+            color: #222;
+        }
+        body.theme-minimal .box,
+        body.theme-minimal .profile-header,
+        body.theme-minimal .history-section,
+        body.theme-minimal .top-item,
+        body.theme-minimal .other-profile-header,
+        body.theme-minimal .modal-content,
+        body.theme-minimal .dropdown-menu,
+        body.theme-minimal .reward-item,
+        body.theme-minimal .integration-btn,
+        body.theme-minimal .achievements-section {
+            background: #fff;
+            border-color: #ddd;
+            color: #222;
+            box-shadow: none;
+        }
+        body.theme-minimal h1 { color: #333; text-shadow: none; }
+
+        /* Тема: Брутализм */
+        body.theme-brutalism {
+            background: #ffdd00;
+            color: #000;
+        }
+        body.theme-brutalism .box,
+        body.theme-brutalism .profile-header,
+        body.theme-brutalism .history-section,
+        body.theme-brutalism .top-item,
+        body.theme-brutalism .other-profile-header,
+        body.theme-brutalism .modal-content,
+        body.theme-brutalism .dropdown-menu,
+        body.theme-brutalism .reward-item,
+        body.theme-brutalism .integration-btn,
+        body.theme-brutalism .achievements-section {
+            background: #fff;
+            border: 4px solid #000;
+            color: #000;
+            border-radius: 0;
+            box-shadow: 8px 8px 0 #000;
+        }
+        body.theme-brutalism h1 { color: #000; text-shadow: none; }
+
+        /* Тема: Живые градиенты */
+        body.theme-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            color: #fff;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        body.theme-gradient .box,
+        body.theme-gradient .profile-header,
+        body.theme-gradient .history-section,
+        body.theme-gradient .top-item,
+        body.theme-gradient .other-profile-header,
+        body.theme-gradient .modal-content,
+        body.theme-gradient .dropdown-menu,
+        body.theme-gradient .reward-item,
+        body.theme-gradient .integration-btn,
+        body.theme-gradient .achievements-section {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Тема: Лес */
+        body.theme-forest {
+            background: #1a2e1a;
+            color: #d4edda;
+        }
+        body.theme-forest .box,
+        body.theme-forest .profile-header,
+        body.theme-forest .history-section,
+        body.theme-forest .top-item,
+        body.theme-forest .other-profile-header,
+        body.theme-forest .modal-content,
+        body.theme-forest .dropdown-menu,
+        body.theme-forest .reward-item,
+        body.theme-forest .integration-btn,
+        body.theme-forest .achievements-section {
+            background: #223522;
+            border-color: #4caf50;
+        }
+        body.theme-forest h1 { color: #8bc34a; text-shadow: none; }
+
+        /* Тема: Океан */
+        body.theme-ocean {
+            background: #0a1628;
+            color: #b3e5fc;
+        }
+        body.theme-ocean .box,
+        body.theme-ocean .profile-header,
+        body.theme-ocean .history-section,
+        body.theme-ocean .top-item,
+        body.theme-ocean .other-profile-header,
+        body.theme-ocean .modal-content,
+        body.theme-ocean .dropdown-menu,
+        body.theme-ocean .reward-item,
+        body.theme-ocean .integration-btn,
+        body.theme-ocean .achievements-section {
+            background: #0d2137;
+            border-color: #0288d1;
+        }
+        body.theme-ocean h1 { color: #4fc3f7; text-shadow: none; }
+
+        /* Тема: Закат */
+        body.theme-sunset {
+            background: linear-gradient(180deg, #2c0a0a, #4a1a1a, #7a3a1a);
+            color: #ffe0b2;
+        }
+        body.theme-sunset .box,
+        body.theme-sunset .profile-header,
+        body.theme-sunset .history-section,
+        body.theme-sunset .top-item,
+        body.theme-sunset .other-profile-header,
+        body.theme-sunset .modal-content,
+        body.theme-sunset .dropdown-menu,
+        body.theme-sunset .reward-item,
+        body.theme-sunset .integration-btn,
+        body.theme-sunset .achievements-section {
+            background: rgba(60,20,20,0.8);
+            border-color: #ff9800;
+        }
+        body.theme-sunset h1 { color: #ffb74d; text-shadow: none; }
+
+        .online-counter {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .online-counter span {
+            color: #ffd700;
+            font-size: 1.3rem;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn {
             position: fixed; top: 20px; right: 20px;
             width: 45px; height: 45px;
@@ -74,7 +242,7 @@
         .help-btn:hover { border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); }
         .boxes {
             display: flex; gap: 25px; justify-content: center;
-            align-items: center; min-height: 70vh; flex-wrap: wrap;
+            align-items: center; min-height: 60vh; flex-wrap: wrap;
         }
         .box {
             width: 200px; height: 260px;
@@ -179,6 +347,10 @@
             background: none; border: none; color: #fff;
             font-size: 2rem; cursor: pointer; margin-left: auto; padding: 5px 10px;
         }
+        .theme-btn {
+            background: none; border: none; color: #fff;
+            font-size: 1.5rem; cursor: pointer; padding: 5px 10px;
+        }
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 30px; margin-bottom: 30px;
@@ -218,11 +390,17 @@
             color: #999;
             margin-bottom: 5px;
         }
+        .profile-reg-date {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
         .profile-name { font-size: 1.5rem; font-weight: bold; }
         .profile-stats {
             display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 25px;
+            flex-wrap: wrap;
         }
-        .stat-block { flex: 1; text-align: center; }
+        .stat-block { flex: 1; text-align: center; min-width: 100px; }
         .stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .stat-label { font-size: 0.85rem; opacity: 0.7; }
         .history-section {
@@ -366,6 +544,57 @@
         }
         .other-stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .other-stat-label { font-size: 0.85rem; opacity: 0.7; }
+        
+        .achievements-section {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .achievements-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .achievements-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .achievement-item {
+            background: #1a1a2e;
+            border: 1px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+            flex: 1;
+            max-width: 180px;
+        }
+        .achievement-item.unlocked {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        .achievement-item.locked {
+            opacity: 0.4;
+        }
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .achievement-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .achievement-desc {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
         .rarity-common { color: #ffffff; border-color: #ffffff; background: rgba(255,255,255,0.08); }
         .rarity-uncommon { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
         .rarity-rare { color: #2196f3; border-color: #2196f3; background: rgba(33,150,243,0.08); }
@@ -386,10 +615,11 @@
                 flex-shrink: 0;
             }
             .integrations { flex-direction: column; }
+            .achievement-item { min-width: 100px; max-width: 140px; }
         }
     </style>
 </head>
-<body>
+<body id="bodyElement">
 
     <button class="burger-btn" id="burgerBtn">
         <div class="burger-line"></div>
@@ -404,6 +634,7 @@
 
     <div id="mainPage">
         <h1>AdminCase</h1>
+        <div class="online-counter">🟢 Онлайн: <span id="onlineCount">0</span></div>
         <div class="boxes">
             <div class="box cheap" id="cheapBox">
                 <button class="info-circle" id="infoCheap">!</button>
@@ -435,6 +666,7 @@
 
     <div class="profile-page" id="profilePage">
         <button class="back-btn" id="backBtn">‹</button>
+        <button class="theme-btn" id="themeBtn" title="Сменить тему">🎨</button>
         <div class="profile-header" id="profileHeader">
             <div class="profile-top-row">
                 <div class="profile-info">
@@ -444,6 +676,7 @@
                     </div>
                     <div>
                         <div class="profile-id" id="profileIDDisplay">ID: 00000000</div>
+                        <div class="profile-reg-date" id="profileRegDate">Регистрация: —</div>
                         <div class="profile-name" id="profileNameDisplay">Игрок</div>
                         <input type="text" class="edit-name-input" id="editNameInput" placeholder="Введите имя" maxlength="20">
                     </div>
@@ -464,6 +697,10 @@
                 <button class="btn btn-open" id="confirmEditBtn">Готово</button>
                 <button class="btn btn-close" id="cancelEditBtn">Отмена</button>
             </div>
+        </div>
+        <div class="achievements-section">
+            <div class="achievements-title">🏅 Достижения</div>
+            <div class="achievements-list" id="achievementsList"></div>
         </div>
         <div class="history-section">
             <div class="history-title">История выпавших наград</div>
@@ -594,6 +831,19 @@
             ]
         };
 
+        var achievements = [
+            { id: "first_case", icon: "📦", name: "Первый кейс", desc: "Открыть первый кейс" },
+            { id: "ten_cases", icon: "🎁", name: "Коллекционер", desc: "Открыть 10 кейсов" },
+            { id: "fifty_cases", icon: "🏆", name: "Опытный", desc: "Открыть 50 кейсов" },
+            { id: "hundred_cases", icon: "👑", name: "Мастер кейсов", desc: "Открыть 100 кейсов" },
+            { id: "legendary_win", icon: "🌟", name: "Легенда", desc: "Выиграть легендарную награду" },
+            { id: "epic_win", icon: "💜", name: "Эпический", desc: "Выиграть эпическую награду" },
+            { id: "rare_win", icon: "💙", name: "Редкий", desc: "Выиграть редкую награду" },
+            { id: "first_name_change", icon: "✏️", name: "Новая личность", desc: "Сменить имя" },
+            { id: "avatar_change", icon: "📸", name: "Фотограф", desc: "Установить аватарку" },
+            { id: "returning", icon: "🔄", name: "Постоянный", desc: "Зайти на сайт 3 раза" }
+        ];
+
         var currentCase = null;
         var usedCodes = {};
         var openedCount = 0;
@@ -614,6 +864,14 @@
         var namesLoaded = false;
         var userUID = '';
         var userID = '';
+        var registrationDate = null;
+        var unlockedAchievements = [];
+        var soundEnabled = true;
+        var currentTheme = 'dark';
+        var visitCount = 0;
+
+        var themes = ['dark', 'neon', 'minimal', 'brutalism', 'gradient', 'forest', 'ocean', 'sunset'];
+        var themeIndex = 0;
 
         // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
@@ -697,6 +955,57 @@
             if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
         } catch(e) {}
 
+        // ===== ДАТА РЕГИСТРАЦИИ =====
+        try {
+            var savedRegDate = localStorage.getItem('admincase_reg_date');
+            if (savedRegDate) {
+                registrationDate = parseInt(savedRegDate);
+            } else {
+                registrationDate = Date.now();
+                localStorage.setItem('admincase_reg_date', registrationDate);
+            }
+        } catch(e) {
+            registrationDate = Date.now();
+            try { localStorage.setItem('admincase_reg_date', registrationDate); } catch(e2) {}
+        }
+
+        // ===== ДОСТИЖЕНИЯ =====
+        try {
+            var savedAchievements = localStorage.getItem('admincase_achievements');
+            if (savedAchievements) unlockedAchievements = JSON.parse(savedAchievements);
+        } catch(e) { unlockedAchievements = []; }
+
+        // ===== ПОСЕЩЕНИЯ =====
+        try {
+            var savedVisits = localStorage.getItem('admincase_visit_count');
+            if (savedVisits) {
+                visitCount = parseInt(savedVisits) + 1;
+            } else {
+                visitCount = 1;
+            }
+            localStorage.setItem('admincase_visit_count', visitCount);
+        } catch(e) { visitCount = 1; }
+
+        // ===== ТЕМА =====
+        try {
+            var savedTheme = localStorage.getItem('admincase_theme');
+            if (savedTheme && themes.indexOf(savedTheme) !== -1) {
+                currentTheme = savedTheme;
+                themeIndex = themes.indexOf(savedTheme);
+                if (currentTheme !== 'dark') {
+                    document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+                }
+            }
+        } catch(e) {}
+
+        // ===== ЗВУК =====
+        try {
+            var savedSound = localStorage.getItem('admincase_sound');
+            if (savedSound === 'off') {
+                soundEnabled = false;
+            }
+        } catch(e) {}
+
         // ===== ЛОГ ВХОДА =====
         db.collection('logins').add({
             userName: userName,
@@ -704,10 +1013,45 @@
             timestamp: Date.now()
         }).catch(function() {});
 
+        // ===== ОНЛАЙН СТАТУС =====
+        function updateOnlineStatus() {
+            db.collection('online_users').doc(userID).set({
+                userName: userName,
+                userID: userID,
+                lastSeen: Date.now()
+            }).catch(function() {});
+        }
+        updateOnlineStatus();
+        setInterval(updateOnlineStatus, 30000);
+
+        // ===== ЗАГРУЗКА ОНЛАЙН =====
+        function loadOnlineCount() {
+            var now = Date.now();
+            var fiveMinAgo = now - 5 * 60 * 1000;
+            db.collection('online_users')
+                .where('lastSeen', '>', fiveMinAgo)
+                .get()
+                .then(function(snapshot) {
+                    document.getElementById('onlineCount').textContent = snapshot.size;
+                })
+                .catch(function() {
+                    document.getElementById('onlineCount').textContent = '0';
+                });
+        }
+        loadOnlineCount();
+        setInterval(loadOnlineCount, 10000);
+
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
             document.getElementById('profileIDDisplay').textContent = 'ID: ' + userID;
+            if (registrationDate) {
+                var d = new Date(registrationDate);
+                var day = String(d.getDate()).padStart(2, '0');
+                var month = String(d.getMonth() + 1).padStart(2, '0');
+                var year = d.getFullYear();
+                document.getElementById('profileRegDate').textContent = 'Регистрация: ' + day + '.' + month + '.' + year;
+            }
             if (avatarData) {
                 document.getElementById('avatarImg').src = avatarData;
                 document.getElementById('avatarImg').style.display = 'block';
@@ -760,6 +1104,119 @@
                     return Promise.all(updatePromises);
                 })
                 .catch(function() {});
+        }
+
+        // ===== ФУНКЦИЯ ПРОВЕРКИ ДОСТИЖЕНИЙ =====
+        function checkAchievements() {
+            var newAchievements = [];
+            
+            if (openedCount >= 1 && unlockedAchievements.indexOf('first_case') === -1) {
+                newAchievements.push('first_case');
+            }
+            if (openedCount >= 10 && unlockedAchievements.indexOf('ten_cases') === -1) {
+                newAchievements.push('ten_cases');
+            }
+            if (openedCount >= 50 && unlockedAchievements.indexOf('fifty_cases') === -1) {
+                newAchievements.push('fifty_cases');
+            }
+            if (openedCount >= 100 && unlockedAchievements.indexOf('hundred_cases') === -1) {
+                newAchievements.push('hundred_cases');
+            }
+            if (visitCount >= 3 && unlockedAchievements.indexOf('returning') === -1) {
+                newAchievements.push('returning');
+            }
+            if (userName !== 'Игрок' && unlockedAchievements.indexOf('first_name_change') === -1) {
+                newAchievements.push('first_name_change');
+            }
+            if (avatarData && unlockedAchievements.indexOf('avatar_change') === -1) {
+                newAchievements.push('avatar_change');
+            }
+            
+            for (var i = 0; i < winHistory.length; i++) {
+                if (winHistory[i].rarity === 'legendary' && unlockedAchievements.indexOf('legendary_win') === -1) {
+                    newAchievements.push('legendary_win');
+                }
+                if (winHistory[i].rarity === 'epic' && unlockedAchievements.indexOf('epic_win') === -1) {
+                    newAchievements.push('epic_win');
+                }
+                if (winHistory[i].rarity === 'rare' && unlockedAchievements.indexOf('rare_win') === -1) {
+                    newAchievements.push('rare_win');
+                }
+            }
+            
+            if (newAchievements.length > 0) {
+                for (var j = 0; j < newAchievements.length; j++) {
+                    if (unlockedAchievements.indexOf(newAchievements[j]) === -1) {
+                        unlockedAchievements.push(newAchievements[j]);
+                    }
+                }
+                try {
+                    localStorage.setItem('admincase_achievements', JSON.stringify(unlockedAchievements));
+                } catch(e) {}
+            }
+        }
+
+        // ===== ФУНКЦИЯ ОТОБРАЖЕНИЯ ДОСТИЖЕНИЙ =====
+        function displayAchievements() {
+            var list = document.getElementById('achievementsList');
+            list.innerHTML = '';
+            
+            for (var i = 0; i < achievements.length; i++) {
+                (function(achievement) {
+                    var div = document.createElement('div');
+                    var unlocked = unlockedAchievements.indexOf(achievement.id) !== -1;
+                    div.className = 'achievement-item ' + (unlocked ? 'unlocked' : 'locked');
+                    div.innerHTML = 
+                        '<div class="achievement-icon">' + achievement.icon + '</div>' +
+                        '<div class="achievement-name">' + achievement.name + '</div>' +
+                        '<div class="achievement-desc">' + achievement.desc + '</div>';
+                    list.appendChild(div);
+                })(achievements[i]);
+            }
+        }
+
+        // ===== ЗВУКИ =====
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                var oscillator = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                if (type === 'win') {
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.value = 0.3;
+                    oscillator.start();
+                    setTimeout(function() {
+                        oscillator.frequency.value = 1200;
+                    }, 100);
+                    setTimeout(function() {
+                        oscillator.stop();
+                    }, 300);
+                } else if (type === 'legendary') {
+                    oscillator.frequency.value = 600;
+                    gainNode.gain.value = 0.3;
+                    oscillator.start();
+                    setTimeout(function() {
+                        oscillator.frequency.value = 900;
+                    }, 150);
+                    setTimeout(function() {
+                        oscillator.frequency.value = 1200;
+                    }, 300);
+                    setTimeout(function() {
+                        oscillator.stop();
+                    }, 500);
+                } else if (type === 'click') {
+                    oscillator.frequency.value = 400;
+                    gainNode.gain.value = 0.2;
+                    oscillator.start();
+                    setTimeout(function() {
+                        oscillator.stop();
+                    }, 100);
+                }
+            } catch(e) {}
         }
 
         // ===== ФУНКЦИИ =====
@@ -842,6 +1299,9 @@
                     })(sortedHistory[j]);
                 }
             }
+            
+            checkAchievements();
+            displayAchievements();
             window.scrollTo(0, 0);
         }
 
@@ -1121,6 +1581,7 @@
                             }).catch(function() {});
                             
                             updateUserDataInFirebase();
+                            checkAchievements();
                             
                             applyProfileData();
                             exitEditMode();
@@ -1153,6 +1614,7 @@
                         }).catch(function() {});
                         
                         updateUserDataInFirebase();
+                        checkAchievements();
                         
                         applyProfileData();
                         exitEditMode();
@@ -1190,6 +1652,7 @@
             usedCodes[input] = true;
             try { localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes)); } catch(e) {}
 
+            playSound('click');
             msg.className = 'message success';
             msg.textContent = '✅ Код активирован!';
             setTimeout(function() {
@@ -1373,6 +1836,14 @@
                             timestamp: Date.now()
                         }).catch(function() {});
                         
+                        checkAchievements();
+                        
+                        if (actualRarity === 'legendary') {
+                            playSound('legendary');
+                        } else {
+                            playSound('win');
+                        }
+                        
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
                         isSpinning = false;
@@ -1390,11 +1861,13 @@
 
         document.getElementById('profileBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
+            playSound('click');
             showProfile();
         };
 
         document.getElementById('topBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
+            playSound('click');
             showTopPage();
         };
 
@@ -1402,12 +1875,14 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            loadOnlineCount();
         };
 
         document.getElementById('topBackBtn').onclick = function() {
             document.getElementById('topPage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            loadOnlineCount();
         };
 
         document.getElementById('otherBackBtn').onclick = function() {
@@ -1415,10 +1890,12 @@
         };
 
         document.getElementById('cheapBox').onclick = function() {
+            playSound('click');
             openPromoModal('cheap');
         };
 
         document.getElementById('expensiveBox').onclick = function() {
+            playSound('click');
             openPromoModal('expensive');
         };
 
@@ -1491,11 +1968,46 @@
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
                         
                         updateUserDataInFirebase();
+                        checkAchievements();
                     };
                     img.src = ev.target.result;
                 };
                 reader.readAsDataURL(file);
             }
+        };
+
+        document.getElementById('themeBtn').onclick = function() {
+            // Убираем текущую тему
+            for (var t = 0; t < themes.length; t++) {
+                document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
+            }
+            
+            themeIndex++;
+            if (themeIndex >= themes.length) {
+                themeIndex = 0;
+            }
+            
+            currentTheme = themes[themeIndex];
+            
+            if (currentTheme !== 'dark') {
+                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+            }
+            
+            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
+            playSound('click');
+            
+            // Показываем название темы
+            var themeNames = {
+                'dark': 'Тёмная',
+                'neon': 'Неон',
+                'minimal': 'Минимализм',
+                'brutalism': 'Брутализм',
+                'gradient': 'Градиент',
+                'forest': 'Лес',
+                'ocean': 'Океан',
+                'sunset': 'Закат'
+            };
+            alert('Тема: ' + (themeNames[currentTheme] || currentTheme));
         };
     </script>
 
