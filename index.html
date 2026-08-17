@@ -34,7 +34,9 @@
         body.theme-neon .reward-item,
         body.theme-neon .integration-btn,
         body.theme-neon .achievements-section,
-        body.theme-neon .theme-dropdown {
+        body.theme-neon .theme-dropdown,
+        body.theme-neon .admin-panel,
+        body.theme-neon .promo-item {
             background: #111;
             border-color: #00ffcc;
             box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
@@ -58,7 +60,9 @@
         body.theme-gold .reward-item,
         body.theme-gold .integration-btn,
         body.theme-gold .achievements-section,
-        body.theme-gold .theme-dropdown {
+        body.theme-gold .theme-dropdown,
+        body.theme-gold .admin-panel,
+        body.theme-gold .promo-item {
             background: #241e0a;
             border-color: #ffd700;
             color: #fff8e1;
@@ -81,7 +85,9 @@
         body.theme-cyberpunk .reward-item,
         body.theme-cyberpunk .integration-btn,
         body.theme-cyberpunk .achievements-section,
-        body.theme-cyberpunk .theme-dropdown {
+        body.theme-cyberpunk .theme-dropdown,
+        body.theme-cyberpunk .admin-panel,
+        body.theme-cyberpunk .promo-item {
             background: #1a0030;
             border-color: #ff00ff;
             color: #00ffff;
@@ -104,7 +110,9 @@
         body.theme-space .reward-item,
         body.theme-space .integration-btn,
         body.theme-space .achievements-section,
-        body.theme-space .theme-dropdown {
+        body.theme-space .theme-dropdown,
+        body.theme-space .admin-panel,
+        body.theme-space .promo-item {
             background: #0a0a2e;
             border-color: #7c4dff;
             color: #e8eaf6;
@@ -127,7 +135,9 @@
         body.theme-blood .reward-item,
         body.theme-blood .integration-btn,
         body.theme-blood .achievements-section,
-        body.theme-blood .theme-dropdown {
+        body.theme-blood .theme-dropdown,
+        body.theme-blood .admin-panel,
+        body.theme-blood .promo-item {
             background: #1a0000;
             border-color: #cc0000;
             color: #ffcccc;
@@ -150,7 +160,9 @@
         body.theme-emerald .reward-item,
         body.theme-emerald .integration-btn,
         body.theme-emerald .achievements-section,
-        body.theme-emerald .theme-dropdown {
+        body.theme-emerald .theme-dropdown,
+        body.theme-emerald .admin-panel,
+        body.theme-emerald .promo-item {
             background: #002a14;
             border-color: #00cc88;
             color: #ccffe8;
@@ -173,7 +185,9 @@
         body.theme-ice .reward-item,
         body.theme-ice .integration-btn,
         body.theme-ice .achievements-section,
-        body.theme-ice .theme-dropdown {
+        body.theme-ice .theme-dropdown,
+        body.theme-ice .admin-panel,
+        body.theme-ice .promo-item {
             background: #001a28;
             border-color: #4dd0e1;
             color: #e0f7fa;
@@ -196,7 +210,9 @@
         body.theme-fire .reward-item,
         body.theme-fire .integration-btn,
         body.theme-fire .achievements-section,
-        body.theme-fire .theme-dropdown {
+        body.theme-fire .theme-dropdown,
+        body.theme-fire .admin-panel,
+        body.theme-fire .promo-item {
             background: #280a00;
             border-color: #ff4500;
             color: #ffe0cc;
@@ -219,7 +235,9 @@
         body.theme-twilight .reward-item,
         body.theme-twilight .integration-btn,
         body.theme-twilight .achievements-section,
-        body.theme-twilight .theme-dropdown {
+        body.theme-twilight .theme-dropdown,
+        body.theme-twilight .admin-panel,
+        body.theme-twilight .promo-item {
             background: #1a0a2e;
             border-color: #9c27b0;
             color: #e1bee7;
@@ -811,7 +829,6 @@
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
         
-        /* Модалка просмотра аватара */
         .avatar-modal {
             display: none;
             position: fixed;
@@ -841,6 +858,99 @@
             background: none;
             border: none;
         }
+
+        /* Админ-панель */
+        .admin-panel {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .admin-panel.active { display: block; }
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-section {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .admin-section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .admin-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .admin-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .promo-item {
+            background: #1a1a2e;
+            border: 1px solid #0f3460;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .promo-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .promo-code {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .promo-details {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        .promo-delete {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .promo-delete:hover { background: #d32f2f; }
         
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
@@ -874,6 +984,7 @@
     <div class="dropdown-menu" id="dropdownMenu">
         <button class="dropdown-item" id="profileBtn">Профиль</button>
         <button class="dropdown-item" id="topBtn">Топ</button>
+        <button class="dropdown-item" id="adminBtn" style="display:none;">🔧 Админ-панель</button>
     </div>
 
     <div id="mainPage">
@@ -1013,6 +1124,35 @@
         </div>
     </div>
 
+    <!-- Админ-панель -->
+    <div class="admin-panel" id="adminPanel">
+        <button class="back-btn" id="adminBackBtn">‹</button>
+        <div class="admin-title">🔧 Админ-панель</div>
+        
+        <div class="admin-section">
+            <div class="admin-section-title">Создать промокод</div>
+            <div class="admin-label">Код:</div>
+            <input type="text" class="admin-input" id="adminPromoCode" placeholder="НАПРИМЕР: EVENT-2024" maxlength="30">
+            <div class="admin-label">Кейс:</div>
+            <select class="admin-select" id="adminPromoCase">
+                <option value="cheap">Дешевый</option>
+                <option value="expensive">Дорогой</option>
+            </select>
+            <div class="admin-label">Количество активаций:</div>
+            <input type="number" class="admin-input" id="adminPromoActivations" placeholder="10" min="1" max="1000" value="10" style="text-transform:none;">
+            <div class="admin-label">Время работы (часов):</div>
+            <input type="number" class="admin-input" id="adminPromoHours" placeholder="24" min="1" max="720" value="24" style="text-transform:none;">
+            <button class="btn btn-open" onclick="createPromoCode()">Создать</button>
+        </div>
+        
+        <div class="admin-section">
+            <div class="admin-section-title">Активные промокоды</div>
+            <div id="activePromosList">
+                <p style="opacity:0.5; text-align:center;">Загрузка...</p>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="promoModal">
         <div class="modal-content">
             <h2 id="promoTitle">Введите промокод</h2>
@@ -1024,7 +1164,6 @@
         </div>
     </div>
 
-    <!-- Модалка просмотра аватара -->
     <div class="avatar-modal" id="avatarModal">
         <button class="avatar-modal-close" onclick="closeAvatarViewer()">✕</button>
         <img id="avatarModalImg" src="" alt="Аватар">
@@ -1250,8 +1389,174 @@
         var visitCount = 0;
         var isAdmin = false;
         var currentOtherAvatar = null;
+        var dynamicPromoCodes = {};
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
+
+        // ===== ПОКАЗАТЬ КНОПКУ АДМИН-ПАНЕЛИ ЕСЛИ АДМИН =====
+        function updateAdminUI() {
+            if (isAdmin) {
+                document.getElementById('adminBtn').style.display = 'block';
+            }
+        }
+
+        // ===== ЗАГРУЗКА ДИНАМИЧЕСКИХ ПРОМОКОДОВ =====
+        function loadDynamicPromoCodes() {
+            db.collection('active_promos').get().then(function(snapshot) {
+                dynamicPromoCodes = {};
+                snapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    // Проверяем срок действия
+                    if (data.expiresAt && data.expiresAt < Date.now()) {
+                        // Удаляем просроченный промокод
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    // Проверяем количество активаций
+                    if (data.activationsLeft <= 0) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    dynamicPromoCodes[data.code] = {
+                        caseType: data.caseType,
+                        docId: doc.id,
+                        activationsLeft: data.activationsLeft,
+                        expiresAt: data.expiresAt
+                    };
+                });
+            }).catch(function() {});
+        }
+        loadDynamicPromoCodes();
+        setInterval(loadDynamicPromoCodes, 30000);
+
+        // ===== СОЗДАНИЕ ПРОМОКОДА =====
+        function createPromoCode() {
+            var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
+            var caseType = document.getElementById('adminPromoCase').value;
+            var activations = parseInt(document.getElementById('adminPromoActivations').value);
+            var hours = parseInt(document.getElementById('adminPromoHours').value);
+            
+            if (!code) {
+                alert('Введите код промокода!');
+                return;
+            }
+            
+            if (code.length < 3) {
+                alert('Код должен быть не короче 3 символов!');
+                return;
+            }
+            
+            if (!activations || activations < 1) {
+                alert('Введите корректное количество активаций!');
+                return;
+            }
+            
+            if (!hours || hours < 1) {
+                alert('Введите корректное время работы!');
+                return;
+            }
+            
+            // Проверка на существование кода
+            if (promoCodes[code] || dynamicPromoCodes[code]) {
+                alert('Такой промокод уже существует!');
+                return;
+            }
+            
+            var expiresAt = Date.now() + hours * 60 * 60 * 1000;
+            
+            db.collection('active_promos').add({
+                code: code,
+                caseType: caseType,
+                activationsLeft: activations,
+                totalActivations: activations,
+                expiresAt: expiresAt,
+                createdAt: Date.now()
+            }).then(function() {
+                document.getElementById('adminPromoCode').value = '';
+                loadDynamicPromoCodes();
+                showActivePromos();
+                alert('Промокод ' + code + ' создан!');
+            }).catch(function(error) {
+                alert('Ошибка: ' + error.message);
+            });
+        }
+
+        // ===== ПОКАЗ АКТИВНЫХ ПРОМОКОДОВ =====
+        function showActivePromos() {
+            var list = document.getElementById('activePromosList');
+            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
+            
+            db.collection('active_promos').get().then(function(snapshot) {
+                list.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
+                    return;
+                }
+                
+                snapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    
+                    // Проверка срока
+                    if (data.expiresAt && data.expiresAt < Date.now()) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    
+                    // Проверка активаций
+                    if (data.activationsLeft <= 0) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    
+                    var div = document.createElement('div');
+                    div.className = 'promo-item';
+                    
+                    var expiresDate = new Date(data.expiresAt);
+                    var expiresStr = expiresDate.toLocaleString('ru-RU');
+                    
+                    div.innerHTML = 
+                        '<div class="promo-info">' +
+                            '<div class="promo-code">' + data.code + '</div>' +
+                            '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
+                            ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
+                            ' | До: ' + expiresStr + '</div>' +
+                        '</div>' +
+                        '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
+                    
+                    list.appendChild(div);
+                });
+            }).catch(function(error) {
+                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
+            });
+        }
+
+        // ===== УДАЛЕНИЕ ПРОМОКОДА =====
+        function deletePromoCode(docId) {
+            if (!confirm('Удалить промокод?')) return;
+            
+            db.collection('active_promos').doc(docId).delete()
+                .then(function() {
+                    loadDynamicPromoCodes();
+                    showActivePromos();
+                })
+                .catch(function(error) {
+                    alert('Ошибка: ' + error.message);
+                });
+        }
+
+        // ===== ПОКАЗ АДМИН-ПАНЕЛИ =====
+        function showAdminPanel() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('adminPanel').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'admin'); } catch(e) {}
+            showActivePromos();
+            window.scrollTo(0, 0);
+        }
 
         // ===== ФУНКЦИЯ ОТКРЫТИЯ ПРОСМОТРА АВАТАРА =====
         function openAvatarViewer(avatarSrc) {
@@ -1474,6 +1779,7 @@
             }
         }
         applyProfileData();
+        updateAdminUI();
 
         try {
             var savedPage = localStorage.getItem('admincase_current_page');
@@ -1484,6 +1790,8 @@
             } else if (savedPage === 'other_profile') {
                 var savedOtherID = localStorage.getItem('admincase_other_profile_id');
                 if (savedOtherID) showOtherProfile(savedOtherID);
+            } else if (savedPage === 'admin') {
+                if (isAdmin) showAdminPanel();
             }
         } catch(e) {}
 
@@ -1621,6 +1929,7 @@
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('topPage').classList.remove('active');
             document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
@@ -1682,6 +1991,7 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('topPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
             
@@ -1801,6 +2111,7 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('topPage').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('otherProfilePage').classList.add('active');
             try {
                 localStorage.setItem('admincase_current_page', 'other_profile');
@@ -2059,19 +2370,74 @@
             msg.textContent = '';
 
             if (!input) { msg.className = 'message error'; msg.textContent = 'Введите промокод!'; return; }
-            if (promoCodes[input] === undefined) { msg.className = 'message error'; msg.textContent = 'Неверный промокод!'; return; }
-            if (usedCodes[input]) { msg.className = 'message error'; msg.textContent = 'Этот код уже использован!'; return; }
-            if (promoCodes[input] !== currentCase) { msg.className = 'message error'; msg.textContent = 'Этот код для другого кейса!'; return; }
-
-            usedCodes[input] = true;
-            try { localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes)); } catch(e) {}
-
-            msg.className = 'message success';
-            msg.textContent = '✅ Код активирован!';
-            setTimeout(function() {
-                document.getElementById('promoModal').classList.remove('active');
-                showRoulettePage(currentCase);
-            }, 500);
+            
+            // Проверка статических промокодов
+            if (promoCodes[input] !== undefined) {
+                if (usedCodes[input]) { msg.className = 'message error'; msg.textContent = 'Этот код уже использован!'; return; }
+                if (promoCodes[input] !== currentCase) { msg.className = 'message error'; msg.textContent = 'Этот код для другого кейса!'; return; }
+                
+                usedCodes[input] = true;
+                try { localStorage.setItem('admincase_used_codes', JSON.stringify(usedCodes)); } catch(e) {}
+                
+                msg.className = 'message success';
+                msg.textContent = '✅ Код активирован!';
+                setTimeout(function() {
+                    document.getElementById('promoModal').classList.remove('active');
+                    showRoulettePage(currentCase);
+                }, 500);
+                return;
+            }
+            
+            // Проверка динамических промокодов
+            if (dynamicPromoCodes[input] !== undefined) {
+                var promoData = dynamicPromoCodes[input];
+                
+                if (promoData.expiresAt && promoData.expiresAt < Date.now()) {
+                    db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                    delete dynamicPromoCodes[input];
+                    msg.className = 'message error';
+                    msg.textContent = 'Промокод истёк!';
+                    return;
+                }
+                
+                if (promoData.activationsLeft <= 0) {
+                    db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                    delete dynamicPromoCodes[input];
+                    msg.className = 'message error';
+                    msg.textContent = 'Промокод больше не действителен!';
+                    return;
+                }
+                
+                if (promoData.caseType !== currentCase) {
+                    msg.className = 'message error';
+                    msg.textContent = 'Этот код для другого кейса!';
+                    return;
+                }
+                
+                // Уменьшаем количество активаций
+                var newActivations = promoData.activationsLeft - 1;
+                db.collection('active_promos').doc(promoData.docId).update({
+                    activationsLeft: newActivations
+                }).then(function() {
+                    if (newActivations <= 0) {
+                        db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                        delete dynamicPromoCodes[input];
+                    } else {
+                        dynamicPromoCodes[input].activationsLeft = newActivations;
+                    }
+                }).catch(function() {});
+                
+                msg.className = 'message success';
+                msg.textContent = '✅ Код активирован!';
+                setTimeout(function() {
+                    document.getElementById('promoModal').classList.remove('active');
+                    showRoulettePage(currentCase);
+                }, 500);
+                return;
+            }
+            
+            msg.className = 'message error';
+            msg.textContent = 'Неверный промокод!';
         }
 
         function showRoulettePage(caseType) {
@@ -2079,6 +2445,7 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('topPage').classList.remove('active');
             document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('roulettePage').classList.add('active');
             document.getElementById('rouletteTitle').textContent = 
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
@@ -2314,6 +2681,11 @@
             showTopPage();
         };
 
+        document.getElementById('adminBtn').onclick = function() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            showAdminPanel();
+        };
+
         document.getElementById('backBtn').onclick = function() {
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
@@ -2330,6 +2702,13 @@
 
         document.getElementById('otherBackBtn').onclick = function() {
             showTopPage();
+        };
+
+        document.getElementById('adminBackBtn').onclick = function() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            loadOnlineCount();
         };
 
         document.getElementById('cheapBox').onclick = function() {
