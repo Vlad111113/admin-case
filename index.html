@@ -400,12 +400,16 @@
         }
         .settings-btn {
             background: none; border: none; color: #fff;
-            font-size: 2rem; cursor: pointer; margin-left: auto; padding: 5px 10px;
+            font-size: 1.5rem; cursor: pointer; padding: 5px 8px;
+            opacity: 0.7;
         }
+        .settings-btn:hover { opacity: 1; }
         .theme-btn {
             background: none; border: none; color: #fff;
-            font-size: 1.5rem; cursor: pointer; padding: 5px 10px;
+            font-size: 1.2rem; cursor: pointer; padding: 5px 8px;
+            opacity: 0.7;
         }
+        .theme-btn:hover { opacity: 1; }
         .theme-wrapper {
             position: relative;
             display: inline-block;
@@ -459,30 +463,32 @@
         .theme-overlay.show { display: block; }
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
-            border-radius: 20px; padding: 30px; margin-bottom: 30px;
+            border-radius: 20px; padding: 25px; margin-bottom: 30px;
             position: relative;
         }
         .profile-top-row {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        .profile-info { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .profile-info { display: flex; align-items: flex-start; gap: 15px; flex: 1; min-width: 0; }
         .avatar {
-            width: 80px;
-            height: 80px;
-            min-width: 80px;
-            min-height: 80px;
-            max-width: 80px;
-            max-height: 80px;
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            min-height: 70px;
+            max-width: 70px;
+            max-height: 70px;
             flex-shrink: 0;
             border-radius: 50%;
             background: linear-gradient(135deg, #4caf50, #ffd700);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             overflow: hidden;
             cursor: pointer;
             aspect-ratio: 1/1;
+            position: relative;
         }
         .avatar img { 
             width: 100%; 
@@ -491,45 +497,76 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
+        .avatar-edit-icon {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: #4caf50;
+            border-radius: 50%;
+            border: 2px solid #16213e;
+            font-size: 0.7rem;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .profile-info-text {
+            flex: 1;
+            min-width: 0;
+        }
         .profile-id {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #999;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            word-break: break-all;
         }
         .profile-reg-date {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            word-break: break-all;
         }
-        .profile-name { font-size: 1.5rem; font-weight: bold; }
+        .profile-name { 
+            font-size: 1.2rem; 
+            font-weight: bold;
+            word-break: break-word;
+        }
         .profile-name.admin-name {
             color: #ff3333;
-            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff3333;
+            text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
         }
         .profile-prefix {
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 3px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid;
         }
-        .profile-prefix.prefix-novice { color: #4caf50; }
-        .profile-prefix.prefix-amateur { color: #42a5f5; }
-        .profile-prefix.prefix-experienced { color: #2196f3; }
-        .profile-prefix.prefix-master { color: #9c27b0; }
-        .profile-prefix.prefix-expert { color: #ff9800; }
-        .profile-prefix.prefix-legend { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
-        .profile-prefix.prefix-overlord { color: #f44336; text-shadow: 0 0 10px #f44336; }
+        .profile-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
+        .profile-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
+        .profile-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
+        .profile-prefix.prefix-master { color: #9c27b0; border-color: #9c27b0; }
+        .profile-prefix.prefix-expert { color: #ff9800; border-color: #ff9800; }
+        .profile-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; text-shadow: 0 0 5px #ffd700; }
+        .profile-prefix.prefix-overlord { color: #f44336; border-color: #f44336; text-shadow: 0 0 5px #f44336; }
         .profile-prefix.prefix-admin {
             color: #ff3333;
-            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff3333;
-            font-size: 1.1rem;
+            border-color: #ff3333;
+            text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
+            font-size: 0.9rem;
+            margin-top: 3px;
         }
         .profile-stats {
-            display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 25px;
+            display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 20px;
             flex-wrap: wrap;
         }
         .stat-block { flex: 1; text-align: center; min-width: 100px; }
-        .stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
-        .stat-label { font-size: 0.85rem; opacity: 0.7; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: #ffd700; }
+        .stat-label { font-size: 0.8rem; opacity: 0.7; }
         .history-section {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 25px;
@@ -564,7 +601,7 @@
         .edit-name-input {
             width: 100%; padding: 10px; border-radius: 8px;
             border: 2px solid #0f3460; background: #1a1a2e;
-            color: #fff; font-size: 1.2rem; margin-top: 10px; display: none;
+            color: #fff; font-size: 1rem; margin-top: 10px; display: none;
         }
         .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .top-page.active { display: block; }
@@ -617,6 +654,7 @@
             justify-content: center;
             font-size: 1.8rem;
             overflow: hidden;
+            cursor: pointer;
         }
         .top-avatar img {
             width: 100%;
@@ -624,24 +662,29 @@
             object-fit: cover;
             border-radius: 50%;
         }
-        .top-info { flex: 1; }
-        .top-name { font-weight: bold; font-size: 1.1rem; }
+        .top-info { flex: 1; min-width: 0; }
+        .top-name { font-weight: bold; font-size: 1rem; word-break: break-word; }
         .top-name.admin-name {
             color: #ff3333;
             text-shadow: 0 0 10px #ff3333;
         }
         .top-prefix {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: bold;
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 10px;
+            border: 1px solid;
+            margin-top: 2px;
         }
-        .top-prefix.prefix-novice { color: #4caf50; }
-        .top-prefix.prefix-amateur { color: #42a5f5; }
-        .top-prefix.prefix-experienced { color: #2196f3; }
-        .top-prefix.prefix-master { color: #9c27b0; }
-        .top-prefix.prefix-expert { color: #ff9800; }
-        .top-prefix.prefix-legend { color: #ffd700; }
-        .top-prefix.prefix-overlord { color: #f44336; }
-        .top-id { font-size: 0.75rem; color: #999; }
+        .top-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
+        .top-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
+        .top-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
+        .top-prefix.prefix-master { color: #9c27b0; border-color: #9c27b0; }
+        .top-prefix.prefix-expert { color: #ff9800; border-color: #ff9800; }
+        .top-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; }
+        .top-prefix.prefix-overlord { color: #f44336; border-color: #f44336; }
+        .top-id { font-size: 0.7rem; color: #999; word-break: break-all; }
         .top-count { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
         .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .other-profile-page.active { display: block; }
@@ -668,6 +711,7 @@
             font-size: 3rem;
             overflow: hidden;
             margin: 0 auto 15px;
+            cursor: pointer;
         }
         .other-avatar img {
             width: 100%;
@@ -675,28 +719,33 @@
             object-fit: cover;
             border-radius: 50%;
         }
-        .other-name { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+        .other-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; word-break: break-word; }
         .other-name.admin-name {
             color: #ff3333;
             text-shadow: 0 0 15px #ff3333;
         }
         .other-prefix {
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: bold;
             margin-bottom: 5px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid;
         }
-        .other-prefix.prefix-novice { color: #4caf50; }
-        .other-prefix.prefix-amateur { color: #42a5f5; }
-        .other-prefix.prefix-experienced { color: #2196f3; }
-        .other-prefix.prefix-master { color: #9c27b0; }
-        .other-prefix.prefix-expert { color: #ff9800; }
-        .other-prefix.prefix-legend { color: #ffd700; }
-        .other-prefix.prefix-overlord { color: #f44336; }
+        .other-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
+        .other-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
+        .other-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
+        .other-prefix.prefix-master { color: #9c27b0; border-color: #9c27b0; }
+        .other-prefix.prefix-expert { color: #ff9800; border-color: #ff9800; }
+        .other-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; }
+        .other-prefix.prefix-overlord { color: #f44336; border-color: #f44336; }
         .other-prefix.prefix-admin {
             color: #ff3333;
-            text-shadow: 0 0 15px #ff3333;
+            border-color: #ff3333;
+            text-shadow: 0 0 10px #ff3333;
         }
-        .other-id { font-size: 0.8rem; color: #999; margin-bottom: 20px; }
+        .other-id { font-size: 0.8rem; color: #999; margin-bottom: 20px; word-break: break-all; }
         .other-stats {
             border-top: 1px solid #0f3460;
             padding-top: 20px;
@@ -761,6 +810,38 @@
         .rarity-rare { color: #2196f3; border-color: #2196f3; background: rgba(33,150,243,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
+        
+        /* Модалка просмотра аватара */
+        .avatar-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 600;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-modal.active { display: flex; }
+        .avatar-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 20px;
+            border: 3px solid #fff;
+        }
+        .avatar-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .box { width: 150px; height: 210px; }
@@ -777,6 +858,8 @@
             }
             .integrations { flex-direction: column; }
             .achievement-item { min-width: 100px; max-width: 140px; }
+            .profile-name { font-size: 1rem; }
+            .profile-prefix { font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -846,11 +929,12 @@
         <div class="profile-header" id="profileHeader">
             <div class="profile-top-row">
                 <div class="profile-info">
-                    <div class="avatar" id="avatar">
+                    <div class="avatar" id="avatar" onclick="openAvatarViewer(avatarData)">
                         <span id="avatarEmoji">👤</span>
                         <img id="avatarImg" style="display:none;" alt="">
+                        <div class="avatar-edit-icon" id="avatarEditIcon" style="display:none;">✏️</div>
                     </div>
-                    <div>
+                    <div class="profile-info-text">
                         <div class="profile-id" id="profileIDDisplay">ID: 00000000</div>
                         <div class="profile-reg-date" id="profileRegDate">Регистрация: —</div>
                         <div class="profile-name" id="profileNameDisplay">Игрок</div>
@@ -859,7 +943,7 @@
                         <input type="text" class="edit-name-input" id="editNameInput" placeholder="Введите имя" maxlength="20">
                     </div>
                 </div>
-                <button class="settings-btn" id="settingsBtn">⚙️</button>
+                <button class="settings-btn" id="settingsBtn" title="Настройки">⚙️</button>
             </div>
             <div class="profile-stats">
                 <div class="stat-block">
@@ -899,7 +983,7 @@
     <div class="other-profile-page" id="otherProfilePage">
         <button class="back-btn" id="otherBackBtn">‹</button>
         <div class="other-profile-header" id="otherProfileHeader">
-            <div class="other-avatar" id="otherAvatar">👤</div>
+            <div class="other-avatar" id="otherAvatar" onclick="openAvatarViewer(currentOtherAvatar)">👤</div>
             <div class="other-name" id="otherName">Игрок</div>
             <div class="other-prefix" id="otherPrefix"></div>
             <div class="other-prefix prefix-admin" id="otherAdminPrefix" style="display:none;">ADMIN</div>
@@ -940,6 +1024,12 @@
         </div>
     </div>
 
+    <!-- Модалка просмотра аватара -->
+    <div class="avatar-modal" id="avatarModal">
+        <button class="avatar-modal-close" onclick="closeAvatarViewer()">✕</button>
+        <img id="avatarModalImg" src="" alt="Аватар">
+    </div>
+
     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
 
     <script>
@@ -956,7 +1046,7 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        // ===== АДМИНЫ (впиши 6 ID) =====
+        // ===== АДМИНЫ =====
         var adminIDs = [
             "12425616",
             "86858801",
@@ -1159,8 +1249,26 @@
         var currentTheme = 'dark';
         var visitCount = 0;
         var isAdmin = false;
+        var currentOtherAvatar = null;
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
+
+        // ===== ФУНКЦИЯ ОТКРЫТИЯ ПРОСМОТРА АВАТАРА =====
+        function openAvatarViewer(avatarSrc) {
+            if (!avatarSrc) return;
+            document.getElementById('avatarModalImg').src = avatarSrc;
+            document.getElementById('avatarModal').classList.add('active');
+        }
+
+        function closeAvatarViewer() {
+            document.getElementById('avatarModal').classList.remove('active');
+        }
+
+        document.getElementById('avatarModal').onclick = function(e) {
+            if (e.target === this) {
+                closeAvatarViewer();
+            }
+        };
 
         // ===== ЗАГРУЗКА ИМЁН =====
         function loadServerNames() {
@@ -1234,7 +1342,6 @@
             try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
         }
 
-        // Проверка на админа
         isAdmin = adminIDs.indexOf(userID) !== -1;
 
         try {
@@ -1340,16 +1447,14 @@
             document.getElementById('profileNameDisplay').textContent = userName;
             document.getElementById('profileIDDisplay').textContent = 'ID: ' + userID;
             
-            // Имя админа красное
             if (isAdmin) {
                 document.getElementById('profileNameDisplay').classList.add('admin-name');
-                document.getElementById('profileAdminPrefix').style.display = 'block';
+                document.getElementById('profileAdminPrefix').style.display = 'inline-block';
             } else {
                 document.getElementById('profileNameDisplay').classList.remove('admin-name');
                 document.getElementById('profileAdminPrefix').style.display = 'none';
             }
             
-            // Префикс
             var prefix = getPrefix(openedCount);
             var prefixEl = document.getElementById('profilePrefixDisplay');
             prefixEl.textContent = prefix.icon + ' ' + prefix.name;
@@ -1588,7 +1693,6 @@
                 
                 caseSnapshot.forEach(function(doc) {
                     var data = doc.data();
-                    // Пропускаем админов
                     if (adminIDs.indexOf(data.userID) !== -1) return;
                     
                     var found = false;
@@ -1671,7 +1775,7 @@
                             var prefix = getPrefix(user.openedCount);
                             div.innerHTML = 
                                 '<div class="top-place">' + (index + 1) + '</div>' +
-                                '<div class="top-avatar">' + avatarHtml + '</div>' +
+                                '<div class="top-avatar" onclick="event.stopPropagation(); openAvatarViewer(\'' + (user.avatar || '') + '\')">' + avatarHtml + '</div>' +
                                 '<div class="top-info">' +
                                     '<div class="top-name">' + user.name + '</div>' +
                                     '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
@@ -1750,7 +1854,7 @@
                                 
                                 if (isOtherAdmin) {
                                     document.getElementById('otherName').classList.add('admin-name');
-                                    document.getElementById('otherAdminPrefix').style.display = 'block';
+                                    document.getElementById('otherAdminPrefix').style.display = 'inline-block';
                                 } else {
                                     document.getElementById('otherName').classList.remove('admin-name');
                                     document.getElementById('otherAdminPrefix').style.display = 'none';
@@ -1761,6 +1865,7 @@
                                 otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
                                 otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
                                 
+                                currentOtherAvatar = foundAvatar;
                                 var otherAvatar = document.getElementById('otherAvatar');
                                 if (foundAvatar) {
                                     otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
@@ -1775,12 +1880,13 @@
                     
                     if (isOtherAdmin) {
                         document.getElementById('otherName').classList.add('admin-name');
-                        document.getElementById('otherAdminPrefix').style.display = 'block';
+                        document.getElementById('otherAdminPrefix').style.display = 'inline-block';
                     } else {
                         document.getElementById('otherName').classList.remove('admin-name');
                         document.getElementById('otherAdminPrefix').style.display = 'none';
                     }
                     
+                    currentOtherAvatar = foundAvatar;
                     var otherAvatar = document.getElementById('otherAvatar');
                     if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
                         otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
@@ -1814,6 +1920,7 @@
             document.getElementById('editNameInput').style.display = 'block';
             document.getElementById('editNameInput').value = userName;
             document.getElementById('editActions').style.display = 'flex';
+            document.getElementById('avatarEditIcon').style.display = 'flex';
         }
 
         function exitEditMode() {
@@ -1821,6 +1928,7 @@
             document.getElementById('profileNameDisplay').style.display = 'block';
             document.getElementById('editNameInput').style.display = 'none';
             document.getElementById('editActions').style.display = 'none';
+            document.getElementById('avatarEditIcon').style.display = 'none';
         }
 
         function confirmEdit() {
@@ -1930,7 +2038,6 @@
         }
 
         function openPromoModal(caseType) {
-            // Админы открывают без кода
             if (isAdmin) {
                 showRoulettePage(caseType);
                 return;
@@ -2276,6 +2383,8 @@
         document.getElementById('avatar').onclick = function() {
             if (isEditMode) {
                 document.getElementById('avatarFileInput').click();
+            } else {
+                openAvatarViewer(avatarData);
             }
         };
 
