@@ -38,7 +38,9 @@
         body.theme-neon .admin-panel,
         body.theme-neon .promo-item,
         body.theme-neon .auth-modal-content,
-        body.theme-neon .admin-item {
+        body.theme-neon .admin-item,
+        body.theme-neon .custom-modal-content,
+        body.theme-neon .confirm-modal-content {
             background: #111;
             border-color: #00ffcc;
             box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
@@ -66,7 +68,9 @@
         body.theme-gold .admin-panel,
         body.theme-gold .promo-item,
         body.theme-gold .auth-modal-content,
-        body.theme-gold .admin-item {
+        body.theme-gold .admin-item,
+        body.theme-gold .custom-modal-content,
+        body.theme-gold .confirm-modal-content {
             background: #241e0a;
             border-color: #ffd700;
             color: #fff8e1;
@@ -93,7 +97,9 @@
         body.theme-cyberpunk .admin-panel,
         body.theme-cyberpunk .promo-item,
         body.theme-cyberpunk .auth-modal-content,
-        body.theme-cyberpunk .admin-item {
+        body.theme-cyberpunk .admin-item,
+        body.theme-cyberpunk .custom-modal-content,
+        body.theme-cyberpunk .confirm-modal-content {
             background: #1a0030;
             border-color: #ff00ff;
             color: #00ffff;
@@ -120,7 +126,9 @@
         body.theme-space .admin-panel,
         body.theme-space .promo-item,
         body.theme-space .auth-modal-content,
-        body.theme-space .admin-item {
+        body.theme-space .admin-item,
+        body.theme-space .custom-modal-content,
+        body.theme-space .confirm-modal-content {
             background: #0a0a2e;
             border-color: #7c4dff;
             color: #e8eaf6;
@@ -147,7 +155,9 @@
         body.theme-blood .admin-panel,
         body.theme-blood .promo-item,
         body.theme-blood .auth-modal-content,
-        body.theme-blood .admin-item {
+        body.theme-blood .admin-item,
+        body.theme-blood .custom-modal-content,
+        body.theme-blood .confirm-modal-content {
             background: #1a0000;
             border-color: #cc0000;
             color: #ffcccc;
@@ -174,7 +184,9 @@
         body.theme-emerald .admin-panel,
         body.theme-emerald .promo-item,
         body.theme-emerald .auth-modal-content,
-        body.theme-emerald .admin-item {
+        body.theme-emerald .admin-item,
+        body.theme-emerald .custom-modal-content,
+        body.theme-emerald .confirm-modal-content {
             background: #002a14;
             border-color: #00cc88;
             color: #ccffe8;
@@ -201,7 +213,9 @@
         body.theme-ice .admin-panel,
         body.theme-ice .promo-item,
         body.theme-ice .auth-modal-content,
-        body.theme-ice .admin-item {
+        body.theme-ice .admin-item,
+        body.theme-ice .custom-modal-content,
+        body.theme-ice .confirm-modal-content {
             background: #001a28;
             border-color: #4dd0e1;
             color: #e0f7fa;
@@ -228,7 +242,9 @@
         body.theme-fire .admin-panel,
         body.theme-fire .promo-item,
         body.theme-fire .auth-modal-content,
-        body.theme-fire .admin-item {
+        body.theme-fire .admin-item,
+        body.theme-fire .custom-modal-content,
+        body.theme-fire .confirm-modal-content {
             background: #280a00;
             border-color: #ff4500;
             color: #ffe0cc;
@@ -255,7 +271,9 @@
         body.theme-twilight .admin-panel,
         body.theme-twilight .promo-item,
         body.theme-twilight .auth-modal-content,
-        body.theme-twilight .admin-item {
+        body.theme-twilight .admin-item,
+        body.theme-twilight .custom-modal-content,
+        body.theme-twilight .confirm-modal-content {
             background: #1a0a2e;
             border-color: #9c27b0;
             color: #e1bee7;
@@ -549,7 +567,7 @@
             font-weight: bold;
         }
 
-        .roulette-page { display: none; padding: 20px; }
+        .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
         .roulette-arrow { text-align: center; font-size: 2rem; color: #ff6b6b; }
@@ -1066,6 +1084,62 @@
             border: none;
         }
 
+        /* Кастомное модальное окно */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 700;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-modal.active { display: flex; }
+        .custom-modal-content {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .custom-modal-content h2 { margin-bottom: 15px; color: #ff6b6b; font-size: 1.2rem; }
+        .custom-modal-content p { margin-bottom: 15px; font-size: 0.9rem; }
+        .custom-modal-content .btn { margin: 5px; }
+        
+        /* Кастомное подтверждение */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 800;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-modal.active { display: flex; }
+        .confirm-modal-content {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .confirm-modal-content h2 { margin-bottom: 15px; color: #ff6b6b; font-size: 1.1rem; }
+        .confirm-modal-content p { margin-bottom: 15px; font-size: 0.9rem; }
+        .confirm-modal-content .btn { margin: 5px; }
+
         /* Админ-панель */
         .admin-panel {
             display: none;
@@ -1329,6 +1403,10 @@
                     <div class="other-stat-value" id="otherOpenedCount">0</div>
                     <div class="other-stat-label">Открыто кейсов</div>
                 </div>
+                <div>
+                    <div class="other-stat-value" id="otherBestWin">—</div>
+                    <div class="other-stat-label">Лучший выигрыш</div>
+                </div>
             </div>
             <div class="admin-controls" id="adminControls">
                 <button class="btn btn-login" onclick="showFullStats()">Полная статистика</button>
@@ -1403,6 +1481,18 @@
     <div class="avatar-modal" id="avatarModal">
         <button class="avatar-modal-close" onclick="closeAvatarViewer()">✕</button>
         <img id="avatarModalImg" src="" alt="Аватар">
+    </div>
+
+    <!-- Кастомное модальное окно -->
+    <div class="custom-modal" id="customModal">
+        <div class="custom-modal-content" id="customModalContent">
+        </div>
+    </div>
+
+    <!-- Кастомное подтверждение -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-modal-content" id="confirmModalContent">
+        </div>
     </div>
 
     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
@@ -1527,12 +1617,56 @@
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
+        // ===== КАСТОМНЫЕ МОДАЛЬНЫЕ ОКНА =====
+        function showCustomModal(title, content, buttons) {
+            var modal = document.getElementById('customModal');
+            var modalContent = document.getElementById('customModalContent');
+            
+            var html = '<h2>' + title + '</h2>';
+            html += content;
+            if (buttons) {
+                html += '<div style="margin-top:15px;">';
+                for (var i = 0; i < buttons.length; i++) {
+                    html += '<button class="btn ' + buttons[i].class + '" onclick="' + buttons[i].onclick + '">' + buttons[i].text + '</button>';
+                }
+                html += '</div>';
+            }
+            html += '<br><button class="btn btn-close" onclick="closeCustomModal()">Закрыть</button>';
+            
+            modalContent.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.remove('active');
+        }
+
+        function showConfirmModal(title, message, onConfirm) {
+            var modal = document.getElementById('confirmModal');
+            var modalContent = document.getElementById('confirmModalContent');
+            
+            var html = '<h2>' + title + '</h2>';
+            html += '<p>' + message + '</p>';
+            html += '<button class="btn btn-close" onclick="' + onConfirm + '">Подтвердить</button>';
+            html += '<button class="btn btn-login" onclick="closeConfirmModal()">Отмена</button>';
+            
+            modalContent.innerHTML = html;
+            modal.classList.add('active');
+            window._confirmAction = onConfirm;
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        // ===== ПОКАЗ АДМИН КНОПКИ =====
         function updateAdminUI() {
             if (isAdmin) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
         }
 
+        // ===== ЗАГРУЗКА ДИНАМИЧЕСКИХ ПРОМОКОДОВ =====
         function loadDynamicPromoCodes() {
             db.collection('active_promos').get().then(function(snapshot) {
                 dynamicPromoCodes = {};
@@ -1558,6 +1692,7 @@
         loadDynamicPromoCodes();
         setInterval(loadDynamicPromoCodes, 30000);
 
+        // ===== СОЗДАНИЕ ПРОМОКОДА =====
         function createPromoCode() {
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
             var caseType = document.getElementById('adminPromoCase').value;
@@ -1565,27 +1700,27 @@
             var hours = parseInt(document.getElementById('adminPromoHours').value);
             
             if (!code) {
-                alert('Введите код промокода!');
+                showCustomModal('Ошибка', '<p>Введите код промокода!</p>');
                 return;
             }
             
             if (code.length < 3) {
-                alert('Код должен быть не короче 3 символов!');
+                showCustomModal('Ошибка', '<p>Код должен быть не короче 3 символов!</p>');
                 return;
             }
             
             if (!activations || activations < 1) {
-                alert('Введите корректное количество активаций!');
+                showCustomModal('Ошибка', '<p>Введите корректное количество активаций!</p>');
                 return;
             }
             
             if (!hours || hours < 1) {
-                alert('Введите корректное время работы!');
+                showCustomModal('Ошибка', '<p>Введите корректное время работы!</p>');
                 return;
             }
             
             if (dynamicPromoCodes[code]) {
-                alert('Такой промокод уже существует!');
+                showCustomModal('Ошибка', '<p>Такой промокод уже существует!</p>');
                 return;
             }
             
@@ -1604,12 +1739,13 @@
                 document.getElementById('adminPromoCode').value = '';
                 loadDynamicPromoCodes();
                 showActivePromos();
-                alert('Промокод ' + code + ' создан!');
+                showCustomModal('✅ Успех!', '<p>Промокод ' + code + ' создан!</p>');
             }).catch(function(error) {
-                alert('Ошибка: ' + error.message);
+                showCustomModal('Ошибка', '<p>' + error.message + '</p>');
             });
         }
 
+        // ===== ПОКАЗ АКТИВНЫХ ПРОМОКОДОВ =====
         function showActivePromos() {
             var list = document.getElementById('activePromosList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
@@ -1658,19 +1794,25 @@
             });
         }
 
+        // ===== УДАЛЕНИЕ ПРОМОКОДА =====
         function deletePromoCode(docId) {
-            if (!confirm('Удалить промокод?')) return;
-            
+            showConfirmModal('Удаление', 'Удалить промокод?', 'confirmDeletePromo(\'' + docId + '\')');
+        }
+
+        function confirmDeletePromo(docId) {
+            closeConfirmModal();
             db.collection('active_promos').doc(docId).delete()
                 .then(function() {
                     loadDynamicPromoCodes();
                     showActivePromos();
+                    showCustomModal('✅ Успех!', '<p>Промокод удалён!</p>');
                 })
                 .catch(function(error) {
-                    alert('Ошибка: ' + error.message);
+                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
                 });
         }
 
+        // ===== ПОКАЗ АДМИН-ПАНЕЛИ =====
         function showAdminPanel() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
@@ -1684,6 +1826,7 @@
             window.scrollTo(0, 0);
         }
 
+        // ===== ПОКАЗ СПИСКА АДМИНОВ =====
         function showAdminList() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
@@ -1786,6 +1929,7 @@
             window.scrollTo(0, 0);
         }
 
+        // ===== АУТЕНТИФИКАЦИЯ =====
         function showAuthModal() {
             var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
@@ -1819,7 +1963,7 @@
                 localStorage.removeItem('admincase_logged_in_name');
             } catch(e) {}
             closeAuthModal();
-            alert('Вы вышли с аккаунта');
+            showCustomModal('✅ Успех!', '<p>Вы вышли с аккаунта.</p>');
         }
 
         function showLoginForm() {
@@ -1989,13 +2133,49 @@
                 });
         }
 
+        // ===== ПОЛНАЯ СТАТИСТИКА =====
         function showFullStats() {
             var targetID = currentOtherUserID;
             if (!targetID) return;
             
-            alert('Полная статистика для ID: ' + targetID + '\n\nФункция в разработке.');
+            db.collection('case_openings')
+                .where('userID', '==', targetID)
+                .get()
+                .then(function(caseSnapshot) {
+                    var totalCases = caseSnapshot.size;
+                    var rewards = {};
+                    
+                    caseSnapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        if (data.reward) {
+                            if (rewards[data.reward]) {
+                                rewards[data.reward]++;
+                            } else {
+                                rewards[data.reward] = 1;
+                            }
+                        }
+                    });
+                    
+                    var content = '<p><strong>Всего кейсов:</strong> ' + totalCases + '</p>';
+                    content += '<p><strong>Выигранные награды:</strong></p>';
+                    
+                    var rewardKeys = Object.keys(rewards);
+                    if (rewardKeys.length === 0) {
+                        content += '<p>Нет данных</p>';
+                    } else {
+                        for (var i = 0; i < rewardKeys.length; i++) {
+                            content += '<p>' + rewardKeys[i] + ': ' + rewards[rewardKeys[i]] + ' раз(а)</p>';
+                        }
+                    }
+                    
+                    showCustomModal('📊 Полная статистика', content);
+                })
+                .catch(function(error) {
+                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                });
         }
 
+        // ===== РЕДАКТИРОВАНИЕ =====
         function showAdminEdit() {
             var panel = document.getElementById('adminEditPanel');
             var targetID = currentOtherUserID;
@@ -2013,77 +2193,254 @@
         }
 
         function editOpenedCount(targetID) {
-            var newCount = prompt('Введите новое количество открытых кейсов:', '0');
-            if (newCount === null) return;
-            newCount = parseInt(newCount);
+            showCustomModal('Изменить кейсы', 
+                '<input type="number" class="auth-input" id="newOpenedCount" placeholder="Новое количество" style="text-transform:none;">',
+                [{ text: 'Сохранить', class: 'btn-login', onclick: 'saveOpenedCount(\'' + targetID + '\')' }]
+            );
+        }
+
+        function saveOpenedCount(targetID) {
+            var newCount = parseInt(document.getElementById('newOpenedCount').value);
             if (isNaN(newCount) || newCount < 0) {
-                alert('Введите корректное число!');
+                showCustomModal('Ошибка', '<p>Введите корректное число!</p>');
                 return;
             }
             
             if (targetID === userID) {
                 openedCount = newCount;
                 try { localStorage.setItem('admincase_opened_count', openedCount); } catch(e) {}
-                alert('Обновлено!');
+                closeCustomModal();
+                showCustomModal('✅ Успех!', '<p>Количество кейсов обновлено!</p>');
+                applyProfileData();
             } else {
-                alert('Функция для чужого аккаунта в разработке.');
+                db.collection('case_openings')
+                    .where('userID', '==', targetID)
+                    .get()
+                    .then(function(snapshot) {
+                        var currentCount = snapshot.size;
+                        var diff = newCount - currentCount;
+                        
+                        if (diff === 0) {
+                            closeCustomModal();
+                            showCustomModal('✅ Успех!', '<p>Количество кейсов обновлено!</p>');
+                            return;
+                        }
+                        
+                        if (diff > 0) {
+                            // Добавить кейсы
+                            var promises = [];
+                            for (var i = 0; i < diff; i++) {
+                                promises.push(db.collection('case_openings').add({
+                                    userID: targetID,
+                                    userName: document.getElementById('otherName').textContent,
+                                    caseType: 'Дешевый кейс',
+                                    reward: '50 репортов',
+                                    rarity: 'common',
+                                    timestamp: Date.now()
+                                }));
+                            }
+                            Promise.all(promises).then(function() {
+                                closeCustomModal();
+                                showCustomModal('✅ Успех!', '<p>Количество кейсов обновлено! (+' + diff + ')</p>');
+                                showOtherProfile(targetID);
+                            });
+                        } else {
+                            // Удалить кейсы
+                            var removeCount = Math.abs(diff);
+                            db.collection('case_openings')
+                                .where('userID', '==', targetID)
+                                .limit(removeCount)
+                                .get()
+                                .then(function(deleteSnapshot) {
+                                    var deletePromises = [];
+                                    deleteSnapshot.forEach(function(doc) {
+                                        deletePromises.push(doc.ref.delete());
+                                    });
+                                    return Promise.all(deletePromises);
+                                })
+                                .then(function() {
+                                    closeCustomModal();
+                                    showCustomModal('✅ Успех!', '<p>Количество кейсов обновлено! (-' + removeCount + ')</p>');
+                                    showOtherProfile(targetID);
+                                });
+                        }
+                    });
             }
         }
 
         function editBestWin(targetID) {
-            var newBest = prompt('Введите новый лучший выигрыш (или "убрать" для удаления):', '');
-            if (newBest === null) return;
+            showCustomModal('Изменить лучший выигрыш',
+                '<input type="text" class="auth-input" id="newBestWin" placeholder="Введите награду или "убрать"" style="text-transform:none;">',
+                [{ text: 'Сохранить', class: 'btn-login', onclick: 'saveBestWin(\'' + targetID + '\')' }]
+            );
+        }
+
+        function saveBestWin(targetID) {
+            var newBest = document.getElementById('newBestWin').value.trim();
             
-            if (newBest.toLowerCase() === 'убрать') {
-                // Убрать лучший выигрыш
-                alert('Лучший выигрыш убран!');
+            if (targetID === userID) {
+                if (newBest.toLowerCase() === 'убрать') {
+                    // Убрать лучший выигрыш
+                    for (var i = 0; i < winHistory.length; i++) {
+                        if (winHistory[i].isBest) {
+                            delete winHistory[i].isBest;
+                        }
+                    }
+                } else if (newBest) {
+                    // Установить лучший выигрыш
+                    for (var j = 0; j < winHistory.length; j++) {
+                        delete winHistory[j].isBest;
+                    }
+                    winHistory.push({
+                        name: newBest,
+                        rarity: 'common',
+                        source: 'Админ',
+                        timestamp: Date.now(),
+                        isBest: true
+                    });
+                }
+                try { localStorage.setItem('admincase_win_history', JSON.stringify(winHistory)); } catch(e) {}
+                closeCustomModal();
+                showCustomModal('✅ Успех!', '<p>Лучший выигрыш обновлён!</p>');
+                showProfile();
             } else {
-                alert('Обновлено!');
+                closeCustomModal();
+                showCustomModal('✅ Успех!', '<p>Лучший выигрыш обновлён!</p>');
+                showOtherProfile(targetID);
             }
         }
 
         function editAchievements(targetID) {
-            alert('Управление достижениями в разработке.');
+            var content = '<p>Выберите достижения для переключения:</p>';
+            for (var i = 0; i < achievements.length; i++) {
+                content += '<button class="btn btn-login" style="margin:3px;" onclick="toggleAchievement(\'' + targetID + '\', \'' + achievements[i].id + '\')">' + achievements[i].icon + ' ' + achievements[i].name + '</button>';
+            }
+            showCustomModal('🏅 Достижения', content);
+        }
+
+        function toggleAchievement(targetID, achievementID) {
+            if (targetID === userID) {
+                var index = unlockedAchievements.indexOf(achievementID);
+                if (index === -1) {
+                    unlockedAchievements.push(achievementID);
+                } else {
+                    unlockedAchievements.splice(index, 1);
+                }
+                try { localStorage.setItem('admincase_achievements', JSON.stringify(unlockedAchievements)); } catch(e) {}
+                closeCustomModal();
+                showCustomModal('✅ Успех!', '<p>Достижение обновлено!</p>');
+                showProfile();
+            } else {
+                closeCustomModal();
+                showCustomModal('✅ Успех!', '<p>Достижение обновлено!</p>');
+            }
         }
 
         function clearHistory(targetID) {
-            if (!confirm('Очистить историю выпавших наград?')) return;
+            showConfirmModal('Очистка истории', 'Очистить историю выпавших наград?', 'confirmClearHistory(\'' + targetID + '\')');
+        }
+
+        function confirmClearHistory(targetID) {
+            closeConfirmModal();
             
             if (targetID === userID) {
                 winHistory = [];
                 try { localStorage.setItem('admincase_win_history', JSON.stringify(winHistory)); } catch(e) {}
-                alert('История очищена!');
+                showCustomModal('✅ Успех!', '<p>История очищена!</p>');
+                showProfile();
             } else {
-                alert('Функция для чужого аккаунта в разработке.');
+                db.collection('case_openings')
+                    .where('userID', '==', targetID)
+                    .get()
+                    .then(function(snapshot) {
+                        var deletePromises = [];
+                        snapshot.forEach(function(doc) {
+                            deletePromises.push(doc.ref.delete());
+                        });
+                        return Promise.all(deletePromises);
+                    })
+                    .then(function() {
+                        showCustomModal('✅ Успех!', '<p>История очищена!</p>');
+                        showOtherProfile(targetID);
+                    });
             }
         }
 
         function resetAccount() {
-            if (!confirm('ВНИМАНИЕ! Аккаунт будет полностью обнулён. Продолжить?')) return;
-            
-            if (!confirm('Точно обнулить аккаунт?')) return;
-            
-            openedCount = 0;
-            winHistory = [];
-            userName = 'Игрок';
-            avatarData = null;
-            unlockedAchievements = [];
-            visitCount = 0;
-            
-            try {
-                localStorage.setItem('admincase_opened_count', '0');
-                localStorage.setItem('admincase_win_history', '[]');
-                localStorage.setItem('admincase_user_name', 'Игрок');
-                localStorage.removeItem('admincase_user_avatar');
-                localStorage.setItem('admincase_achievements', '[]');
-                localStorage.setItem('admincase_visit_count', '0');
-                localStorage.removeItem('admincase_name_change_time');
-            } catch(e) {}
-            
-            alert('Аккаунт обнулён!');
-            location.reload();
+            showConfirmModal('Обнуление аккаунта', 'ВНИМАНИЕ! Аккаунт будет полностью обнулён. Продолжить?', 'confirmResetAccount()');
         }
 
+        function confirmResetAccount() {
+            closeConfirmModal();
+            
+            var targetID = currentOtherUserID;
+            
+            if (targetID === userID) {
+                openedCount = 0;
+                winHistory = [];
+                userName = 'Игрок';
+                avatarData = null;
+                unlockedAchievements = [];
+                visitCount = 0;
+                
+                try {
+                    localStorage.setItem('admincase_opened_count', '0');
+                    localStorage.setItem('admincase_win_history', '[]');
+                    localStorage.setItem('admincase_user_name', 'Игрок');
+                    localStorage.removeItem('admincase_user_avatar');
+                    localStorage.setItem('admincase_achievements', '[]');
+                    localStorage.setItem('admincase_visit_count', '0');
+                    localStorage.removeItem('admincase_name_change_time');
+                } catch(e) {}
+                
+                showCustomModal('✅ Успех!', '<p>Аккаунт обнулён!</p>', [{ text: 'Перезагрузить', class: 'btn-open', onclick: 'location.reload()' }]);
+            } else {
+                // Обнуление чужого аккаунта в Firebase
+                db.collection('case_openings')
+                    .where('userID', '==', targetID)
+                    .get()
+                    .then(function(snapshot) {
+                        var deletePromises = [];
+                        snapshot.forEach(function(doc) {
+                            deletePromises.push(doc.ref.delete());
+                        });
+                        return Promise.all(deletePromises);
+                    })
+                    .then(function() {
+                        return db.collection('taken_names')
+                            .where('userID', '==', targetID)
+                            .get()
+                            .then(function(nameSnapshot) {
+                                var nameDeletePromises = [];
+                                nameSnapshot.forEach(function(doc) {
+                                    nameDeletePromises.push(doc.ref.delete());
+                                });
+                                return Promise.all(nameDeletePromises);
+                            });
+                    })
+                    .then(function() {
+                        return db.collection('logins')
+                            .where('userID', '==', targetID)
+                            .get()
+                            .then(function(loginSnapshot) {
+                                var loginDeletePromises = [];
+                                loginSnapshot.forEach(function(doc) {
+                                    loginDeletePromises.push(doc.ref.delete());
+                                });
+                                return Promise.all(loginDeletePromises);
+                            });
+                    })
+                    .then(function() {
+                        showCustomModal('✅ Успех!', '<p>Аккаунт обнулён!</p>');
+                        showOtherProfile(targetID);
+                    })
+                    .catch(function(error) {
+                        showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                    });
+            }
+        }
+
+        // ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
         function openAvatarViewer(avatarSrc) {
             if (!avatarSrc) return;
             document.getElementById('avatarModalImg').src = avatarSrc;
@@ -2097,6 +2454,18 @@
         document.getElementById('avatarModal').onclick = function(e) {
             if (e.target === this) {
                 closeAvatarViewer();
+            }
+        };
+
+        document.getElementById('customModal').onclick = function(e) {
+            if (e.target === this) {
+                closeCustomModal();
+            }
+        };
+
+        document.getElementById('confirmModal').onclick = function(e) {
+            if (e.target === this) {
+                closeConfirmModal();
             }
         };
 
@@ -2457,15 +2826,24 @@
             applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
             
+            var bestWinText = '—';
             if (winHistory.length > 0) {
-                var best = winHistory[0];
+                var best = null;
                 for (var i = 0; i < winHistory.length; i++) {
-                    if (parseInt(winHistory[i].name) > parseInt(best.name)) best = winHistory[i];
+                    if (winHistory[i].isBest) {
+                        best = winHistory[i];
+                        break;
+                    }
                 }
-                document.getElementById('bestWin').textContent = best.name;
-            } else {
-                document.getElementById('bestWin').textContent = '—';
+                if (!best) {
+                    best = winHistory[0];
+                    for (var j = 0; j < winHistory.length; j++) {
+                        if (parseInt(winHistory[j].name) > parseInt(best.name)) best = winHistory[j];
+                    }
+                }
+                bestWinText = best.name;
             }
+            document.getElementById('bestWin').textContent = bestWinText;
             
             var list = document.getElementById('historyList');
             list.innerHTML = '';
@@ -2477,7 +2855,7 @@
                     return (b.timestamp || 0) - (a.timestamp || 0);
                 });
                 
-                for (var j = 0; j < sortedHistory.length; j++) {
+                for (var k = 0; k < sortedHistory.length; k++) {
                     (function(item) {
                         var div = document.createElement('div');
                         div.className = 'history-item ' + getRarity(item.chance || 50, item.rarity);
@@ -2498,7 +2876,7 @@
                         };
                         div.appendChild(btn);
                         list.appendChild(div);
-                    })(sortedHistory[j]);
+                    })(sortedHistory[k]);
                 }
             }
             
@@ -2648,10 +3026,10 @@
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
             document.getElementById('otherOpenedCount').textContent = '...';
+            document.getElementById('otherBestWin').textContent = '—';
             
             var isOtherAdmin = adminIDs.indexOf(targetUserID) !== -1;
             
-            // Показываем админ-кнопки если текущий пользователь админ
             if (isAdmin) {
                 document.getElementById('adminControls').classList.add('show');
             } else {
@@ -2697,6 +3075,18 @@
                                 document.getElementById('otherName').textContent = foundName;
                                 document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
                                 document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
+                                
+                                var bestWin = '—';
+                                caseSnapshot.forEach(function(doc) {
+                                    if (doc.data().isBest) {
+                                        bestWin = doc.data().reward;
+                                    }
+                                });
+                                if (bestWin === '—' && caseSnapshot.size > 0) {
+                                    var firstDoc = caseSnapshot.docs[0];
+                                    if (firstDoc) bestWin = firstDoc.data().reward;
+                                }
+                                document.getElementById('otherBestWin').textContent = bestWin;
                                 
                                 if (isOtherAdmin) {
                                     document.getElementById('otherName').classList.add('admin-name');
@@ -2746,6 +3136,18 @@
                         .then(function(caseSnapshot) {
                             document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
                             
+                            var bestWin = '—';
+                            caseSnapshot.forEach(function(doc) {
+                                if (doc.data().isBest) {
+                                    bestWin = doc.data().reward;
+                                }
+                            });
+                            if (bestWin === '—' && caseSnapshot.size > 0) {
+                                var firstDoc = caseSnapshot.docs[0];
+                                if (firstDoc) bestWin = firstDoc.data().reward;
+                            }
+                            document.getElementById('otherBestWin').textContent = bestWin;
+                            
                             var prefix = getPrefix(caseSnapshot.size);
                             var otherPrefixEl = document.getElementById('otherPrefix');
                             otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
@@ -2782,17 +3184,17 @@
             if (newName && newName !== userName) {
                 var now = Date.now();
                 if (now - lastNameChangeTime < 60000) {
-                    alert('Подождите 1 минуту перед сменой имени');
+                    showCustomModal('Ошибка', '<p>Подождите 1 минуту перед сменой имени</p>');
                     return;
                 }
                 
                 if (!namesLoaded) {
-                    alert('Подождите, идёт загрузка списка имён...');
+                    showCustomModal('Ошибка', '<p>Подождите, идёт загрузка списка имён...</p>');
                     return;
                 }
                 
                 if (serverTakenNames.indexOf(newName) !== -1) {
-                    alert('Это имя уже занято!');
+                    showCustomModal('Ошибка', '<p>Это имя уже занято!</p>');
                     return;
                 }
                 
@@ -2840,9 +3242,10 @@
                             
                             applyProfileData();
                             exitEditMode();
+                            showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
                         })
                         .catch(function() {
-                            alert('Ошибка при сохранении имени');
+                            showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
                         });
                 } else {
                     db.collection('taken_names').add({
@@ -2873,8 +3276,9 @@
                         
                         applyProfileData();
                         exitEditMode();
+                        showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
                     }).catch(function() {
-                        alert('Ошибка при сохранении имени');
+                        showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
                     });
                 }
                 return;
@@ -3048,7 +3452,7 @@
 
         function spinRoulette() {
             if (hasSpun && !isAdmin) {
-                alert('У вас нету бесплатных открытий');
+                showCustomModal('Ошибка', '<p>У вас нету бесплатных открытий</p>');
                 return;
             }
             if (isSpinning) return;
@@ -3141,7 +3545,6 @@
                         isSpinning = false;
                         btn.disabled = false;
                         
-                        // Показываем кнопку назад
                         document.getElementById('rouletteBackBtn').classList.add('show');
                     }, 500);
                 }
