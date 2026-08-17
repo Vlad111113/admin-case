@@ -446,8 +446,6 @@
         .theme-option:hover { background: rgba(255,255,255,0.1); }
         .theme-option.active { background: rgba(76,175,80,0.3); }
         .theme-option-icon { font-size: 1.2rem; }
-        
-        /* Затемнение фона при открытом меню тем */
         .theme-overlay {
             display: none;
             position: fixed;
@@ -459,7 +457,6 @@
             z-index: 499;
         }
         .theme-overlay.show { display: block; }
-
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
             border-radius: 20px; padding: 30px; margin-bottom: 30px;
@@ -505,6 +502,27 @@
             margin-bottom: 5px;
         }
         .profile-name { font-size: 1.5rem; font-weight: bold; }
+        .profile-name.admin-name {
+            color: #ff3333;
+            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff3333;
+        }
+        .profile-prefix {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .profile-prefix.prefix-novice { color: #4caf50; }
+        .profile-prefix.prefix-amateur { color: #42a5f5; }
+        .profile-prefix.prefix-experienced { color: #2196f3; }
+        .profile-prefix.prefix-master { color: #9c27b0; }
+        .profile-prefix.prefix-expert { color: #ff9800; }
+        .profile-prefix.prefix-legend { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+        .profile-prefix.prefix-overlord { color: #f44336; text-shadow: 0 0 10px #f44336; }
+        .profile-prefix.prefix-admin {
+            color: #ff3333;
+            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff3333;
+            font-size: 1.1rem;
+        }
         .profile-stats {
             display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 25px;
             flex-wrap: wrap;
@@ -608,6 +626,21 @@
         }
         .top-info { flex: 1; }
         .top-name { font-weight: bold; font-size: 1.1rem; }
+        .top-name.admin-name {
+            color: #ff3333;
+            text-shadow: 0 0 10px #ff3333;
+        }
+        .top-prefix {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .top-prefix.prefix-novice { color: #4caf50; }
+        .top-prefix.prefix-amateur { color: #42a5f5; }
+        .top-prefix.prefix-experienced { color: #2196f3; }
+        .top-prefix.prefix-master { color: #9c27b0; }
+        .top-prefix.prefix-expert { color: #ff9800; }
+        .top-prefix.prefix-legend { color: #ffd700; }
+        .top-prefix.prefix-overlord { color: #f44336; }
         .top-id { font-size: 0.75rem; color: #999; }
         .top-count { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
         .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
@@ -643,6 +676,26 @@
             border-radius: 50%;
         }
         .other-name { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+        .other-name.admin-name {
+            color: #ff3333;
+            text-shadow: 0 0 15px #ff3333;
+        }
+        .other-prefix {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .other-prefix.prefix-novice { color: #4caf50; }
+        .other-prefix.prefix-amateur { color: #42a5f5; }
+        .other-prefix.prefix-experienced { color: #2196f3; }
+        .other-prefix.prefix-master { color: #9c27b0; }
+        .other-prefix.prefix-expert { color: #ff9800; }
+        .other-prefix.prefix-legend { color: #ffd700; }
+        .other-prefix.prefix-overlord { color: #f44336; }
+        .other-prefix.prefix-admin {
+            color: #ff3333;
+            text-shadow: 0 0 15px #ff3333;
+        }
         .other-id { font-size: 0.8rem; color: #999; margin-bottom: 20px; }
         .other-stats {
             border-top: 1px solid #0f3460;
@@ -801,6 +854,8 @@
                         <div class="profile-id" id="profileIDDisplay">ID: 00000000</div>
                         <div class="profile-reg-date" id="profileRegDate">Регистрация: —</div>
                         <div class="profile-name" id="profileNameDisplay">Игрок</div>
+                        <div class="profile-prefix" id="profilePrefixDisplay"></div>
+                        <div class="profile-prefix prefix-admin" id="profileAdminPrefix" style="display:none;">ADMIN</div>
                         <input type="text" class="edit-name-input" id="editNameInput" placeholder="Введите имя" maxlength="20">
                     </div>
                 </div>
@@ -846,6 +901,8 @@
         <div class="other-profile-header" id="otherProfileHeader">
             <div class="other-avatar" id="otherAvatar">👤</div>
             <div class="other-name" id="otherName">Игрок</div>
+            <div class="other-prefix" id="otherPrefix"></div>
+            <div class="other-prefix prefix-admin" id="otherAdminPrefix" style="display:none;">ADMIN</div>
             <div class="other-id" id="otherID">ID: 00000000</div>
             <div class="other-stats">
                 <div>
@@ -898,6 +955,16 @@
         
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
+
+        // ===== АДМИНЫ (впиши 6 ID) =====
+        var adminIDs = [
+            "12425616",
+            "86858801",
+            "50579855",
+            "92473788",
+            "10000005",
+            "10000006"
+        ];
 
         // ===== ДАННЫЕ =====
         var promoCodes = {
@@ -1091,6 +1158,7 @@
         var unlockedAchievements = [];
         var currentTheme = 'dark';
         var visitCount = 0;
+        var isAdmin = false;
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
@@ -1165,6 +1233,9 @@
             userID = String(Math.floor(10000000 + Math.random() * 90000000));
             try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
         }
+
+        // Проверка на админа
+        isAdmin = adminIDs.indexOf(userID) !== -1;
 
         try {
             var savedAvatar = localStorage.getItem('admincase_user_avatar');
@@ -1253,10 +1324,37 @@
         loadOnlineCount();
         setInterval(loadOnlineCount, 10000);
 
+        // ===== ФУНКЦИЯ ПОЛУЧЕНИЯ ПРЕФИКСА =====
+        function getPrefix(openCount) {
+            if (openCount < 10) return { icon: '🌱', name: 'Новичок', cssClass: 'prefix-novice' };
+            if (openCount < 30) return { icon: '📦', name: 'Любитель', cssClass: 'prefix-amateur' };
+            if (openCount < 50) return { icon: '🎯', name: 'Опытный', cssClass: 'prefix-experienced' };
+            if (openCount < 100) return { icon: '🏆', name: 'Мастер', cssClass: 'prefix-master' };
+            if (openCount < 150) return { icon: '👑', name: 'Эксперт', cssClass: 'prefix-expert' };
+            if (openCount < 200) return { icon: '🌟', name: 'Легенда', cssClass: 'prefix-legend' };
+            return { icon: '🐉', name: 'Властелин кейсов', cssClass: 'prefix-overlord' };
+        }
+
         // ===== ПРИМЕНЕНИЕ ПРОФИЛЯ =====
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
             document.getElementById('profileIDDisplay').textContent = 'ID: ' + userID;
+            
+            // Имя админа красное
+            if (isAdmin) {
+                document.getElementById('profileNameDisplay').classList.add('admin-name');
+                document.getElementById('profileAdminPrefix').style.display = 'block';
+            } else {
+                document.getElementById('profileNameDisplay').classList.remove('admin-name');
+                document.getElementById('profileAdminPrefix').style.display = 'none';
+            }
+            
+            // Префикс
+            var prefix = getPrefix(openedCount);
+            var prefixEl = document.getElementById('profilePrefixDisplay');
+            prefixEl.textContent = prefix.icon + ' ' + prefix.name;
+            prefixEl.className = 'profile-prefix ' + prefix.cssClass;
+            
             if (registrationDate) {
                 var d = new Date(registrationDate);
                 var day = String(d.getDate()).padStart(2, '0');
@@ -1421,6 +1519,7 @@
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
+            applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
             
             if (winHistory.length > 0) {
@@ -1489,6 +1588,9 @@
                 
                 caseSnapshot.forEach(function(doc) {
                     var data = doc.data();
+                    // Пропускаем админов
+                    if (adminIDs.indexOf(data.userID) !== -1) return;
+                    
                     var found = false;
                     for (var i = 0; i < users.length; i++) {
                         if (users[i].userID === data.userID) {
@@ -1518,6 +1620,7 @@
                     nameSnapshot.forEach(function(doc) {
                         var data = doc.data();
                         if (!data.name || data.name === 'Игрок') return;
+                        if (adminIDs.indexOf(data.userID) !== -1) return;
                         
                         var found = false;
                         for (var i = 0; i < users.length; i++) {
@@ -1565,11 +1668,13 @@
                             if (user.avatar && user.avatar !== 'undefined' && user.avatar !== 'null') {
                                 avatarHtml = '<img src="' + user.avatar + '" alt="">';
                             }
+                            var prefix = getPrefix(user.openedCount);
                             div.innerHTML = 
                                 '<div class="top-place">' + (index + 1) + '</div>' +
                                 '<div class="top-avatar">' + avatarHtml + '</div>' +
                                 '<div class="top-info">' +
                                     '<div class="top-name">' + user.name + '</div>' +
+                                    '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
                                     '<div class="top-id">ID: ' + user.userID + '</div>' +
                                 '</div>' +
                                 '<div class="top-count">' + user.openedCount + '</div>';
@@ -1601,6 +1706,8 @@
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
             document.getElementById('otherOpenedCount').textContent = '...';
+            
+            var isOtherAdmin = adminIDs.indexOf(targetUserID) !== -1;
             
             db.collection('taken_names')
                 .where('userID', '==', targetUserID)
@@ -1641,6 +1748,19 @@
                                 document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
                                 document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
                                 
+                                if (isOtherAdmin) {
+                                    document.getElementById('otherName').classList.add('admin-name');
+                                    document.getElementById('otherAdminPrefix').style.display = 'block';
+                                } else {
+                                    document.getElementById('otherName').classList.remove('admin-name');
+                                    document.getElementById('otherAdminPrefix').style.display = 'none';
+                                }
+                                
+                                var prefix = getPrefix(caseSnapshot.size);
+                                var otherPrefixEl = document.getElementById('otherPrefix');
+                                otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
+                                otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
+                                
                                 var otherAvatar = document.getElementById('otherAvatar');
                                 if (foundAvatar) {
                                     otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
@@ -1652,6 +1772,14 @@
                     
                     document.getElementById('otherName').textContent = foundName;
                     document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                    
+                    if (isOtherAdmin) {
+                        document.getElementById('otherName').classList.add('admin-name');
+                        document.getElementById('otherAdminPrefix').style.display = 'block';
+                    } else {
+                        document.getElementById('otherName').classList.remove('admin-name');
+                        document.getElementById('otherAdminPrefix').style.display = 'none';
+                    }
                     
                     var otherAvatar = document.getElementById('otherAvatar');
                     if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
@@ -1665,6 +1793,11 @@
                         .get()
                         .then(function(caseSnapshot) {
                             document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
+                            
+                            var prefix = getPrefix(caseSnapshot.size);
+                            var otherPrefixEl = document.getElementById('otherPrefix');
+                            otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
+                            otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
                         });
                 })
                 .catch(function(error) {
@@ -1797,6 +1930,12 @@
         }
 
         function openPromoModal(caseType) {
+            // Админы открывают без кода
+            if (isAdmin) {
+                showRoulettePage(caseType);
+                return;
+            }
+            
             currentCase = caseType;
             document.getElementById('promoModal').classList.add('active');
             document.getElementById('promoTitle').textContent = 
@@ -1916,7 +2055,7 @@
         }
 
         function spinRoulette() {
-            if (hasSpun) {
+            if (hasSpun && !isAdmin) {
                 alert('У вас нету бесплатных открытий');
                 return;
             }
