@@ -1720,12 +1720,7 @@
         }
 
         function showAdminPanel() {
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('topPage').classList.remove('active');
-            document.getElementById('otherProfilePage').classList.remove('active');
-            document.getElementById('adminListPage').classList.remove('active');
+            hideAllPages();
             document.getElementById('adminPanel').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin'); } catch(e) {}
             showActivePromos();
@@ -1733,12 +1728,7 @@
         }
 
         function showAdminListPage() {
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('topPage').classList.remove('active');
-            document.getElementById('otherProfilePage').classList.remove('active');
-            document.getElementById('adminPanel').classList.remove('active');
+            hideAllPages();
             document.getElementById('adminListPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin_list'); } catch(e) {}
             
@@ -2036,7 +2026,6 @@
                 } else if (savedPage === 'admin_list') {
                     showAdminListPage();
                 } else {
-                    // Показываем главную страницу
                     document.getElementById('mainPage').style.display = 'block';
                 }
             } catch(e) {
@@ -2116,10 +2105,17 @@
                 var year = d.getFullYear();
                 document.getElementById('profileRegDate').textContent = 'Регистрация: ' + day + '.' + month + '.' + year;
             }
+            
+            // Обновляем аватар
+            var avatarImg = document.getElementById('avatarImg');
+            var avatarEmoji = document.getElementById('avatarEmoji');
             if (avatarData) {
-                document.getElementById('avatarImg').src = avatarData;
-                document.getElementById('avatarImg').style.display = 'block';
-                document.getElementById('avatarEmoji').style.display = 'none';
+                avatarImg.src = avatarData;
+                avatarImg.style.display = 'block';
+                avatarEmoji.style.display = 'none';
+            } else {
+                avatarImg.style.display = 'none';
+                avatarEmoji.style.display = 'block';
             }
         }
 
@@ -3004,17 +3000,26 @@
         }
 
         function handleLogout() {
-            // Очищаем данные входа
+            // Очищаем все данные пользователя
             try {
                 localStorage.removeItem('admincase_logged_in');
                 localStorage.removeItem('admincase_logged_in_name');
                 localStorage.removeItem('admincase_logged_in_id');
+                localStorage.removeItem('admincase_opened_count');
+                localStorage.removeItem('admincase_win_history');
+                localStorage.removeItem('admincase_user_name');
+                localStorage.removeItem('admincase_user_avatar');
+                localStorage.removeItem('admincase_achievements');
+                localStorage.removeItem('admincase_name_change_time');
+                localStorage.removeItem('admincase_user_id');
+                localStorage.removeItem('admincase_current_page');
+                localStorage.removeItem('admincase_other_profile_id');
             } catch(e) {}
             
             closeAuthModal();
             
             // Перезагружаем страницу для сброса к состоянию по умолчанию
-            showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
+            showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
         }
 
         function showLoginForm() {
