@@ -483,84 +483,6 @@
         .password-input-wrapper .auth-input {
             padding-right: 45px;
         }
-        
-        .admin-list-page {
-            display: none;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .admin-list-page.active { display: block; }
-        .admin-contact-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #0077ff;
-            background: #16213e;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 25px;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .admin-contact-btn:hover {
-            background: #1a2a4e;
-            border-color: #0077ff;
-            box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3);
-        }
-        .admin-item {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 15px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-        }
-        .admin-item:hover {
-            border-color: #ff9800;
-            background: #1a2a4e;
-        }
-        .admin-avatar {
-            width: 50px;
-            height: 50px;
-            min-width: 50px;
-            min-height: 50px;
-            max-width: 50px;
-            max-height: 50px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff9800, #ffd700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            overflow: hidden;
-        }
-        .admin-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .admin-info { flex: 1; min-width: 0; }
-        .admin-name { font-weight: bold; font-size: 1rem; word-break: break-word; color: #ff9800; }
-        .admin-id { font-size: 0.75rem; color: #999; }
-        .admin-badge {
-            background: #ff9800;
-            color: #fff;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
 
         .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
@@ -1839,155 +1761,226 @@
         }
         loadServerNames();
 
-        try {
-            var saved = localStorage.getItem('admincase_used_codes');
-            if (saved) usedCodes = JSON.parse(saved);
-        } catch(e) {}
+        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
+        function loadUserData(callback) {
+            // Сначала проверяем, вошёл ли пользователь в аккаунт
+            var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
+            
+            if (savedLoggedInID) {
+                userID = savedLoggedInID;
+                isLoggedIn = true;
+                loggedInAccountID = savedLoggedInID;
+                loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
+                
+                // Загружаем данные аккаунта из Firebase
+                db.collection('case_openings')
+                    .where('userID', '==', userID)
+                    .get()
+                    .then(function(caseSnapshot) {
+                        openedCount = caseSnapshot.size;
+                        winHistory = [];
+                        caseSnapshot.forEach(function(doc) {
+                            var data = doc.data();
+                            winHistory.push({
+                                name: data.reward,
+                                rarity: data.rarity,
+                                source: data.caseType,
+                                timestamp: data.timestamp
+                            });
+                        });
+                        
+                        // Загружаем имя
+                        return db.collection('taken_names')
+                            .where('userID', '==', userID)
+                            .get()
+                            .then(function(nameSnapshot) {
+                                var latestTimestamp = 0;
+                                nameSnapshot.forEach(function(doc) {
+                                    var data = doc.data();
+                                    var ts = data.timestamp || 0;
+                                    if (ts > latestTimestamp && data.name) {
+                                        latestTimestamp = ts;
+                                        userName = data.name;
+                                        if (data.avatar) avatarData = data.avatar;
+                                    }
+                                });
+                                
+                                // Сохраняем в localStorage
+                                try {
+                                    localStorage.setItem('admincase_opened_count', openedCount);
+                                    localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
+                                    localStorage.setItem('admincase_user_name', userName);
+                                    if (avatarData) localStorage.setItem('admincase_user_avatar', avatarData);
+                                } catch(e) {}
+                                
+                                if (callback) callback();
+                            });
+                    })
+                    .catch(function() {
+                        if (callback) callback();
+                    });
+            } else {
+                // Обычная загрузка из localStorage
+                try {
+                    var savedCount = localStorage.getItem('admincase_opened_count');
+                    if (savedCount) openedCount = parseInt(savedCount);
+                } catch(e) {}
 
-        try {
-            var savedHistory = localStorage.getItem('admincase_win_history');
-            if (savedHistory) {
-                winHistory = JSON.parse(savedHistory);
-                for (var h = 0; h < winHistory.length; h++) {
-                    if (!winHistory[h].timestamp) {
-                        winHistory[h].timestamp = Date.now() - (winHistory.length - h) * 60000;
+                try {
+                    var savedHistory = localStorage.getItem('admincase_win_history');
+                    if (savedHistory) {
+                        winHistory = JSON.parse(savedHistory);
+                        for (var h = 0; h < winHistory.length; h++) {
+                            if (!winHistory[h].timestamp) {
+                                winHistory[h].timestamp = Date.now() - (winHistory.length - h) * 60000;
+                            }
+                        }
+                    }
+                } catch(e) {}
+
+                try {
+                    var savedName = localStorage.getItem('admincase_user_name');
+                    if (savedName) userName = savedName;
+                } catch(e) {}
+
+                try {
+                    var savedAvatar = localStorage.getItem('admincase_user_avatar');
+                    if (savedAvatar) avatarData = savedAvatar;
+                } catch(e) {}
+
+                if (callback) callback();
+            }
+        }
+
+        // Загружаем данные и инициализируем
+        loadUserData(function() {
+            try {
+                var savedUID = localStorage.getItem('admincase_user_uid');
+                if (savedUID) {
+                    userUID = savedUID;
+                } else {
+                    userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('admincase_user_uid', userUID);
+                }
+            } catch(e) {
+                userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                try { localStorage.setItem('admincase_user_uid', userUID); } catch(e2) {}
+            }
+
+            if (!userID) {
+                try {
+                    var savedID = localStorage.getItem('admincase_user_id');
+                    if (savedID) {
+                        userID = savedID;
+                    } else {
+                        userID = String(Math.floor(10000000 + Math.random() * 90000000));
+                        localStorage.setItem('admincase_user_id', userID);
+                    }
+                } catch(e) {
+                    userID = String(Math.floor(10000000 + Math.random() * 90000000));
+                    try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
+                }
+            }
+
+            isAdmin = adminIDs.indexOf(userID) !== -1;
+
+            try {
+                var savedNameTime = localStorage.getItem('admincase_name_change_time');
+                if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
+            } catch(e) {}
+
+            try {
+                var savedRegDate = localStorage.getItem('admincase_reg_date');
+                if (savedRegDate) {
+                    registrationDate = parseInt(savedRegDate);
+                } else {
+                    registrationDate = Date.now();
+                    localStorage.setItem('admincase_reg_date', registrationDate);
+                }
+            } catch(e) {
+                registrationDate = Date.now();
+                try { localStorage.setItem('admincase_reg_date', registrationDate); } catch(e2) {}
+            }
+
+            try {
+                var savedAchievements = localStorage.getItem('admincase_achievements');
+                if (savedAchievements) unlockedAchievements = JSON.parse(savedAchievements);
+            } catch(e) { unlockedAchievements = []; }
+
+            try {
+                var savedVisits = localStorage.getItem('admincase_visit_count');
+                if (savedVisits) {
+                    visitCount = parseInt(savedVisits) + 1;
+                } else {
+                    visitCount = 1;
+                }
+                localStorage.setItem('admincase_visit_count', visitCount);
+            } catch(e) { visitCount = 1; }
+
+            try {
+                var savedTheme = localStorage.getItem('admincase_theme');
+                if (savedTheme && themes.indexOf(savedTheme) !== -1) {
+                    currentTheme = savedTheme;
+                    if (currentTheme !== 'dark') {
+                        document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
                     }
                 }
-                try { localStorage.setItem('admincase_win_history', JSON.stringify(winHistory)); } catch(e) {}
-            }
-        } catch(e) {}
+            } catch(e) {}
 
-        try {
-            var savedCount = localStorage.getItem('admincase_opened_count');
-            if (savedCount) openedCount = parseInt(savedCount);
-        } catch(e) {}
+            applyProfileData();
 
-        try {
-            var savedName = localStorage.getItem('admincase_user_name');
-            if (savedName) userName = savedName;
-        } catch(e) {}
-
-        try {
-            var savedUID = localStorage.getItem('admincase_user_uid');
-            if (savedUID) {
-                userUID = savedUID;
-            } else {
-                userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('admincase_user_uid', userUID);
-            }
-        } catch(e) {
-            userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            try { localStorage.setItem('admincase_user_uid', userUID); } catch(e2) {}
-        }
-
-        try {
-            var savedID = localStorage.getItem('admincase_user_id');
-            if (savedID) {
-                userID = savedID;
-            } else {
-                userID = String(Math.floor(10000000 + Math.random() * 90000000));
-                localStorage.setItem('admincase_user_id', userID);
-            }
-        } catch(e) {
-            userID = String(Math.floor(10000000 + Math.random() * 90000000));
-            try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
-        }
-
-        isAdmin = adminIDs.indexOf(userID) !== -1;
-
-        try {
-            var savedAvatar = localStorage.getItem('admincase_user_avatar');
-            if (savedAvatar) avatarData = savedAvatar;
-        } catch(e) {}
-
-        try {
-            var savedNameTime = localStorage.getItem('admincase_name_change_time');
-            if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
-        } catch(e) {}
-
-        try {
-            var savedRegDate = localStorage.getItem('admincase_reg_date');
-            if (savedRegDate) {
-                registrationDate = parseInt(savedRegDate);
-            } else {
-                registrationDate = Date.now();
-                localStorage.setItem('admincase_reg_date', registrationDate);
-            }
-        } catch(e) {
-            registrationDate = Date.now();
-            try { localStorage.setItem('admincase_reg_date', registrationDate); } catch(e2) {}
-        }
-
-        try {
-            var savedAchievements = localStorage.getItem('admincase_achievements');
-            if (savedAchievements) unlockedAchievements = JSON.parse(savedAchievements);
-        } catch(e) { unlockedAchievements = []; }
-
-        try {
-            var savedVisits = localStorage.getItem('admincase_visit_count');
-            if (savedVisits) {
-                visitCount = parseInt(savedVisits) + 1;
-            } else {
-                visitCount = 1;
-            }
-            localStorage.setItem('admincase_visit_count', visitCount);
-        } catch(e) { visitCount = 1; }
-
-        try {
-            var savedTheme = localStorage.getItem('admincase_theme');
-            if (savedTheme && themes.indexOf(savedTheme) !== -1) {
-                currentTheme = savedTheme;
-                if (currentTheme !== 'dark') {
-                    document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+            try {
+                var savedPage = localStorage.getItem('admincase_current_page');
+                if (savedPage === 'profile') {
+                    showProfile();
+                } else if (savedPage === 'top') {
+                    showTopPage();
+                } else if (savedPage === 'other_profile') {
+                    var savedOtherID = localStorage.getItem('admincase_other_profile_id');
+                    if (savedOtherID) showOtherProfile(savedOtherID);
+                } else if (savedPage === 'admin') {
+                    if (isAdmin) showAdminPanel();
+                } else if (savedPage === 'admin_list') {
+                    showAdminListPage();
                 }
-            }
-        } catch(e) {}
+            } catch(e) {}
 
-        // Загрузка состояния входа из localStorage
-        try {
-            var savedLoggedIn = localStorage.getItem('admincase_logged_in');
-            if (savedLoggedIn === 'true') {
-                isLoggedIn = true;
-                loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
-                loggedInAccountID = localStorage.getItem('admincase_logged_in_id') || '';
-            }
-        } catch(e) {}
-
-        if (openedCount > 0 || userName !== 'Игрок') {
-            db.collection('logins').add({
-                userName: userName,
-                userID: userID,
-                timestamp: Date.now()
-            }).catch(function() {});
-        }
-
-        function updateOnlineStatus() {
             if (openedCount > 0 || userName !== 'Игрок') {
-                db.collection('online_users').doc(userID).set({
+                db.collection('logins').add({
                     userName: userName,
                     userID: userID,
-                    lastSeen: Date.now()
+                    timestamp: Date.now()
                 }).catch(function() {});
             }
-        }
-        updateOnlineStatus();
-        setInterval(updateOnlineStatus, 30000);
 
-        function loadOnlineCount() {
-            var now = Date.now();
-            var fiveMinAgo = now - 5 * 60 * 1000;
-            db.collection('online_users')
-                .where('lastSeen', '>', fiveMinAgo)
-                .get()
-                .then(function(snapshot) {
-                    document.getElementById('onlineCount').textContent = snapshot.size;
-                })
-                .catch(function() {
-                    document.getElementById('onlineCount').textContent = '0';
-                });
-        }
-        loadOnlineCount();
-        setInterval(loadOnlineCount, 10000);
+            function updateOnlineStatus() {
+                if (openedCount > 0 || userName !== 'Игрок') {
+                    db.collection('online_users').doc(userID).set({
+                        userName: userName,
+                        userID: userID,
+                        lastSeen: Date.now()
+                    }).catch(function() {});
+                }
+            }
+            updateOnlineStatus();
+            setInterval(updateOnlineStatus, 30000);
+
+            function loadOnlineCount() {
+                var now = Date.now();
+                var fiveMinAgo = now - 5 * 60 * 1000;
+                db.collection('online_users')
+                    .where('lastSeen', '>', fiveMinAgo)
+                    .get()
+                    .then(function(snapshot) {
+                        document.getElementById('onlineCount').textContent = snapshot.size;
+                    })
+                    .catch(function() {
+                        document.getElementById('onlineCount').textContent = '0';
+                    });
+            }
+            loadOnlineCount();
+            setInterval(loadOnlineCount, 10000);
+        });
 
         function getPrefix(openCount) {
             if (openCount < 10) return { icon: '🌱', name: 'Новичок', cssClass: 'prefix-novice' };
@@ -2031,23 +2024,6 @@
                 document.getElementById('avatarEmoji').style.display = 'none';
             }
         }
-        applyProfileData();
-
-        try {
-            var savedPage = localStorage.getItem('admincase_current_page');
-            if (savedPage === 'profile') {
-                showProfile();
-            } else if (savedPage === 'top') {
-                showTopPage();
-            } else if (savedPage === 'other_profile') {
-                var savedOtherID = localStorage.getItem('admincase_other_profile_id');
-                if (savedOtherID) showOtherProfile(savedOtherID);
-            } else if (savedPage === 'admin') {
-                if (isAdmin) showAdminPanel();
-            } else if (savedPage === 'admin_list') {
-                showAdminListPage();
-            }
-        } catch(e) {}
 
         function updateUserDataInFirebase() {
             if (openedCount === 0 && userName === 'Игрок') return;
@@ -2258,7 +2234,6 @@
                 
                 caseSnapshot.forEach(function(doc) {
                     var data = doc.data();
-                    // Пропускаем админов
                     if (adminIDs.indexOf(data.userID) !== -1) return;
                     
                     var found = false;
@@ -2908,7 +2883,9 @@
             if (isLoggedIn) {
                 var html = '<h2>Аккаунт</h2>';
                 html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
-                html += '<button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                html += '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + loggedInAccountID + '</p>';
+                html += '<button class="btn btn-login" onclick="showLoginForm()">Повторный вход в аккаунт</button>';
+                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
                 content.innerHTML = html;
             } else {
                 var html = '<h2>Вход / Регистрация</h2>';
@@ -3068,10 +3045,8 @@
                         var data = doc.data();
                         if (data.password === password) {
                             found = true;
-                            isLoggedIn = true;
-                            loggedInAccountName = data.userName;
-                            loggedInAccountID = data.userID;
                             
+                            // Сохраняем данные в localStorage
                             try {
                                 localStorage.setItem('admincase_logged_in', 'true');
                                 localStorage.setItem('admincase_logged_in_name', data.userName);
@@ -3079,7 +3054,7 @@
                             } catch(e) {}
                             
                             closeAuthModal();
-                            showCustomModal('✅ Успешно!', '<p>Вы вошли в аккаунт "' + data.userName + '".</p>');
+                            showCustomModal('✅ Успешно!', '<p>Вы вошли в аккаунт "' + data.userName + '".<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
                         }
                     });
                     
@@ -3127,14 +3102,12 @@
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
-            loadOnlineCount();
         };
 
         document.getElementById('topBackBtn').onclick = function() {
             document.getElementById('topPage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
-            loadOnlineCount();
         };
 
         document.getElementById('otherBackBtn').onclick = function() {
@@ -3149,21 +3122,18 @@
             document.getElementById('adminListPage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
-            loadOnlineCount();
         };
 
         document.getElementById('adminBackBtn').onclick = function() {
             document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
-            loadOnlineCount();
         };
 
         document.getElementById('rouletteBackBtn').onclick = function() {
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
             try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
-            loadOnlineCount();
         };
 
         document.getElementById('cheapBox').onclick = function() {
