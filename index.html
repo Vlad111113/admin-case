@@ -7,6 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -418,6 +419,7 @@
         .btn-close { background: #f44336; color: #fff; }
         .btn-login { background: #2196f3; color: #fff; padding: 12px 25px; }
         .btn-register { background: #ff9800; color: #fff; padding: 12px 25px; }
+        .btn-logout { background: #f44336; color: #fff; padding: 12px 25px; }
         .message {
             margin: 15px 0; padding: 15px; border-radius: 10px;
             display: none; font-weight: bold;
@@ -1107,6 +1109,97 @@
             font-size: 0.8rem;
         }
         .promo-delete:hover { background: #d32f2f; }
+        
+        /* Стили для страницы администрации */
+        .admin-list-page {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .admin-list-page.active {
+            display: block;
+        }
+        .admin-contact-btn {
+            display: block;
+            text-align: center;
+            background: #16213e;
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .admin-contact-btn:hover {
+            border-color: #ff9800;
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+            background: #1a2a4e;
+        }
+        .admin-item {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .admin-item:hover {
+            border-color: #ff9800;
+            background: #1a2a4e;
+        }
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            max-width: 50px;
+            max-height: 50px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9800, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            overflow: hidden;
+        }
+        .admin-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .admin-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .admin-name {
+            font-weight: bold;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .admin-id {
+            font-size: 0.7rem;
+            color: #999;
+            word-break: break-all;
+        }
+        .admin-badge {
+            background: #ff9800;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
         
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
@@ -1942,8 +2035,13 @@
                     if (isAdmin) showAdminPanel();
                 } else if (savedPage === 'admin_list') {
                     showAdminListPage();
+                } else {
+                    // Показываем главную страницу
+                    document.getElementById('mainPage').style.display = 'block';
                 }
-            } catch(e) {}
+            } catch(e) {
+                document.getElementById('mainPage').style.display = 'block';
+            }
 
             if (openedCount > 0 || userName !== 'Игрок') {
                 db.collection('logins').add({
@@ -2150,15 +2248,33 @@
             return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
         }
 
-        function showProfile() {
-            loadServerNames();
-            
+        function hideAllPages() {
             document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
             document.getElementById('topPage').classList.remove('active');
             document.getElementById('otherProfilePage').classList.remove('active');
             document.getElementById('adminListPage').classList.remove('active');
             document.getElementById('adminPanel').classList.remove('active');
+            
+            // Останавливаем анимацию рулетки если она была
+            if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
+            if (spinAnimFrame) cancelAnimationFrame(spinAnimFrame);
+            bgAnimFrame = null;
+            spinAnimFrame = null;
+            isSpinning = false;
+        }
+
+        function showMainPage() {
+            hideAllPages();
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            window.scrollTo(0, 0);
+        }
+
+        function showProfile() {
+            loadServerNames();
+            hideAllPages();
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
@@ -2217,12 +2333,7 @@
 
         function showTopPage() {
             adminReturnPage = 'top';
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('otherProfilePage').classList.remove('active');
-            document.getElementById('adminListPage').classList.remove('active');
-            document.getElementById('adminPanel').classList.remove('active');
+            hideAllPages();
             document.getElementById('topPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
             
@@ -2339,12 +2450,7 @@
         }
 
         function showOtherProfile(targetUserID) {
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('topPage').classList.remove('active');
-            document.getElementById('adminListPage').classList.remove('active');
-            document.getElementById('adminPanel').classList.remove('active');
+            hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
             try {
                 localStorage.setItem('admincase_current_page', 'other_profile');
@@ -2632,12 +2738,7 @@
         }
 
         function showRoulettePage(caseType) {
-            document.getElementById('mainPage').style.display = 'none';
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('topPage').classList.remove('active');
-            document.getElementById('otherProfilePage').classList.remove('active');
-            document.getElementById('adminListPage').classList.remove('active');
-            document.getElementById('adminPanel').classList.remove('active');
+            hideAllPages();
             document.getElementById('roulettePage').classList.add('active');
             document.getElementById('rouletteTitle').textContent = 
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
@@ -2884,7 +2985,7 @@
                 var html = '<h2>Аккаунт</h2>';
                 html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
                 html += '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + loggedInAccountID + '</p>';
-                html += '<button class="btn btn-login" onclick="showLoginForm()">Повторный вход в аккаунт</button>';
+                html += '<button class="btn btn-logout" onclick="handleLogout()">Выйти с аккаунта</button>';
                 html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
                 content.innerHTML = html;
             } else {
@@ -2900,6 +3001,20 @@
 
         function closeAuthModal() {
             document.getElementById('authModal').classList.remove('active');
+        }
+
+        function handleLogout() {
+            // Очищаем данные входа
+            try {
+                localStorage.removeItem('admincase_logged_in');
+                localStorage.removeItem('admincase_logged_in_name');
+                localStorage.removeItem('admincase_logged_in_id');
+            } catch(e) {}
+            
+            closeAuthModal();
+            
+            // Перезагружаем страницу для сброса к состоянию по умолчанию
+            showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
         }
 
         function showLoginForm() {
@@ -3099,15 +3214,11 @@
         };
 
         document.getElementById('backBtn').onclick = function() {
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('mainPage').style.display = 'block';
-            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            showMainPage();
         };
 
         document.getElementById('topBackBtn').onclick = function() {
-            document.getElementById('topPage').classList.remove('active');
-            document.getElementById('mainPage').style.display = 'block';
-            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            showMainPage();
         };
 
         document.getElementById('otherBackBtn').onclick = function() {
@@ -3119,21 +3230,15 @@
         };
 
         document.getElementById('adminListBackBtn').onclick = function() {
-            document.getElementById('adminListPage').classList.remove('active');
-            document.getElementById('mainPage').style.display = 'block';
-            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            showMainPage();
         };
 
         document.getElementById('adminBackBtn').onclick = function() {
-            document.getElementById('adminPanel').classList.remove('active');
-            document.getElementById('mainPage').style.display = 'block';
-            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            showMainPage();
         };
 
         document.getElementById('rouletteBackBtn').onclick = function() {
-            document.getElementById('roulettePage').classList.remove('active');
-            document.getElementById('mainPage').style.display = 'block';
-            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            showMainPage();
         };
 
         document.getElementById('cheapBox').onclick = function() {
@@ -3239,6 +3344,11 @@
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.theme-wrapper') && !e.target.closest('.theme-dropdown')) {
                 closeThemeMenu();
+            }
+            
+            // Закрываем выпадающее меню при клике вне его
+            if (!e.target.closest('.burger-btn') && !e.target.closest('.dropdown-menu')) {
+                document.getElementById('dropdownMenu').classList.remove('show');
             }
         });
 
