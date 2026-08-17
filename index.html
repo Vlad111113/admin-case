@@ -19,7 +19,6 @@
             transition: all 0.3s ease;
         }
 
-        /* ТЕМЫ */
         body.theme-neon {
             background: #0a0a0a;
             color: #00ffcc;
@@ -38,7 +37,9 @@
         body.theme-neon .admin-item,
         body.theme-neon .custom-modal-content,
         body.theme-neon .auth-modal-content,
-        body.theme-neon .promo-item {
+        body.theme-neon .promo-item,
+        body.theme-neon .admin-panel,
+        body.theme-neon .admin-section {
             background: #111;
             border-color: #00ffcc;
             box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
@@ -66,7 +67,9 @@
         body.theme-gold .admin-item,
         body.theme-gold .custom-modal-content,
         body.theme-gold .auth-modal-content,
-        body.theme-gold .promo-item {
+        body.theme-gold .promo-item,
+        body.theme-gold .admin-panel,
+        body.theme-gold .admin-section {
             background: #241e0a;
             border-color: #ffd700;
             color: #fff8e1;
@@ -93,7 +96,9 @@
         body.theme-cyberpunk .admin-item,
         body.theme-cyberpunk .custom-modal-content,
         body.theme-cyberpunk .auth-modal-content,
-        body.theme-cyberpunk .promo-item {
+        body.theme-cyberpunk .promo-item,
+        body.theme-cyberpunk .admin-panel,
+        body.theme-cyberpunk .admin-section {
             background: #1a0030;
             border-color: #ff00ff;
             color: #00ffff;
@@ -120,7 +125,9 @@
         body.theme-space .admin-item,
         body.theme-space .custom-modal-content,
         body.theme-space .auth-modal-content,
-        body.theme-space .promo-item {
+        body.theme-space .promo-item,
+        body.theme-space .admin-panel,
+        body.theme-space .admin-section {
             background: #0a0a2e;
             border-color: #7c4dff;
             color: #e8eaf6;
@@ -147,7 +154,9 @@
         body.theme-blood .admin-item,
         body.theme-blood .custom-modal-content,
         body.theme-blood .auth-modal-content,
-        body.theme-blood .promo-item {
+        body.theme-blood .promo-item,
+        body.theme-blood .admin-panel,
+        body.theme-blood .admin-section {
             background: #1a0000;
             border-color: #cc0000;
             color: #ffcccc;
@@ -174,7 +183,9 @@
         body.theme-emerald .admin-item,
         body.theme-emerald .custom-modal-content,
         body.theme-emerald .auth-modal-content,
-        body.theme-emerald .promo-item {
+        body.theme-emerald .promo-item,
+        body.theme-emerald .admin-panel,
+        body.theme-emerald .admin-section {
             background: #002a14;
             border-color: #00cc88;
             color: #ccffe8;
@@ -201,7 +212,9 @@
         body.theme-ice .admin-item,
         body.theme-ice .custom-modal-content,
         body.theme-ice .auth-modal-content,
-        body.theme-ice .promo-item {
+        body.theme-ice .promo-item,
+        body.theme-ice .admin-panel,
+        body.theme-ice .admin-section {
             background: #001a28;
             border-color: #4dd0e1;
             color: #e0f7fa;
@@ -228,7 +241,9 @@
         body.theme-fire .admin-item,
         body.theme-fire .custom-modal-content,
         body.theme-fire .auth-modal-content,
-        body.theme-fire .promo-item {
+        body.theme-fire .promo-item,
+        body.theme-fire .admin-panel,
+        body.theme-fire .admin-section {
             background: #280a00;
             border-color: #ff4500;
             color: #ffe0cc;
@@ -255,7 +270,9 @@
         body.theme-twilight .admin-item,
         body.theme-twilight .custom-modal-content,
         body.theme-twilight .auth-modal-content,
-        body.theme-twilight .promo-item {
+        body.theme-twilight .promo-item,
+        body.theme-twilight .admin-panel,
+        body.theme-twilight .admin-section {
             background: #1a0a2e;
             border-color: #9c27b0;
             color: #e1bee7;
@@ -401,7 +418,6 @@
         .btn-close { background: #f44336; color: #fff; }
         .btn-login { background: #2196f3; color: #fff; padding: 12px 25px; }
         .btn-register { background: #ff9800; color: #fff; padding: 12px 25px; }
-        .btn-logout { background: #607d8b; color: #fff; padding: 12px 25px; }
         .message {
             margin: 15px 0; padding: 15px; border-radius: 10px;
             display: none; font-weight: bold;
@@ -1078,7 +1094,6 @@
         .custom-modal-content h2 { margin-bottom: 15px; color: #ff6b6b; font-size: 1.2rem; }
         .custom-modal-content p { margin-bottom: 15px; font-size: 0.9rem; }
 
-        /* Админ-панель */
         .admin-panel {
             display: none;
             width: 100%;
@@ -1432,7 +1447,6 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        // ===== АДМИНЫ =====
         var adminIDs = [
             "12425616",
             "86858801",
@@ -1531,6 +1545,8 @@
         var dynamicPromoCodes = {};
         var isLoggedIn = false;
         var loggedInAccountName = '';
+        var loggedInAccountID = '';
+        var adminReturnPage = 'top';
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
@@ -1711,6 +1727,8 @@
             document.getElementById('adminListPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin_list'); } catch(e) {}
             
+            adminReturnPage = 'admin_list';
+            
             var list = document.getElementById('adminListContainer');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
@@ -1793,6 +1811,7 @@
                             '<span class="admin-badge">ADMIN</span>';
                         
                         div.onclick = function() {
+                            adminReturnPage = 'admin_list';
                             showOtherProfile(admin.userID);
                         };
                         
@@ -1924,11 +1943,13 @@
             }
         } catch(e) {}
 
+        // Загрузка состояния входа из localStorage
         try {
             var savedLoggedIn = localStorage.getItem('admincase_logged_in');
             if (savedLoggedIn === 'true') {
                 isLoggedIn = true;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
+                loggedInAccountID = localStorage.getItem('admincase_logged_in_id') || '';
             }
         } catch(e) {}
 
@@ -2219,6 +2240,7 @@
         }
 
         function showTopPage() {
+            adminReturnPage = 'top';
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
@@ -2236,6 +2258,9 @@
                 
                 caseSnapshot.forEach(function(doc) {
                     var data = doc.data();
+                    // Пропускаем админов
+                    if (adminIDs.indexOf(data.userID) !== -1) return;
+                    
                     var found = false;
                     for (var i = 0; i < users.length; i++) {
                         if (users[i].userID === data.userID) {
@@ -2265,6 +2290,7 @@
                     nameSnapshot.forEach(function(doc) {
                         var data = doc.data();
                         if (!data.name || data.name === 'Игрок') return;
+                        if (adminIDs.indexOf(data.userID) !== -1) return;
                         
                         var found = false;
                         for (var i = 0; i < users.length; i++) {
@@ -2323,6 +2349,7 @@
                                 '</div>' +
                                 '<div class="top-count">' + user.openedCount + '</div>';
                             div.onclick = function() {
+                                adminReturnPage = 'top';
                                 showOtherProfile(user.userID);
                             };
                             list.appendChild(div);
@@ -2881,8 +2908,7 @@
             if (isLoggedIn) {
                 var html = '<h2>Аккаунт</h2>';
                 html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
-                html += '<button class="btn btn-logout" onclick="logoutAccount()">Выйти с аккаунта</button>';
-                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                html += '<button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
                 content.innerHTML = html;
             } else {
                 var html = '<h2>Вход / Регистрация</h2>';
@@ -2897,17 +2923,6 @@
 
         function closeAuthModal() {
             document.getElementById('authModal').classList.remove('active');
-        }
-
-        function logoutAccount() {
-            isLoggedIn = false;
-            loggedInAccountName = '';
-            try {
-                localStorage.removeItem('admincase_logged_in');
-                localStorage.removeItem('admincase_logged_in_name');
-            } catch(e) {}
-            closeAuthModal();
-            showCustomModal('✅ Успех!', '<p>Вы вышли с аккаунта.</p>');
         }
 
         function showLoginForm() {
@@ -3055,14 +3070,16 @@
                             found = true;
                             isLoggedIn = true;
                             loggedInAccountName = data.userName;
+                            loggedInAccountID = data.userID;
                             
                             try {
                                 localStorage.setItem('admincase_logged_in', 'true');
                                 localStorage.setItem('admincase_logged_in_name', data.userName);
+                                localStorage.setItem('admincase_logged_in_id', data.userID);
                             } catch(e) {}
                             
-                            var content = document.getElementById('authModalContent');
-                            content.innerHTML = '<h2>✅ Успешно!</h2><p style="margin-bottom:15px;">Вы успешно вошли в аккаунт "' + data.userName + '".</p><button class="btn btn-open" onclick="location.reload()">Продолжить</button>';
+                            closeAuthModal();
+                            showCustomModal('✅ Успешно!', '<p>Вы вошли в аккаунт "' + data.userName + '".</p>');
                         }
                     });
                     
@@ -3121,7 +3138,11 @@
         };
 
         document.getElementById('otherBackBtn').onclick = function() {
-            showTopPage();
+            if (adminReturnPage === 'admin_list') {
+                showAdminListPage();
+            } else {
+                showTopPage();
+            }
         };
 
         document.getElementById('adminListBackBtn').onclick = function() {
@@ -3255,38 +3276,6 @@
             var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
             if (activeBtn) activeBtn.classList.add('active');
         })();
-
-        // ===== ОЧИСТКА СТАТИСТИКИ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ =====
-        function clearAllUserStats() {
-            var cleanupDone = localStorage.getItem('admincase_stats_cleanup_done');
-            if (cleanupDone) return;
-            
-            var collections = ['case_openings', 'taken_names', 'logins', 'name_changes', 'online_users', 'active_promos', 'registered_accounts'];
-            var promises = [];
-            
-            for (var c = 0; c < collections.length; c++) {
-                (function(collectionName) {
-                    promises.push(
-                        db.collection(collectionName).get()
-                            .then(function(snapshot) {
-                                var deletePromises = [];
-                                snapshot.forEach(function(doc) {
-                                    deletePromises.push(doc.ref.delete());
-                                });
-                                return Promise.all(deletePromises);
-                            })
-                            .catch(function() {})
-                    );
-                })(collections[c]);
-            }
-            
-            Promise.all(promises).then(function() {
-                localStorage.setItem('admincase_stats_cleanup_done', 'true');
-                console.log('Статистика очищена');
-            });
-        }
-
-        clearAllUserStats();
     </script>
 
 </body>
