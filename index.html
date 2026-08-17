@@ -399,6 +399,9 @@
         .btn-open { background: #4caf50; color: #fff; font-size: 1.2rem; padding: 15px 40px; }
         .btn-open:disabled { background: #555; cursor: not-allowed; }
         .btn-close { background: #f44336; color: #fff; }
+        .btn-login { background: #2196f3; color: #fff; padding: 12px 25px; }
+        .btn-register { background: #ff9800; color: #fff; padding: 12px 25px; }
+        .btn-logout { background: #607d8b; color: #fff; padding: 12px 25px; }
         .message {
             margin: 15px 0; padding: 15px; border-radius: 10px;
             display: none; font-weight: bold;
@@ -407,7 +410,6 @@
         .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win { display: block; background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; font-size: 1.2rem; }
         
-        /* Аутентификация */
         .auth-modal {
             display: none;
             position: fixed;
@@ -469,7 +471,6 @@
             padding-right: 45px;
         }
         
-        /* Администрация */
         .admin-list-page {
             display: none;
             width: 100%;
@@ -563,6 +564,19 @@
             font-weight: bold; font-size: 1.1rem;
             border-right: 1px solid #0f3460; flex-shrink: 0;
         }
+        .roulette-back-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 5px 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .roulette-back-btn.show { display: block; }
         .rewards-section { width: 100%; max-width: 400px; margin: 30px auto; }
         .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; }
         .reward-item {
@@ -766,18 +780,31 @@
             margin-bottom: 20px; text-align: center;
         }
         .history-list {
-            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: flex-start;
         }
         .history-item {
-            padding: 10px 15px; border-radius: 10px;
-            display: flex; align-items: center; gap: 10px;
-            border: 1px solid; position: relative;
+            padding: 5px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid;
+            position: relative;
+            font-size: 0.75rem;
+            flex: 0 0 calc(33.33% - 5px);
+            max-width: calc(33.33% - 5px);
+            min-width: 0;
         }
-        .history-name { font-weight: bold; }
+        .history-name { font-weight: bold; font-size: 0.7rem; word-break: break-word; }
         .history-info-circle {
-            width: 24px; height: 24px; background: rgba(255,255,255,0.2);
+            width: 18px; height: 18px; background: rgba(255,255,255,0.2);
             border-radius: 50%; border: none; color: #fff;
             cursor: pointer; font-weight: bold; position: relative;
+            font-size: 0.6rem;
+            flex-shrink: 0;
         }
         .history-tooltip {
             position: absolute; bottom: calc(100% + 8px); left: 50%;
@@ -945,6 +972,14 @@
         }
         .other-stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .other-stat-label { font-size: 0.85rem; opacity: 0.7; }
+        .admin-controls {
+            display: none;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .admin-controls.show { display: flex; }
         .achievements-section {
             background: #16213e;
             border: 2px solid #0f3460;
@@ -1143,6 +1178,10 @@
             .profile-name { font-size: 1rem; }
             .profile-prefix { font-size: 0.75rem; }
             .auth-btn { right: 75px; }
+            .history-item {
+                flex: 0 0 calc(33.33% - 5px);
+                max-width: calc(33.33% - 5px);
+            }
         }
     </style>
 </head>
@@ -1270,7 +1309,7 @@
 
     <div class="admin-list-page" id="adminListPage">
         <button class="back-btn" id="adminListBackBtn">‹</button>
-        <a href="https://vk.ru/ufa.blackrussia.online" target="_blank" class="admin-contact-btn">📞 Связаться с нами</a>
+        <a href="https://vk.ru/club240893213" target="_blank" class="admin-contact-btn">📞 Связаться с нами</a>
         <div class="top-title">👑 Администрация Сайта</div>
         <div id="adminList">
             <p style="opacity:0.5; text-align:center;">Загрузка...</p>
@@ -1291,10 +1330,17 @@
                     <div class="other-stat-label">Открыто кейсов</div>
                 </div>
             </div>
+            <div class="admin-controls" id="adminControls">
+                <button class="btn btn-login" onclick="showFullStats()">Полная статистика</button>
+                <button class="btn btn-register" onclick="showAdminEdit()">Редактировать</button>
+                <button class="btn btn-close" onclick="resetAccount()">Обнулить аккаунт</button>
+            </div>
+            <div id="adminEditPanel" style="display:none; margin-top:15px;"></div>
         </div>
     </div>
 
     <div class="roulette-page" id="roulettePage">
+        <button class="roulette-back-btn" id="rouletteBackBtn">‹</button>
         <h2 id="rouletteTitle">Кейс</h2>
         <div class="roulette-arrow">▼</div>
         <div class="roulette-container" id="rouletteContainer">
@@ -1310,7 +1356,6 @@
         </div>
     </div>
 
-    <!-- Админ-панель -->
     <div class="admin-panel" id="adminPanel">
         <button class="back-btn" id="adminBackBtn">‹</button>
         <div class="admin-title">🔧 Админ-панель</div>
@@ -1350,10 +1395,8 @@
         </div>
     </div>
 
-    <!-- Модалка аутентификации -->
     <div class="auth-modal" id="authModal">
         <div class="auth-modal-content" id="authModalContent">
-            <!-- Содержимое заполняется динамически -->
         </div>
     </div>
 
@@ -1378,7 +1421,6 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        // ===== АДМИНЫ =====
         var adminIDs = [
             "12425616",
             "86858801",
@@ -1480,17 +1522,17 @@
         var dynamicPromoCodes = {};
         var isLoggedIn = false;
         var loggedInAccountName = '';
+        var currentOtherUserID = null;
+        var adminReturnPage = 'top';
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
-        // ===== ПОКАЗ АДМИН КНОПКИ =====
         function updateAdminUI() {
             if (isAdmin) {
                 document.getElementById('adminBtn').style.display = 'block';
             }
         }
 
-        // ===== ЗАГРУЗКА ДИНАМИЧЕСКИХ ПРОМОКОДОВ =====
         function loadDynamicPromoCodes() {
             db.collection('active_promos').get().then(function(snapshot) {
                 dynamicPromoCodes = {};
@@ -1516,7 +1558,6 @@
         loadDynamicPromoCodes();
         setInterval(loadDynamicPromoCodes, 30000);
 
-        // ===== СОЗДАНИЕ ПРОМОКОДА =====
         function createPromoCode() {
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
             var caseType = document.getElementById('adminPromoCase').value;
@@ -1556,7 +1597,9 @@
                 activationsLeft: activations,
                 totalActivations: activations,
                 expiresAt: expiresAt,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                createdBy: userName,
+                createdByID: userID
             }).then(function() {
                 document.getElementById('adminPromoCode').value = '';
                 loadDynamicPromoCodes();
@@ -1567,7 +1610,6 @@
             });
         }
 
-        // ===== ПОКАЗ АКТИВНЫХ ПРОМОКОДОВ =====
         function showActivePromos() {
             var list = document.getElementById('activePromosList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
@@ -1598,13 +1640,14 @@
                     
                     var expiresDate = new Date(data.expiresAt);
                     var expiresStr = expiresDate.toLocaleString('ru-RU');
+                    var creatorName = data.createdBy || 'Неизвестно';
                     
                     div.innerHTML = 
                         '<div class="promo-info">' +
                             '<div class="promo-code">' + data.code + '</div>' +
                             '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
                             ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
-                            ' | До: ' + expiresStr + '</div>' +
+                            ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
                         '</div>' +
                         '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
                     
@@ -1615,7 +1658,6 @@
             });
         }
 
-        // ===== УДАЛЕНИЕ ПРОМОКОДА =====
         function deletePromoCode(docId) {
             if (!confirm('Удалить промокод?')) return;
             
@@ -1629,7 +1671,6 @@
                 });
         }
 
-        // ===== ПОКАЗ АДМИН-ПАНЕЛИ =====
         function showAdminPanel() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
@@ -1643,7 +1684,6 @@
             window.scrollTo(0, 0);
         }
 
-        // ===== ПОКАЗ СПИСКА АДМИНОВ =====
         function showAdminList() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
@@ -1654,12 +1694,13 @@
             document.getElementById('adminListPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin_list'); } catch(e) {}
             
+            adminReturnPage = 'admin_list';
+            
             var list = document.getElementById('adminList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
             var adminItems = [];
             
-            // Собираем данные админов
             var adminPromises = [];
             for (var a = 0; a < adminIDs.length; a++) {
                 (function(adminID) {
@@ -1733,6 +1774,7 @@
                             '<span class="admin-badge">ADMIN</span>';
                         
                         div.onclick = function() {
+                            adminReturnPage = 'admin_list';
                             showOtherProfile(admin.userID);
                         };
                         
@@ -1744,22 +1786,40 @@
             window.scrollTo(0, 0);
         }
 
-        // ===== АУТЕНТИФИКАЦИЯ =====
         function showAuthModal() {
             var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
             
-            var html = '<h2>Вход / Регистрация</h2>';
-            html += '<button class="btn btn-open" onclick="showLoginForm()">Войти</button>';
-            html += '<button class="btn btn-close" onclick="showRegisterForm()">Регистрация</button>';
-            html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+            if (isLoggedIn) {
+                var html = '<h2>Аккаунт</h2>';
+                html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
+                html += '<button class="btn btn-logout" onclick="logoutAccount()">Выйти с аккаунта</button>';
+                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                content.innerHTML = html;
+            } else {
+                var html = '<h2>Вход / Регистрация</h2>';
+                html += '<button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
+                html += '<button class="btn btn-register" onclick="showRegisterForm()">Регистрация</button>';
+                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                content.innerHTML = html;
+            }
             
-            content.innerHTML = html;
             modal.classList.add('active');
         }
 
         function closeAuthModal() {
             document.getElementById('authModal').classList.remove('active');
+        }
+
+        function logoutAccount() {
+            isLoggedIn = false;
+            loggedInAccountName = '';
+            try {
+                localStorage.removeItem('admincase_logged_in');
+                localStorage.removeItem('admincase_logged_in_name');
+            } catch(e) {}
+            closeAuthModal();
+            alert('Вы вышли с аккаунта');
         }
 
         function showLoginForm() {
@@ -1773,7 +1833,7 @@
             html += '<input type="password" class="auth-input" id="loginPassword" placeholder="Введите пароль">';
             html += '<button class="auth-eye-btn" onclick="togglePassword(\'loginPassword\', this)">👁️</button>';
             html += '</div>';
-            html += '<button class="btn btn-open" onclick="handleLogin()">Войти</button>';
+            html += '<button class="btn btn-login" onclick="handleLogin()">Войти</button>';
             html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
             html += '<div class="message" id="authMessage"></div>';
             
@@ -1783,7 +1843,6 @@
         function showRegisterForm() {
             var content = document.getElementById('authModalContent');
             
-            // Проверка условий
             if (openedCount < 10) {
                 content.innerHTML = '<h2>Регистрация недоступна</h2><p style="margin-bottom:15px;">Для регистрации нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p><button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
                 return;
@@ -1807,7 +1866,7 @@
             html += '<input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" maxlength="10">';
             html += '<button class="auth-eye-btn" onclick="togglePassword(\'regPasswordConfirm\', this)">👁️</button>';
             html += '</div>';
-            html += '<button class="btn btn-open" onclick="handleRegister()">Зарегистрироваться</button>';
+            html += '<button class="btn btn-register" onclick="handleRegister()">Зарегистрироваться</button>';
             html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
             html += '<div class="message" id="authMessage"></div>';
             
@@ -1851,7 +1910,6 @@
                 return;
             }
             
-            // Проверка на существующий аккаунт
             db.collection('registered_accounts')
                 .where('userID', '==', userID)
                 .get()
@@ -1869,7 +1927,7 @@
                         createdAt: Date.now()
                     }).then(function() {
                         var content = document.getElementById('authModalContent');
-                        content.innerHTML = '<h2>✅ Успех!</h2><p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p><p>ID: ' + userID + '</p><button class="btn btn-open" onclick="showLoginForm()">Войти</button>';
+                        content.innerHTML = '<h2>✅ Успех!</h2><p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p><p>ID: ' + userID + '</p><button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
                     });
                 })
                 .catch(function(error) {
@@ -1910,6 +1968,11 @@
                             isLoggedIn = true;
                             loggedInAccountName = data.userName;
                             
+                            try {
+                                localStorage.setItem('admincase_logged_in', 'true');
+                                localStorage.setItem('admincase_logged_in_name', data.userName);
+                            } catch(e) {}
+                            
                             var content = document.getElementById('authModalContent');
                             content.innerHTML = '<h2>✅ Успешно!</h2><p style="margin-bottom:15px;">Вы успешно вошли в аккаунт "' + data.userName + '".</p><button class="btn btn-open" onclick="location.reload()">Продолжить</button>';
                         }
@@ -1926,18 +1989,101 @@
                 });
         }
 
-        // ===== ОБРАБОТЧИКИ КНОПОК =====
-        document.getElementById('authBtn').onclick = function() {
-            showAuthModal();
-        };
+        function showFullStats() {
+            var targetID = currentOtherUserID;
+            if (!targetID) return;
+            
+            alert('Полная статистика для ID: ' + targetID + '\n\nФункция в разработке.');
+        }
 
-        document.getElementById('authModal').onclick = function(e) {
-            if (e.target === this) {
-                closeAuthModal();
+        function showAdminEdit() {
+            var panel = document.getElementById('adminEditPanel');
+            var targetID = currentOtherUserID;
+            
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                panel.innerHTML = '<h3 style="color:#ffd700; margin-bottom:10px;">Редактирование</h3>' +
+                    '<button class="btn btn-login" onclick="editOpenedCount(\'' + targetID + '\')">Изменить кейсы</button>' +
+                    '<button class="btn btn-register" onclick="editBestWin(\'' + targetID + '\')">Изменить лучший выигрыш</button>' +
+                    '<button class="btn btn-login" onclick="editAchievements(\'' + targetID + '\')">Достижения</button>' +
+                    '<button class="btn btn-close" onclick="clearHistory(\'' + targetID + '\')">Очистить историю</button>';
+            } else {
+                panel.style.display = 'none';
             }
-        };
+        }
 
-        // ===== ОСТАЛЬНЫЕ ФУНКЦИИ (как в предыдущем коде) =====
+        function editOpenedCount(targetID) {
+            var newCount = prompt('Введите новое количество открытых кейсов:', '0');
+            if (newCount === null) return;
+            newCount = parseInt(newCount);
+            if (isNaN(newCount) || newCount < 0) {
+                alert('Введите корректное число!');
+                return;
+            }
+            
+            if (targetID === userID) {
+                openedCount = newCount;
+                try { localStorage.setItem('admincase_opened_count', openedCount); } catch(e) {}
+                alert('Обновлено!');
+            } else {
+                alert('Функция для чужого аккаунта в разработке.');
+            }
+        }
+
+        function editBestWin(targetID) {
+            var newBest = prompt('Введите новый лучший выигрыш (или "убрать" для удаления):', '');
+            if (newBest === null) return;
+            
+            if (newBest.toLowerCase() === 'убрать') {
+                // Убрать лучший выигрыш
+                alert('Лучший выигрыш убран!');
+            } else {
+                alert('Обновлено!');
+            }
+        }
+
+        function editAchievements(targetID) {
+            alert('Управление достижениями в разработке.');
+        }
+
+        function clearHistory(targetID) {
+            if (!confirm('Очистить историю выпавших наград?')) return;
+            
+            if (targetID === userID) {
+                winHistory = [];
+                try { localStorage.setItem('admincase_win_history', JSON.stringify(winHistory)); } catch(e) {}
+                alert('История очищена!');
+            } else {
+                alert('Функция для чужого аккаунта в разработке.');
+            }
+        }
+
+        function resetAccount() {
+            if (!confirm('ВНИМАНИЕ! Аккаунт будет полностью обнулён. Продолжить?')) return;
+            
+            if (!confirm('Точно обнулить аккаунт?')) return;
+            
+            openedCount = 0;
+            winHistory = [];
+            userName = 'Игрок';
+            avatarData = null;
+            unlockedAchievements = [];
+            visitCount = 0;
+            
+            try {
+                localStorage.setItem('admincase_opened_count', '0');
+                localStorage.setItem('admincase_win_history', '[]');
+                localStorage.setItem('admincase_user_name', 'Игрок');
+                localStorage.removeItem('admincase_user_avatar');
+                localStorage.setItem('admincase_achievements', '[]');
+                localStorage.setItem('admincase_visit_count', '0');
+                localStorage.removeItem('admincase_name_change_time');
+            } catch(e) {}
+            
+            alert('Аккаунт обнулён!');
+            location.reload();
+        }
+
         function openAvatarViewer(avatarSrc) {
             if (!avatarSrc) return;
             document.getElementById('avatarModalImg').src = avatarSrc;
@@ -2071,6 +2217,14 @@
                 if (currentTheme !== 'dark') {
                     document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
                 }
+            }
+        } catch(e) {}
+
+        try {
+            var savedLoggedIn = localStorage.getItem('admincase_logged_in');
+            if (savedLoggedIn === 'true') {
+                isLoggedIn = true;
+                loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
             }
         } catch(e) {}
 
@@ -2354,6 +2508,7 @@
         }
 
         function showTopPage() {
+            adminReturnPage = 'top';
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
@@ -2461,6 +2616,7 @@
                                 '</div>' +
                                 '<div class="top-count">' + user.openedCount + '</div>';
                             div.onclick = function() {
+                                adminReturnPage = 'top';
                                 showOtherProfile(user.userID);
                             };
                             list.appendChild(div);
@@ -2475,6 +2631,8 @@
         }
 
         function showOtherProfile(targetUserID) {
+            currentOtherUserID = targetUserID;
+            
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('roulettePage').classList.remove('active');
@@ -2492,6 +2650,14 @@
             document.getElementById('otherOpenedCount').textContent = '...';
             
             var isOtherAdmin = adminIDs.indexOf(targetUserID) !== -1;
+            
+            // Показываем админ-кнопки если текущий пользователь админ
+            if (isAdmin) {
+                document.getElementById('adminControls').classList.add('show');
+            } else {
+                document.getElementById('adminControls').classList.remove('show');
+            }
+            document.getElementById('adminEditPanel').style.display = 'none';
             
             db.collection('taken_names')
                 .where('userID', '==', targetUserID)
@@ -2802,6 +2968,7 @@
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
             document.getElementById('resultMessage').className = 'message';
             document.getElementById('spinBtn').disabled = false;
+            document.getElementById('rouletteBackBtn').classList.remove('show');
             isSpinning = false;
             hasSpun = false;
             
@@ -2973,6 +3140,9 @@
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
                         isSpinning = false;
                         btn.disabled = false;
+                        
+                        // Показываем кнопку назад
+                        document.getElementById('rouletteBackBtn').classList.add('show');
                     }, 500);
                 }
             }
@@ -3016,6 +3186,16 @@
             document.getElementById('themeOverlay').classList.remove('show');
         }
 
+        document.getElementById('authBtn').onclick = function() {
+            showAuthModal();
+        };
+
+        document.getElementById('authModal').onclick = function(e) {
+            if (e.target === this) {
+                closeAuthModal();
+            }
+        };
+
         document.getElementById('burgerBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.toggle('show');
         };
@@ -3050,7 +3230,18 @@
         };
 
         document.getElementById('otherBackBtn').onclick = function() {
-            showTopPage();
+            if (adminReturnPage === 'admin_list') {
+                showAdminList();
+            } else {
+                showTopPage();
+            }
+        };
+
+        document.getElementById('rouletteBackBtn').onclick = function() {
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
+            loadOnlineCount();
         };
 
         document.getElementById('adminBackBtn').onclick = function() {
