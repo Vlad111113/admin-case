@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase</title>
+    <title>AdminCase - Оптимизированный</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
@@ -1343,7 +1343,7 @@
 
     <div class="top-page" id="topPage">
         <button class="back-btn" id="topBackBtn">‹</button>
-        <div class="top-title">🏆 Топ 10 пользователей</div>
+        <div class="top-title">🏆 Топ 5 пользователей</div>
         <div class="top-list" id="topList">
             <p style="opacity:0.5; text-align:center;">Загрузка...</p>
         </div>
@@ -1563,6 +1563,10 @@
         var loggedInAccountID = '';
         var adminReturnPage = 'top';
 
+        // Переменная для хранения последнего обновления топа
+        var lastTopUpdateTime = 0;
+        var TOP_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 часа в миллисекундах
+
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
         function showCustomModal(title, content) {
@@ -1582,11 +1586,13 @@
             }
         };
 
-        function loadDynamicPromoCodes() {
-            db.collection('active_promos').get().then(function(snapshot) {
+        // ===== REALTIME LISTENER ДЛЯ ПРОМОКОДОВ (оптимизировано) =====
+        function subscribeToPromoCodes() {
+            db.collection('active_promos').onSnapshot(function(snapshot) {
                 dynamicPromoCodes = {};
                 snapshot.forEach(function(doc) {
                     var data = doc.data();
+                    
                     if (data.expiresAt && data.expiresAt < Date.now()) {
                         doc.ref.delete().catch(function() {});
                         return;
@@ -1602,10 +1608,18 @@
                         expiresAt: data.expiresAt
                     };
                 });
-            }).catch(function() {});
+                
+                // Обновляем список активных промокодов в админ-панели, если она открыта
+                if (document.getElementById('adminPanel').classList.contains('active')) {
+                    showActivePromos();
+                }
+            }, function(error) {
+                console.error('Ошибка подписки на промокоды:', error);
+            });
         }
-        loadDynamicPromoCodes();
-        setInterval(loadDynamicPromoCodes, 30000);
+        
+        // Запускаем подписку один раз
+        subscribeToPromoCodes();
 
         function createPromoCode() {
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
@@ -1651,7 +1665,6 @@
                 createdByID: userID
             }).then(function() {
                 document.getElementById('adminPromoCode').value = '';
-                loadDynamicPromoCodes();
                 showActivePromos();
                 showCustomModal('✅ Успех!', '<p>Промокод ' + code + ' создан!</p>');
             }).catch(function(error) {
@@ -1663,54 +1676,60 @@
             var list = document.getElementById('activePromosList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            db.collection('active_promos').get().then(function(snapshot) {
-                list.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
-                    return;
-                }
-                
-                snapshot.forEach(function(doc) {
-                    var data = doc.data();
+            // Используем данные из локального кэша (dynamicPromoCodes), обновленного через listener
+            var promoCodes = Object.keys(dynamicPromoCodes);
+            
+            if (promoCodes.length === 0) {
+                list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
+                return;
+            }
+            
+            list.innerHTML = '';
+            
+            for (var i = 0; i < promoCodes.length; i++) {
+                (function(codeKey) {
+                    var promoData = dynamicPromoCodes[codeKey];
                     
-                    if (data.expiresAt && data.expiresAt < Date.now()) {
-                        doc.ref.delete().catch(function() {});
-                        return;
-                    }
-                    
-                    if (data.activationsLeft <= 0) {
-                        doc.ref.delete().catch(function() {});
-                        return;
-                    }
-                    
-                    var div = document.createElement('div');
-                    div.className = 'promo-item';
-                    
-                    var expiresDate = new Date(data.expiresAt);
-                    var expiresStr = expiresDate.toLocaleString('ru-RU');
-                    var creatorName = data.createdBy || 'Неизвестно';
-                    
-                    div.innerHTML = 
-                        '<div class="promo-info">' +
-                            '<div class="promo-code">' + data.code + '</div>' +
-                            '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
-                            ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
-                            ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
-                        '</div>' +
-                        '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
-                    
-                    list.appendChild(div);
-                });
-            }).catch(function(error) {
-                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
-            });
+                    // Дополнительно получаем полные данные для отображения
+                    db.collection('active_promos').doc(promoData.docId).get()
+                        .then(function(doc) {
+                            if (!doc.exists) return;
+                            
+                            var data = doc.data();
+                            var div = document.createElement('div');
+                            div.className = 'promo-item';
+                            
+                            var expiresDate = new Date(data.expiresAt);
+                            var expiresStr = expiresDate.toLocaleString('ru-RU');
+                            var creatorName = data.createdBy || 'Неизвестно';
+                            
+                            div.innerHTML = 
+                                '<div class="promo-info">' +
+                                    '<div class="promo-code">' + data.code + '</div>' +
+                                    '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
+                                    ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
+                                    ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
+                                '</div>' +
+                                '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
+                            
+                            // Вставляем в правильном порядке
+                            var container = document.getElementById('activePromosList');
+                            var existingItem = container.querySelector('[data-code="' + data.code + '"]');
+                            if (existingItem) {
+                                existingItem.replaceWith(div);
+                            } else {
+                                container.appendChild(div);
+                            }
+                            div.setAttribute('data-code', data.code);
+                        })
+                        .catch(function() {});
+                })(promoCodes[i]);
+            }
         }
 
         function deletePromoCode(docId) {
             db.collection('active_promos').doc(docId).delete()
                 .then(function() {
-                    loadDynamicPromoCodes();
                     showActivePromos();
                     showCustomModal('✅ Успех!', '<p>Промокод удалён!</p>');
                 })
@@ -1846,7 +1865,6 @@
 
         // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
         function loadUserData(callback) {
-            // Сначала проверяем, вошёл ли пользователь в аккаунт
             var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
             
             if (savedLoggedInID) {
@@ -1855,7 +1873,6 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
-                // Загружаем данные аккаунта из Firebase
                 db.collection('case_openings')
                     .where('userID', '==', userID)
                     .get()
@@ -1872,7 +1889,6 @@
                             });
                         });
                         
-                        // Загружаем имя
                         return db.collection('taken_names')
                             .where('userID', '==', userID)
                             .get()
@@ -1888,7 +1904,6 @@
                                     }
                                 });
                                 
-                                // Сохраняем в localStorage
                                 try {
                                     localStorage.setItem('admincase_opened_count', openedCount);
                                     localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
@@ -1903,7 +1918,6 @@
                         if (callback) callback();
                     });
             } else {
-                // Обычная загрузка из localStorage
                 try {
                     var savedCount = localStorage.getItem('admincase_opened_count');
                     if (savedCount) openedCount = parseInt(savedCount);
@@ -2040,6 +2054,7 @@
                 }).catch(function() {});
             }
 
+            // ===== ОНЛАЙН-СЧЕТЧИК (оптимизировано: каждые 5 минут) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
                     db.collection('online_users').doc(userID).set({
@@ -2050,7 +2065,7 @@
                 }
             }
             updateOnlineStatus();
-            setInterval(updateOnlineStatus, 30000);
+            setInterval(updateOnlineStatus, 5 * 60 * 1000); // 5 минут
 
             function loadOnlineCount() {
                 var now = Date.now();
@@ -2066,7 +2081,7 @@
                     });
             }
             loadOnlineCount();
-            setInterval(loadOnlineCount, 10000);
+            setInterval(loadOnlineCount, 5 * 60 * 1000); // 5 минут вместо 10 секунд
         });
 
         function getPrefix(openCount) {
@@ -2106,7 +2121,6 @@
                 document.getElementById('profileRegDate').textContent = 'Регистрация: ' + day + '.' + month + '.' + year;
             }
             
-            // Обновляем аватар
             var avatarImg = document.getElementById('avatarImg');
             var avatarEmoji = document.getElementById('avatarEmoji');
             if (avatarData) {
@@ -2253,7 +2267,6 @@
             document.getElementById('adminListPage').classList.remove('active');
             document.getElementById('adminPanel').classList.remove('active');
             
-            // Останавливаем анимацию рулетки если она была
             if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
             if (spinAnimFrame) cancelAnimationFrame(spinAnimFrame);
             bgAnimFrame = null;
@@ -2327,12 +2340,63 @@
             window.scrollTo(0, 0);
         }
 
+        // ===== ТОП-5 С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ РАЗ В 24 ЧАСА (В 12:00 МСК) =====
         function showTopPage() {
             adminReturnPage = 'top';
             hideAllPages();
             document.getElementById('topPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
             
+            // Проверяем, нужно ли обновить топ (раз в 24 часа)
+            var now = Date.now();
+            var shouldUpdate = false;
+            
+            // Проверяем, был ли топ обновлен сегодня в 12:00 МСК
+            var lastUpdateStr = localStorage.getItem('admincase_top_last_update');
+            if (lastUpdateStr) {
+                lastTopUpdateTime = parseInt(lastUpdateStr);
+            }
+            
+            // Определяем время следующего обновления (сегодня в 12:00 МСК)
+            var mskOffset = 3 * 60 * 60 * 1000; // МСК = UTC+3
+            var nowMsk = new Date(now + mskOffset);
+            var nextUpdateMsk = new Date(nowMsk);
+            nextUpdateMsk.setHours(12, 0, 0, 0);
+            
+            // Если сейчас меньше 12:00, то сегодняшнее обновление ещё не наступило
+            if (nowMsk < nextUpdateMsk) {
+                // Если последнее обновление было больше 24 часов назад
+                if (now - lastTopUpdateTime > TOP_UPDATE_INTERVAL) {
+                    shouldUpdate = true;
+                }
+            } else {
+                // Если уже после 12:00, проверяем, было ли сегодня обновление
+                var todayUpdateMsk = new Date(nowMsk);
+                todayUpdateMsk.setHours(12, 0, 0, 0);
+                var todayUpdateUTC = todayUpdateMsk.getTime() - mskOffset;
+                
+                if (lastTopUpdateTime < todayUpdateUTC) {
+                    shouldUpdate = true;
+                }
+            }
+            
+            // Если топ не нужно обновлять, загружаем из localStorage
+            if (!shouldUpdate) {
+                var cachedTop = localStorage.getItem('admincase_top5_data');
+                if (cachedTop) {
+                    try {
+                        var topData = JSON.parse(cachedTop);
+                        displayTopList(topData);
+                        return;
+                    } catch(e) {}
+                }
+            }
+            
+            // Загружаем топ из Firebase
+            loadTopFromFirebase();
+        }
+        
+        function loadTopFromFirebase() {
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
@@ -2403,47 +2467,92 @@
                         return b.openedCount - a.openedCount;
                     });
                     
-                    var top10 = users.slice(0, 10);
+                    // ТОП-5 вместо ТОП-10
+                    var top5 = users.slice(0, 5);
                     
-                    if (top10.length === 0) {
-                        list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
-                        return;
-                    }
+                    // Сохраняем в localStorage
+                    try {
+                        localStorage.setItem('admincase_top5_data', JSON.stringify(top5));
+                        localStorage.setItem('admincase_top_last_update', Date.now());
+                    } catch(e) {}
                     
-                    list.innerHTML = '';
-                    
-                    for (var j = 0; j < top10.length; j++) {
-                        (function(user, index) {
-                            var div = document.createElement('div');
-                            div.className = 'top-item';
-                            var avatarHtml = '<span>👤</span>';
-                            if (user.avatar && user.avatar !== 'undefined' && user.avatar !== 'null') {
-                                avatarHtml = '<img src="' + user.avatar + '" alt="">';
-                            }
-                            var prefix = getPrefix(user.openedCount);
-                            div.innerHTML = 
-                                '<div class="top-place">' + (index + 1) + '</div>' +
-                                '<div class="top-avatar" onclick="event.stopPropagation(); openAvatarViewer(\'' + (user.avatar || '') + '\')">' + avatarHtml + '</div>' +
-                                '<div class="top-info">' +
-                                    '<div class="top-name">' + user.name + '</div>' +
-                                    '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
-                                    '<div class="top-id">ID: ' + user.userID + '</div>' +
-                                '</div>' +
-                                '<div class="top-count">' + user.openedCount + '</div>';
-                            div.onclick = function() {
-                                adminReturnPage = 'top';
-                                showOtherProfile(user.userID);
-                            };
-                            list.appendChild(div);
-                        })(top10[j], j);
-                    }
+                    displayTopList(top5);
                 });
             }).catch(function(error) {
                 list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
             });
-            
-            window.scrollTo(0, 0);
         }
+        
+        function displayTopList(topUsers) {
+            var list = document.getElementById('topList');
+            
+            if (topUsers.length === 0) {
+                list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
+                return;
+            }
+            
+            list.innerHTML = '';
+            
+            for (var j = 0; j < topUsers.length; j++) {
+                (function(user, index) {
+                    var div = document.createElement('div');
+                    div.className = 'top-item';
+                    var avatarHtml = '<span>👤</span>';
+                    if (user.avatar && user.avatar !== 'undefined' && user.avatar !== 'null') {
+                        avatarHtml = '<img src="' + user.avatar + '" alt="">';
+                    }
+                    var prefix = getPrefix(user.openedCount);
+                    div.innerHTML = 
+                        '<div class="top-place">' + (index + 1) + '</div>' +
+                        '<div class="top-avatar" onclick="event.stopPropagation(); openAvatarViewer(\'' + (user.avatar || '') + '\')">' + avatarHtml + '</div>' +
+                        '<div class="top-info">' +
+                            '<div class="top-name">' + user.name + '</div>' +
+                            '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
+                            '<div class="top-id">ID: ' + user.userID + '</div>' +
+                        '</div>' +
+                        '<div class="top-count">' + user.openedCount + '</div>';
+                    div.onclick = function() {
+                        adminReturnPage = 'top';
+                        showOtherProfile(user.userID);
+                    };
+                    list.appendChild(div);
+                })(topUsers[j], j);
+            }
+        }
+
+        // Функция для автоматического обновления топа в 12:00 МСК
+        function scheduleTopUpdate() {
+            function checkAndUpdate() {
+                var now = Date.now();
+                var mskOffset = 3 * 60 * 60 * 1000;
+                var nowMsk = new Date(now + mskOffset);
+                
+                // Если сейчас ровно 12:00 или позже, и топ не обновлялся сегодня
+                if (nowMsk.getHours() >= 12) {
+                    var todayUpdateMsk = new Date(nowMsk);
+                    todayUpdateMsk.setHours(12, 0, 0, 0);
+                    var todayUpdateUTC = todayUpdateMsk.getTime() - mskOffset;
+                    
+                    var lastUpdateStr = localStorage.getItem('admincase_top_last_update');
+                    var lastUpdate = lastUpdateStr ? parseInt(lastUpdateStr) : 0;
+                    
+                    if (lastUpdate < todayUpdateUTC) {
+                        // Обновляем топ
+                        loadTopFromFirebase();
+                        console.log('Топ обновлен в 12:00 МСК');
+                    }
+                }
+            }
+            
+            // Проверяем каждую минуту
+            setInterval(checkAndUpdate, 60 * 1000);
+            
+            // Проверяем сразу при загрузке
+            checkAndUpdate();
+        }
+        
+        // Запускаем планировщик обновления топа
+        scheduleTopUpdate();
 
         function showOtherProfile(targetUserID) {
             hideAllPages();
@@ -3000,7 +3109,6 @@
         }
 
         function handleLogout() {
-            // Очищаем все данные пользователя
             try {
                 localStorage.removeItem('admincase_logged_in');
                 localStorage.removeItem('admincase_logged_in_name');
@@ -3014,11 +3122,11 @@
                 localStorage.removeItem('admincase_user_id');
                 localStorage.removeItem('admincase_current_page');
                 localStorage.removeItem('admincase_other_profile_id');
+                localStorage.removeItem('admincase_top5_data');
+                localStorage.removeItem('admincase_top_last_update');
             } catch(e) {}
             
             closeAuthModal();
-            
-            // Перезагружаем страницу для сброса к состоянию по умолчанию
             showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
         }
 
@@ -3166,7 +3274,6 @@
                         if (data.password === password) {
                             found = true;
                             
-                            // Сохраняем данные в localStorage
                             try {
                                 localStorage.setItem('admincase_logged_in', 'true');
                                 localStorage.setItem('admincase_logged_in_name', data.userName);
@@ -3351,7 +3458,6 @@
                 closeThemeMenu();
             }
             
-            // Закрываем выпадающее меню при клике вне его
             if (!e.target.closest('.burger-btn') && !e.target.closest('.dropdown-menu')) {
                 document.getElementById('dropdownMenu').classList.remove('show');
             }
@@ -3364,4 +3470,4 @@
     </script>
 
 </body>
-            </html>
+    </html>
