@@ -7,6 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Все стили остаются без изменений */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -18,129 +19,341 @@
             flex-direction: column;
             transition: all 0.3s ease;
         }
-        body.theme-neon { background: #0a0a0a; color: #00ffcc; }
-        body.theme-neon .box, body.theme-neon .profile-header, body.theme-neon .history-section,
-        body.theme-neon .top-item, body.theme-neon .other-profile-header, body.theme-neon .modal-content,
-        body.theme-neon .dropdown-menu, body.theme-neon .reward-item, body.theme-neon .integration-btn,
-        body.theme-neon .achievements-section, body.theme-neon .theme-dropdown, body.theme-neon .admin-item,
-        body.theme-neon .custom-modal-content, body.theme-neon .auth-modal-content, body.theme-neon .promo-item,
-        body.theme-neon .admin-panel, body.theme-neon .admin-section {
-            background: #111; border-color: #00ffcc; box-shadow: 0 0 15px rgba(0, 255, 204, 0.3); color: #00ffcc;
+
+        body.theme-neon {
+            background: #0a0a0a;
+            color: #00ffcc;
+        }
+        body.theme-neon .box,
+        body.theme-neon .profile-header,
+        body.theme-neon .history-section,
+        body.theme-neon .top-item,
+        body.theme-neon .other-profile-header,
+        body.theme-neon .modal-content,
+        body.theme-neon .dropdown-menu,
+        body.theme-neon .reward-item,
+        body.theme-neon .integration-btn,
+        body.theme-neon .achievements-section,
+        body.theme-neon .theme-dropdown,
+        body.theme-neon .admin-item,
+        body.theme-neon .custom-modal-content,
+        body.theme-neon .auth-modal-content,
+        body.theme-neon .promo-item,
+        body.theme-neon .admin-panel,
+        body.theme-neon .admin-section {
+            background: #111;
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
         }
         body.theme-neon h1 { color: #00ffcc; text-shadow: 0 0 20px #00ffcc; }
         body.theme-neon .btn-open { background: #00ffcc; color: #000; }
         body.theme-neon .stat-value { color: #00ffcc; }
-        body.theme-gold { background: #1a1608; color: #fff8e1; }
-        body.theme-gold .box, body.theme-gold .profile-header, body.theme-gold .history-section,
-        body.theme-gold .top-item, body.theme-gold .other-profile-header, body.theme-gold .modal-content,
-        body.theme-gold .dropdown-menu, body.theme-gold .reward-item, body.theme-gold .integration-btn,
-        body.theme-gold .achievements-section, body.theme-gold .theme-dropdown, body.theme-gold .admin-item,
-        body.theme-gold .custom-modal-content, body.theme-gold .auth-modal-content, body.theme-gold .promo-item,
-        body.theme-gold .admin-panel, body.theme-gold .admin-section {
-            background: #241e0a; border-color: #ffd700; color: #fff8e1;
+
+        body.theme-gold {
+            background: #1a1608;
+            color: #fff8e1;
+        }
+        body.theme-gold .box,
+        body.theme-gold .profile-header,
+        body.theme-gold .history-section,
+        body.theme-gold .top-item,
+        body.theme-gold .other-profile-header,
+        body.theme-gold .modal-content,
+        body.theme-gold .dropdown-menu,
+        body.theme-gold .reward-item,
+        body.theme-gold .integration-btn,
+        body.theme-gold .achievements-section,
+        body.theme-gold .theme-dropdown,
+        body.theme-gold .admin-item,
+        body.theme-gold .custom-modal-content,
+        body.theme-gold .auth-modal-content,
+        body.theme-gold .promo-item,
+        body.theme-gold .admin-panel,
+        body.theme-gold .admin-section {
+            background: #241e0a;
+            border-color: #ffd700;
+            color: #fff8e1;
         }
         body.theme-gold h1 { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         body.theme-gold .btn-open { background: #ffd700; color: #000; }
         body.theme-gold .stat-value { color: #ffd700; }
-        body.theme-cyberpunk { background: #0d001a; color: #00ffff; }
-        body.theme-cyberpunk .box, body.theme-cyberpunk .profile-header, body.theme-cyberpunk .history-section,
-        body.theme-cyberpunk .top-item, body.theme-cyberpunk .other-profile-header, body.theme-cyberpunk .modal-content,
-        body.theme-cyberpunk .dropdown-menu, body.theme-cyberpunk .reward-item, body.theme-cyberpunk .integration-btn,
-        body.theme-cyberpunk .achievements-section, body.theme-cyberpunk .theme-dropdown, body.theme-cyberpunk .admin-item,
-        body.theme-cyberpunk .custom-modal-content, body.theme-cyberpunk .auth-modal-content, body.theme-cyberpunk .promo-item,
-        body.theme-cyberpunk .admin-panel, body.theme-cyberpunk .admin-section {
-            background: #1a0030; border-color: #ff00ff; color: #00ffff;
+
+        body.theme-cyberpunk {
+            background: #0d001a;
+            color: #00ffff;
+        }
+        body.theme-cyberpunk .box,
+        body.theme-cyberpunk .profile-header,
+        body.theme-cyberpunk .history-section,
+        body.theme-cyberpunk .top-item,
+        body.theme-cyberpunk .other-profile-header,
+        body.theme-cyberpunk .modal-content,
+        body.theme-cyberpunk .dropdown-menu,
+        body.theme-cyberpunk .reward-item,
+        body.theme-cyberpunk .integration-btn,
+        body.theme-cyberpunk .achievements-section,
+        body.theme-cyberpunk .theme-dropdown,
+        body.theme-cyberpunk .admin-item,
+        body.theme-cyberpunk .custom-modal-content,
+        body.theme-cyberpunk .auth-modal-content,
+        body.theme-cyberpunk .promo-item,
+        body.theme-cyberpunk .admin-panel,
+        body.theme-cyberpunk .admin-section {
+            background: #1a0030;
+            border-color: #ff00ff;
+            color: #00ffff;
         }
         body.theme-cyberpunk h1 { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
         body.theme-cyberpunk .btn-open { background: #ff00ff; color: #fff; }
         body.theme-cyberpunk .stat-value { color: #ff00ff; }
-        body.theme-space { background: #000010; color: #e8eaf6; }
-        body.theme-space .box, body.theme-space .profile-header, body.theme-space .history-section,
-        body.theme-space .top-item, body.theme-space .other-profile-header, body.theme-space .modal-content,
-        body.theme-space .dropdown-menu, body.theme-space .reward-item, body.theme-space .integration-btn,
-        body.theme-space .achievements-section, body.theme-space .theme-dropdown, body.theme-space .admin-item,
-        body.theme-space .custom-modal-content, body.theme-space .auth-modal-content, body.theme-space .promo-item,
-        body.theme-space .admin-panel, body.theme-space .admin-section {
-            background: #0a0a2e; border-color: #7c4dff; color: #e8eaf6;
+
+        body.theme-space {
+            background: #000010;
+            color: #e8eaf6;
+        }
+        body.theme-space .box,
+        body.theme-space .profile-header,
+        body.theme-space .history-section,
+        body.theme-space .top-item,
+        body.theme-space .other-profile-header,
+        body.theme-space .modal-content,
+        body.theme-space .dropdown-menu,
+        body.theme-space .reward-item,
+        body.theme-space .integration-btn,
+        body.theme-space .achievements-section,
+        body.theme-space .theme-dropdown,
+        body.theme-space .admin-item,
+        body.theme-space .custom-modal-content,
+        body.theme-space .auth-modal-content,
+        body.theme-space .promo-item,
+        body.theme-space .admin-panel,
+        body.theme-space .admin-section {
+            background: #0a0a2e;
+            border-color: #7c4dff;
+            color: #e8eaf6;
         }
         body.theme-space h1 { color: #b388ff; text-shadow: 0 0 20px #7c4dff; }
         body.theme-space .btn-open { background: #7c4dff; color: #fff; }
         body.theme-space .stat-value { color: #b388ff; }
-        body.theme-blood { background: #0a0000; color: #ffcccc; }
-        body.theme-blood .box, body.theme-blood .profile-header, body.theme-blood .history-section,
-        body.theme-blood .top-item, body.theme-blood .other-profile-header, body.theme-blood .modal-content,
-        body.theme-blood .dropdown-menu, body.theme-blood .reward-item, body.theme-blood .integration-btn,
-        body.theme-blood .achievements-section, body.theme-blood .theme-dropdown, body.theme-blood .admin-item,
-        body.theme-blood .custom-modal-content, body.theme-blood .auth-modal-content, body.theme-blood .promo-item,
-        body.theme-blood .admin-panel, body.theme-blood .admin-section {
-            background: #1a0000; border-color: #cc0000; color: #ffcccc;
+
+        body.theme-blood {
+            background: #0a0000;
+            color: #ffcccc;
+        }
+        body.theme-blood .box,
+        body.theme-blood .profile-header,
+        body.theme-blood .history-section,
+        body.theme-blood .top-item,
+        body.theme-blood .other-profile-header,
+        body.theme-blood .modal-content,
+        body.theme-blood .dropdown-menu,
+        body.theme-blood .reward-item,
+        body.theme-blood .integration-btn,
+        body.theme-blood .achievements-section,
+        body.theme-blood .theme-dropdown,
+        body.theme-blood .admin-item,
+        body.theme-blood .custom-modal-content,
+        body.theme-blood .auth-modal-content,
+        body.theme-blood .promo-item,
+        body.theme-blood .admin-panel,
+        body.theme-blood .admin-section {
+            background: #1a0000;
+            border-color: #cc0000;
+            color: #ffcccc;
         }
         body.theme-blood h1 { color: #ff3333; text-shadow: 0 0 20px #cc0000; }
         body.theme-blood .btn-open { background: #cc0000; color: #fff; }
         body.theme-blood .stat-value { color: #ff3333; }
-        body.theme-emerald { background: #001a0a; color: #ccffe8; }
-        body.theme-emerald .box, body.theme-emerald .profile-header, body.theme-emerald .history-section,
-        body.theme-emerald .top-item, body.theme-emerald .other-profile-header, body.theme-emerald .modal-content,
-        body.theme-emerald .dropdown-menu, body.theme-emerald .reward-item, body.theme-emerald .integration-btn,
-        body.theme-emerald .achievements-section, body.theme-emerald .theme-dropdown, body.theme-emerald .admin-item,
-        body.theme-emerald .custom-modal-content, body.theme-emerald .auth-modal-content, body.theme-emerald .promo-item,
-        body.theme-emerald .admin-panel, body.theme-emerald .admin-section {
-            background: #002a14; border-color: #00cc88; color: #ccffe8;
+
+        body.theme-emerald {
+            background: #001a0a;
+            color: #ccffe8;
+        }
+        body.theme-emerald .box,
+        body.theme-emerald .profile-header,
+        body.theme-emerald .history-section,
+        body.theme-emerald .top-item,
+        body.theme-emerald .other-profile-header,
+        body.theme-emerald .modal-content,
+        body.theme-emerald .dropdown-menu,
+        body.theme-emerald .reward-item,
+        body.theme-emerald .integration-btn,
+        body.theme-emerald .achievements-section,
+        body.theme-emerald .theme-dropdown,
+        body.theme-emerald .admin-item,
+        body.theme-emerald .custom-modal-content,
+        body.theme-emerald .auth-modal-content,
+        body.theme-emerald .promo-item,
+        body.theme-emerald .admin-panel,
+        body.theme-emerald .admin-section {
+            background: #002a14;
+            border-color: #00cc88;
+            color: #ccffe8;
         }
         body.theme-emerald h1 { color: #00ffaa; text-shadow: 0 0 20px #00cc88; }
         body.theme-emerald .btn-open { background: #00cc88; color: #000; }
         body.theme-emerald .stat-value { color: #00ffaa; }
-        body.theme-ice { background: #000a14; color: #e0f7fa; }
-        body.theme-ice .box, body.theme-ice .profile-header, body.theme-ice .history-section,
-        body.theme-ice .top-item, body.theme-ice .other-profile-header, body.theme-ice .modal-content,
-        body.theme-ice .dropdown-menu, body.theme-ice .reward-item, body.theme-ice .integration-btn,
-        body.theme-ice .achievements-section, body.theme-ice .theme-dropdown, body.theme-ice .admin-item,
-        body.theme-ice .custom-modal-content, body.theme-ice .auth-modal-content, body.theme-ice .promo-item,
-        body.theme-ice .admin-panel, body.theme-ice .admin-section {
-            background: #001a28; border-color: #4dd0e1; color: #e0f7fa;
+
+        body.theme-ice {
+            background: #000a14;
+            color: #e0f7fa;
+        }
+        body.theme-ice .box,
+        body.theme-ice .profile-header,
+        body.theme-ice .history-section,
+        body.theme-ice .top-item,
+        body.theme-ice .other-profile-header,
+        body.theme-ice .modal-content,
+        body.theme-ice .dropdown-menu,
+        body.theme-ice .reward-item,
+        body.theme-ice .integration-btn,
+        body.theme-ice .achievements-section,
+        body.theme-ice .theme-dropdown,
+        body.theme-ice .admin-item,
+        body.theme-ice .custom-modal-content,
+        body.theme-ice .auth-modal-content,
+        body.theme-ice .promo-item,
+        body.theme-ice .admin-panel,
+        body.theme-ice .admin-section {
+            background: #001a28;
+            border-color: #4dd0e1;
+            color: #e0f7fa;
         }
         body.theme-ice h1 { color: #80deea; text-shadow: 0 0 20px #4dd0e1; }
         body.theme-ice .btn-open { background: #4dd0e1; color: #000; }
         body.theme-ice .stat-value { color: #80deea; }
-        body.theme-fire { background: #140000; color: #ffe0cc; }
-        body.theme-fire .box, body.theme-fire .profile-header, body.theme-fire .history-section,
-        body.theme-fire .top-item, body.theme-fire .other-profile-header, body.theme-fire .modal-content,
-        body.theme-fire .dropdown-menu, body.theme-fire .reward-item, body.theme-fire .integration-btn,
-        body.theme-fire .achievements-section, body.theme-fire .theme-dropdown, body.theme-fire .admin-item,
-        body.theme-fire .custom-modal-content, body.theme-fire .auth-modal-content, body.theme-fire .promo-item,
-        body.theme-fire .admin-panel, body.theme-fire .admin-section {
-            background: #280a00; border-color: #ff4500; color: #ffe0cc;
+
+        body.theme-fire {
+            background: #140000;
+            color: #ffe0cc;
+        }
+        body.theme-fire .box,
+        body.theme-fire .profile-header,
+        body.theme-fire .history-section,
+        body.theme-fire .top-item,
+        body.theme-fire .other-profile-header,
+        body.theme-fire .modal-content,
+        body.theme-fire .dropdown-menu,
+        body.theme-fire .reward-item,
+        body.theme-fire .integration-btn,
+        body.theme-fire .achievements-section,
+        body.theme-fire .theme-dropdown,
+        body.theme-fire .admin-item,
+        body.theme-fire .custom-modal-content,
+        body.theme-fire .auth-modal-content,
+        body.theme-fire .promo-item,
+        body.theme-fire .admin-panel,
+        body.theme-fire .admin-section {
+            background: #280a00;
+            border-color: #ff4500;
+            color: #ffe0cc;
         }
         body.theme-fire h1 { color: #ff6b35; text-shadow: 0 0 20px #ff4500; }
         body.theme-fire .btn-open { background: #ff4500; color: #fff; }
         body.theme-fire .stat-value { color: #ff6b35; }
-        body.theme-twilight { background: #0a0a1a; color: #e1bee7; }
-        body.theme-twilight .box, body.theme-twilight .profile-header, body.theme-twilight .history-section,
-        body.theme-twilight .top-item, body.theme-twilight .other-profile-header, body.theme-twilight .modal-content,
-        body.theme-twilight .dropdown-menu, body.theme-twilight .reward-item, body.theme-twilight .integration-btn,
-        body.theme-twilight .achievements-section, body.theme-twilight .theme-dropdown, body.theme-twilight .admin-item,
-        body.theme-twilight .custom-modal-content, body.theme-twilight .auth-modal-content, body.theme-twilight .promo-item,
-        body.theme-twilight .admin-panel, body.theme-twilight .admin-section {
-            background: #1a0a2e; border-color: #9c27b0; color: #e1bee7;
+
+        body.theme-twilight {
+            background: #0a0a1a;
+            color: #e1bee7;
+        }
+        body.theme-twilight .box,
+        body.theme-twilight .profile-header,
+        body.theme-twilight .history-section,
+        body.theme-twilight .top-item,
+        body.theme-twilight .other-profile-header,
+        body.theme-twilight .modal-content,
+        body.theme-twilight .dropdown-menu,
+        body.theme-twilight .reward-item,
+        body.theme-twilight .integration-btn,
+        body.theme-twilight .achievements-section,
+        body.theme-twilight .theme-dropdown,
+        body.theme-twilight .admin-item,
+        body.theme-twilight .custom-modal-content,
+        body.theme-twilight .auth-modal-content,
+        body.theme-twilight .promo-item,
+        body.theme-twilight .admin-panel,
+        body.theme-twilight .admin-section {
+            background: #1a0a2e;
+            border-color: #9c27b0;
+            color: #e1bee7;
         }
         body.theme-twilight h1 { color: #ce93d8; text-shadow: 0 0 20px #9c27b0; }
         body.theme-twilight .btn-open { background: #9c27b0; color: #fff; }
         body.theme-twilight .stat-value { color: #ce93d8; }
 
-        .online-counter { text-align: center; font-size: 1.1rem; color: #4caf50; margin-bottom: 20px; font-weight: bold; }
-        .online-counter span { color: #ffd700; font-size: 1.3rem; }
+        .online-counter {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .online-counter span {
+            color: #ffd700;
+            font-size: 1.3rem;
+        }
+
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
-        .burger-btn { position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; }
-        .auth-btn { position: fixed; top: 20px; right: 75px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
+        .burger-btn {
+            position: fixed; top: 20px; right: 20px;
+            width: 45px; height: 45px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px; cursor: pointer; z-index: 300;
+        }
+        .auth-btn {
+            position: fixed; top: 20px; right: 75px;
+            width: 45px; height: 45px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px; cursor: pointer; z-index: 300;
+            font-size: 1.2rem;
+        }
         .auth-btn:hover { background: rgba(255,255,255,0.2); }
         .burger-line { width: 22px; height: 2px; background: #fff; margin: 4px auto; }
-        .dropdown-menu { position: fixed; top: 75px; right: 20px; background: #16213e; border: 2px solid #0f3460; border-radius: 12px; padding: 10px 0; display: none; z-index: 300; min-width: 180px; }
+        .dropdown-menu {
+            position: fixed; top: 75px; right: 20px;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 12px; padding: 10px 0;
+            display: none; z-index: 300; min-width: 180px;
+        }
         .dropdown-menu.show { display: block; }
-        .dropdown-item { padding: 14px 20px; cursor: pointer; font-size: 1rem; font-weight: bold; color: #fff; text-align: left; border: none; background: none; width: 100%; }
+        .dropdown-item {
+            padding: 14px 20px; cursor: pointer;
+            font-size: 1rem; font-weight: bold; color: #fff;
+            text-align: left; border: none; background: none; width: 100%;
+        }
         .dropdown-item:hover { background: rgba(255,255,255,0.1); }
-        .integrations { display: flex; gap: 15px; justify-content: center; align-items: center; margin-top: 40px; padding: 20px 0; flex-wrap: wrap; }
-        .integration-btn { display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; border: 2px solid #0f3460; background: #16213e; color: #fff; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-decoration: none; transition: all 0.3s; }
-        .integration-btn:hover { border-color: #4caf50; background: #1a2a4e; transform: translateY(-3px); }
+        .integrations {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            flex-wrap: wrap;
+        }
+        .integration-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid #0f3460;
+            background: #16213e;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .integration-btn:hover {
+            border-color: #4caf50;
+            background: #1a2a4e;
+            transform: translateY(-3px);
+        }
         .integration-icon { font-size: 1.3rem; }
         .vk-btn { border-color: #0077ff; }
         .vk-btn:hover { border-color: #0077ff; box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3); }
@@ -148,8 +361,18 @@
         .help-btn:hover { border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); }
         .admin-link-btn { border-color: #ff9800; }
         .admin-link-btn:hover { border-color: #ff9800; box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3); }
-        .boxes { display: flex; gap: 25px; justify-content: center; align-items: center; min-height: 60vh; flex-wrap: wrap; }
-        .box { width: 200px; height: 260px; background: #16213e; border-radius: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px solid #0f3460; position: relative; transition: transform 0.3s; }
+        .boxes {
+            display: flex; gap: 25px; justify-content: center;
+            align-items: center; min-height: 60vh; flex-wrap: wrap;
+        }
+        .box {
+            width: 200px; height: 260px;
+            background: #16213e; border-radius: 20px;
+            cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 12px;
+            border: 2px solid #0f3460; position: relative;
+            transition: transform 0.3s;
+        }
         .box:hover { transform: translateY(-8px); }
         .box.cheap { border-color: #4caf50; }
         .box.expensive { border-color: #ffd700; }
@@ -157,77 +380,313 @@
         .box-name { font-size: 1.3rem; font-weight: bold; }
         .lock-icon { font-size: 2.5rem; opacity: 0.5; }
         .box-price { font-size: 0.85rem; opacity: 0.7; }
-        .info-circle { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #666; border-radius: 50%; border: none; color: #fff; cursor: pointer; font-weight: bold; font-size: 1rem; z-index: 5; }
-        .case-tooltip { position: absolute; top: 10px; right: 50px; background: #2a2a3e; border: 1px solid #444; border-radius: 8px; padding: 8px 12px; font-size: 0.75rem; color: #ccc; display: none; z-index: 10; max-width: 180px; }
+        .info-circle {
+            position: absolute; top: 10px; right: 10px;
+            width: 30px; height: 30px; background: #666;
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold; font-size: 1rem; z-index: 5;
+        }
+        .case-tooltip {
+            position: absolute; top: 10px; right: 50px;
+            background: #2a2a3e; border: 1px solid #444;
+            border-radius: 8px; padding: 8px 12px;
+            font-size: 0.75rem; color: #ccc; display: none; z-index: 10; max-width: 180px;
+        }
         .case-tooltip.show { display: block; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200;
+        }
         .modal.active { display: block; }
-        .modal-content { background: #16213e; border-radius: 20px; padding: 25px; width: 90%; max-width: 400px; margin: 80px auto; text-align: center; border: 2px solid #0f3460; }
+        .modal-content {
+            background: #16213e; border-radius: 20px; padding: 25px;
+            width: 90%; max-width: 400px; margin: 80px auto;
+            text-align: center; border: 2px solid #0f3460;
+        }
         .modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.5rem; }
-        .modal-content input { width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 15px; text-transform: uppercase; }
-        .btn { padding: 12px 25px; border-radius: 10px; border: none; font-size: 1rem; font-weight: bold; cursor: pointer; margin: 5px; }
+        .modal-content input {
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: 2px solid #0f3460; background: #1a1a2e;
+            color: #fff; font-size: 1.1rem; text-align: center;
+            margin-bottom: 15px; text-transform: uppercase;
+        }
+        .btn {
+            padding: 12px 25px; border-radius: 10px; border: none;
+            font-size: 1rem; font-weight: bold; cursor: pointer; margin: 5px;
+        }
         .btn-open { background: #4caf50; color: #fff; font-size: 1.2rem; padding: 15px 40px; }
         .btn-open:disabled { background: #555; cursor: not-allowed; }
         .btn-close { background: #f44336; color: #fff; }
         .btn-login { background: #2196f3; color: #fff; padding: 12px 25px; }
         .btn-register { background: #ff9800; color: #fff; padding: 12px 25px; }
         .btn-logout { background: #f44336; color: #fff; padding: 12px 25px; }
-        .message { margin: 15px 0; padding: 15px; border-radius: 10px; display: none; font-weight: bold; }
+        .message {
+            margin: 15px 0; padding: 15px; border-radius: 10px;
+            display: none; font-weight: bold;
+        }
         .message.success { display: block; background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid #4caf50; }
         .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win { display: block; background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; font-size: 1.2rem; }
-        .auth-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 400; align-items: center; justify-content: center; }
+        
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 400;
+            align-items: center;
+            justify-content: center;
+        }
         .auth-modal.active { display: flex; }
-        .auth-modal-content { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; width: 90%; max-width: 400px; text-align: center; }
+        .auth-modal-content {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
         .auth-modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.3rem; }
-        .auth-input { width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; text-align: center; outline: none; margin-bottom: 10px; }
+        .auth-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            margin-bottom: 10px;
+        }
         .auth-input:focus { border-color: #4caf50; }
-        .auth-eye-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #999; cursor: pointer; font-size: 1.2rem; }
-        .auth-label { font-size: 0.85rem; color: #999; margin-bottom: 5px; text-align: left; }
-        .password-input-wrapper { position: relative; }
-        .password-input-wrapper .auth-input { padding-right: 45px; }
+        .auth-eye-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .auth-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-input-wrapper .auth-input {
+            padding-right: 45px;
+        }
+
         .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
         .roulette-arrow { text-align: center; font-size: 2rem; color: #ff6b6b; }
-        .roulette-container { position: relative; width: 100%; max-width: 400px; margin: 10px auto; overflow: hidden; border-radius: 15px; border: 3px solid #0f3460; background: #1a1a2e; }
+        .roulette-container {
+            position: relative; width: 100%; max-width: 400px;
+            margin: 10px auto; overflow: hidden;
+            border-radius: 15px; border: 3px solid #0f3460; background: #1a1a2e;
+        }
         .roulette-track { display: flex; }
-        .roulette-item { min-width: 180px; padding: 30px 20px; text-align: center; font-weight: bold; font-size: 1.1rem; border-right: 1px solid #0f3460; flex-shrink: 0; }
-        .roulette-back-btn { display: none; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; padding: 5px 15px; position: absolute; top: 0; left: 0; }
+        .roulette-item {
+            min-width: 180px; padding: 30px 20px; text-align: center;
+            font-weight: bold; font-size: 1.1rem;
+            border-right: 1px solid #0f3460; flex-shrink: 0;
+        }
+        .roulette-back-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 5px 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
         .roulette-back-btn.show { display: block; }
         .rewards-section { width: 100%; max-width: 400px; margin: 30px auto; }
         .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; }
-        .reward-item { background: #1a1a2e; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #0f3460; }
+        .reward-item {
+            background: #1a1a2e; padding: 15px; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid #0f3460;
+        }
         .reward-name { font-weight: bold; }
-        .reward-info-circle { width: 28px; height: 28px; background: #666; border-radius: 50%; border: none; color: #fff; cursor: pointer; font-weight: bold; }
+        .reward-info-circle {
+            width: 28px; height: 28px; background: #666;
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold;
+        }
+        .reward-tooltip {
+            display: none; background: #2a2a3e; border: 1px solid #444;
+            border-radius: 8px; padding: 8px 12px;
+            font-size: 0.75rem; color: #ccc; margin-left: 10px;
+        }
+        .reward-tooltip.show { display: inline-block; }
         .profile-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .profile-page.active { display: block; }
-        .back-btn { background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; margin-bottom: 20px; padding: 5px 15px; }
-        .settings-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 5px 8px; opacity: 0.7; }
+        .back-btn {
+            background: none; border: none; color: #fff;
+            font-size: 2.5rem; cursor: pointer; margin-bottom: 20px; padding: 5px 15px;
+        }
+        .settings-btn {
+            background: none; border: none; color: #fff;
+            font-size: 1.5rem; cursor: pointer; padding: 5px 8px;
+            opacity: 0.7;
+        }
         .settings-btn:hover { opacity: 1; }
-        .theme-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 5px 8px; opacity: 0.7; }
+        .theme-btn {
+            background: none; border: none; color: #fff;
+            font-size: 1.2rem; cursor: pointer; padding: 5px 8px;
+            opacity: 0.7;
+        }
         .theme-btn:hover { opacity: 1; }
-        .theme-wrapper { position: relative; display: inline-block; }
-        .theme-dropdown { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #16213e; border: 2px solid #0f3460; border-radius: 15px; min-width: 220px; max-width: 280px; max-height: 70vh; overflow-y: auto; z-index: 500; padding: 10px; }
+        .theme-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .theme-dropdown {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 15px;
+            min-width: 220px;
+            max-width: 280px;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 500;
+            padding: 10px;
+        }
         .theme-dropdown.show { display: block; }
-        .theme-option { padding: 12px 15px; cursor: pointer; font-size: 0.9rem; font-weight: bold; color: #fff; transition: background 0.2s; border: none; background: none; width: 100%; text-align: left; display: flex; align-items: center; gap: 10px; border-radius: 8px; }
+        .theme-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #fff;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 8px;
+        }
         .theme-option:hover { background: rgba(255,255,255,0.1); }
         .theme-option.active { background: rgba(76,175,80,0.3); }
         .theme-option-icon { font-size: 1.2rem; }
-        .theme-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 499; }
+        .theme-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 499;
+        }
         .theme-overlay.show { display: block; }
-        .profile-header { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; margin-bottom: 30px; position: relative; }
-        .profile-top-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .profile-header {
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            position: relative;
+        }
+        .profile-top-row {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
         .profile-info { display: flex; align-items: flex-start; gap: 15px; flex: 1; min-width: 0; }
-        .avatar { width: 70px; height: 70px; min-width: 70px; min-height: 70px; max-width: 70px; max-height: 70px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; cursor: pointer; aspect-ratio: 1/1; position: relative; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
-        .avatar-edit-icon { display: none; position: absolute; bottom: 0; right: 0; width: 24px; height: 24px; background: #4caf50; border-radius: 50%; border: 2px solid #16213e; font-size: 0.7rem; align-items: center; justify-content: center; cursor: pointer; }
-        .profile-info-text { flex: 1; min-width: 0; }
-        .profile-id { font-size: 0.7rem; color: #999; margin-bottom: 3px; word-break: break-all; }
-        .profile-reg-date { font-size: 0.65rem; color: #666; margin-bottom: 3px; word-break: break-all; }
-        .profile-name { font-size: 1.2rem; font-weight: bold; word-break: break-word; }
-        .profile-name.admin-name { color: #ff3333; text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; }
-        .profile-prefix { font-size: 0.85rem; font-weight: bold; margin-top: 3px; display: inline-block; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
+        .avatar {
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            min-height: 70px;
+            max-width: 70px;
+            max-height: 70px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1/1;
+            position: relative;
+        }
+        .avatar img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .avatar-edit-icon {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: #4caf50;
+            border-radius: 50%;
+            border: 2px solid #16213e;
+            font-size: 0.7rem;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .profile-info-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-id {
+            font-size: 0.7rem;
+            color: #999;
+            margin-bottom: 3px;
+            word-break: break-all;
+        }
+        .profile-reg-date {
+            font-size: 0.65rem;
+            color: #666;
+            margin-bottom: 3px;
+            word-break: break-all;
+        }
+        .profile-name { 
+            font-size: 1.2rem; 
+            font-weight: bold;
+            word-break: break-word;
+        }
+        .profile-name.admin-name {
+            color: #ff3333;
+            text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
+        }
+        .profile-prefix {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 3px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid;
+        }
         .profile-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
         .profile-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
         .profile-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
@@ -235,31 +694,139 @@
         .profile-prefix.prefix-expert { color: #ff9800; border-color: #ff9800; }
         .profile-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; text-shadow: 0 0 5px #ffd700; }
         .profile-prefix.prefix-overlord { color: #f44336; border-color: #f44336; text-shadow: 0 0 5px #f44336; }
-        .profile-prefix.prefix-admin { color: #ff3333; border-color: #ff3333; text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; font-size: 0.9rem; margin-top: 3px; }
-        .profile-stats { display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 20px; flex-wrap: wrap; }
+        .profile-prefix.prefix-admin {
+            color: #ff3333;
+            border-color: #ff3333;
+            text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
+            font-size: 0.9rem;
+            margin-top: 3px;
+        }
+        .profile-stats {
+            display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 20px;
+            flex-wrap: wrap;
+        }
         .stat-block { flex: 1; text-align: center; min-width: 100px; }
         .stat-value { font-size: 1.5rem; font-weight: bold; color: #ffd700; }
         .stat-label { font-size: 0.8rem; opacity: 0.7; }
-        .history-section { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; }
-        .history-title { font-size: 1.3rem; font-weight: bold; color: #ffd700; margin-bottom: 20px; text-align: center; }
-        .history-list { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-start; }
-        .history-item { padding: 5px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid; position: relative; font-size: 0.75rem; flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); min-width: 0; }
+        .history-section {
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 20px; padding: 25px;
+        }
+        .history-title {
+            font-size: 1.3rem; font-weight: bold; color: #ffd700;
+            margin-bottom: 20px; text-align: center;
+        }
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: flex-start;
+        }
+        .history-item {
+            padding: 5px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid;
+            position: relative;
+            font-size: 0.75rem;
+            flex: 0 0 calc(33.33% - 5px);
+            max-width: calc(33.33% - 5px);
+            min-width: 0;
+        }
         .history-name { font-weight: bold; font-size: 0.7rem; word-break: break-word; }
-        .history-info-circle { width: 18px; height: 18px; background: rgba(255,255,255,0.2); border-radius: 50%; border: none; color: #fff; cursor: pointer; font-weight: bold; position: relative; font-size: 0.6rem; flex-shrink: 0; }
+        .history-info-circle {
+            width: 18px; height: 18px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; border: none; color: #fff;
+            cursor: pointer; font-weight: bold; position: relative;
+            font-size: 0.6rem;
+            flex-shrink: 0;
+        }
+        .history-tooltip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%); background: #2a2a3e;
+            border: 1px solid #444; border-radius: 8px; padding: 8px 12px;
+            font-size: 0.7rem; color: #ccc; display: none;
+            white-space: nowrap; z-index: 10;
+        }
+        .history-tooltip.show { display: block; }
         .edit-actions { display: none; gap: 10px; margin-top: 20px; justify-content: center; }
-        .edit-name-input { width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; margin-top: 10px; display: none; }
+        .edit-name-input {
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 2px solid #0f3460; background: #1a1a2e;
+            color: #fff; font-size: 1rem; margin-top: 10px; display: none;
+        }
         .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .top-page.active { display: block; }
-        .top-title { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-align: center; margin-bottom: 30px; }
-        .top-list { display: flex; flex-direction: column; gap: 10px; }
-        .top-item { background: #16213e; border: 2px solid #0f3460; border-radius: 15px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.3s; }
-        .top-item:hover { border-color: #4caf50; background: #1a2a4e; }
-        .top-place { font-size: 1.5rem; font-weight: bold; color: #ffd700; min-width: 40px; text-align: center; }
-        .top-avatar { width: 50px; height: 50px; min-width: 50px; min-height: 50px; max-width: 50px; max-height: 50px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; overflow: hidden; cursor: pointer; }
-        .top-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .top-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .top-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .top-item {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .top-item:hover {
+            border-color: #4caf50;
+            background: #1a2a4e;
+        }
+        .top-place {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            min-width: 40px;
+            text-align: center;
+        }
+        .top-avatar {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            max-width: 50px;
+            max-height: 50px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .top-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
         .top-info { flex: 1; min-width: 0; }
         .top-name { font-weight: bold; font-size: 1rem; word-break: break-word; }
-        .top-prefix { font-size: 0.7rem; font-weight: bold; display: inline-block; padding: 1px 6px; border-radius: 10px; border: 1px solid; margin-top: 2px; }
+        .top-prefix {
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 10px;
+            border: 1px solid;
+            margin-top: 2px;
+        }
         .top-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
         .top-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
         .top-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
@@ -271,12 +838,51 @@
         .top-count { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
         .other-profile-page { display: none; width: 100%; max-width: 500px; margin: 0 auto; }
         .other-profile-page.active { display: block; }
-        .other-profile-header { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 30px; text-align: center; }
-        .other-avatar { width: 100px; height: 100px; min-width: 100px; min-height: 100px; max-width: 100px; max-height: 100px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; margin: 0 auto 15px; cursor: pointer; }
-        .other-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .other-profile-header {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        .other-avatar {
+            width: 100px;
+            height: 100px;
+            min-width: 100px;
+            min-height: 100px;
+            max-width: 100px;
+            max-height: 100px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            cursor: pointer;
+        }
+        .other-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
         .other-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; word-break: break-word; }
-        .other-name.admin-name { color: #ff3333; text-shadow: 0 0 15px #ff3333; }
-        .other-prefix { font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; display: inline-block; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
+        .other-name.admin-name {
+            color: #ff3333;
+            text-shadow: 0 0 15px #ff3333;
+        }
+        .other-prefix {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid;
+        }
         .other-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
         .other-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
         .other-prefix.prefix-experienced { color: #2196f3; border-color: #2196f3; }
@@ -284,72 +890,340 @@
         .other-prefix.prefix-expert { color: #ff9800; border-color: #ff9800; }
         .other-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; }
         .other-prefix.prefix-overlord { color: #f44336; border-color: #f44336; }
-        .other-prefix.prefix-admin { color: #ff3333; border-color: #ff3333; text-shadow: 0 0 10px #ff3333; }
+        .other-prefix.prefix-admin {
+            color: #ff3333;
+            border-color: #ff3333;
+            text-shadow: 0 0 10px #ff3333;
+        }
         .other-id { font-size: 0.8rem; color: #999; margin-bottom: 20px; word-break: break-all; }
-        .other-stats { border-top: 1px solid #0f3460; padding-top: 20px; display: flex; justify-content: center; gap: 30px; }
+        .other-stats {
+            border-top: 1px solid #0f3460;
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
         .other-stat-value { font-size: 1.8rem; font-weight: bold; color: #ffd700; }
         .other-stat-label { font-size: 0.85rem; opacity: 0.7; }
-        .achievements-section { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; margin-bottom: 30px; }
-        .achievements-title { font-size: 1.3rem; font-weight: bold; color: #ffd700; margin-bottom: 20px; text-align: center; }
-        .achievements-list { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
-        .achievement-item { background: #1a1a2e; border: 1px solid #0f3460; border-radius: 15px; padding: 15px; text-align: center; min-width: 120px; flex: 1; max-width: 180px; }
-        .achievement-item.unlocked { border-color: #ffd700; background: rgba(255,215,0,0.1); }
-        .achievement-item.locked { opacity: 0.4; }
-        .achievement-icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .achievement-name { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
-        .achievement-desc { font-size: 0.7rem; opacity: 0.7; }
+        .achievements-section {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .achievements-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .achievements-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .achievement-item {
+            background: #1a1a2e;
+            border: 1px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+            flex: 1;
+            max-width: 180px;
+        }
+        .achievement-item.unlocked {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        .achievement-item.locked {
+            opacity: 0.4;
+        }
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .achievement-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .achievement-desc {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
         .rarity-common { color: #ffffff; border-color: #ffffff; background: rgba(255,255,255,0.08); }
         .rarity-uncommon { color: #4caf50; border-color: #4caf50; background: rgba(76,175,80,0.08); }
         .rarity-rare { color: #2196f3; border-color: #2196f3; background: rgba(33,150,243,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
-        .avatar-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 600; align-items: center; justify-content: center; }
+        
+        .avatar-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 600;
+            align-items: center;
+            justify-content: center;
+        }
         .avatar-modal.active { display: flex; }
-        .avatar-modal img { max-width: 90%; max-height: 90%; border-radius: 20px; border: 3px solid #fff; }
-        .avatar-modal-close { position: absolute; top: 20px; right: 30px; font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none; }
-        .custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 700; align-items: center; justify-content: center; }
+        .avatar-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 20px;
+            border: 3px solid #fff;
+        }
+        .avatar-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 700;
+            align-items: center;
+            justify-content: center;
+        }
         .custom-modal.active { display: flex; }
-        .custom-modal-content { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; width: 90%; max-width: 400px; text-align: center; max-height: 80vh; overflow-y: auto; }
+        .custom-modal-content {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
         .custom-modal-content h2 { margin-bottom: 15px; color: #ff6b6b; font-size: 1.2rem; }
         .custom-modal-content p { margin-bottom: 15px; font-size: 0.9rem; }
-        .admin-panel { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
+
+        .admin-panel {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
         .admin-panel.active { display: block; }
-        .admin-title { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-align: center; margin-bottom: 30px; }
-        .admin-section { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; margin-bottom: 20px; }
-        .admin-section-title { font-size: 1.2rem; font-weight: bold; color: #ffd700; margin-bottom: 15px; text-align: center; }
-        .admin-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; margin-bottom: 10px; text-align: center; text-transform: uppercase; }
-        .admin-select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; margin-bottom: 10px; text-align: center; }
-        .admin-label { font-size: 0.85rem; color: #999; margin-bottom: 5px; text-align: left; }
-        .promo-item { background: #1a1a2e; border: 1px solid #0f3460; border-radius: 10px; padding: 12px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .promo-info { flex: 1; min-width: 0; }
-        .promo-code { font-weight: bold; font-size: 1rem; }
-        .promo-details { font-size: 0.75rem; opacity: 0.7; }
-        .promo-delete { background: #f44336; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; }
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-section {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .admin-section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .admin-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .admin-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .promo-item {
+            background: #1a1a2e;
+            border: 1px solid #0f3460;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .promo-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .promo-code {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .promo-details {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        .promo-delete {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
         .promo-delete:hover { background: #d32f2f; }
-        .admin-list-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
-        .admin-list-page.active { display: block; }
-        .admin-contact-btn { display: block; text-align: center; background: #16213e; border: 2px solid #ff9800; border-radius: 12px; padding: 12px 20px; color: #fff; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-decoration: none; transition: all 0.3s; margin-bottom: 20px; }
-        .admin-contact-btn:hover { border-color: #ff9800; box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3); background: #1a2a4e; }
-        .admin-item { background: #16213e; border: 2px solid #0f3460; border-radius: 15px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; }
-        .admin-item:hover { border-color: #ff9800; background: #1a2a4e; }
-        .admin-avatar { width: 50px; height: 50px; min-width: 50px; min-height: 50px; max-width: 50px; max-height: 50px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, #ff9800, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; overflow: hidden; }
-        .admin-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .admin-info { flex: 1; min-width: 0; }
-        .admin-name { font-weight: bold; font-size: 1rem; word-break: break-word; }
-        .admin-id { font-size: 0.7rem; color: #999; word-break: break-all; }
-        .admin-badge { background: #ff9800; color: #000; padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.7rem; }
+        
+        /* Стили для страницы администрации */
+        .admin-list-page {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .admin-list-page.active {
+            display: block;
+        }
+        .admin-contact-btn {
+            display: block;
+            text-align: center;
+            background: #16213e;
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .admin-contact-btn:hover {
+            border-color: #ff9800;
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+            background: #1a2a4e;
+        }
+        .admin-item {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        .admin-item:hover {
+            border-color: #ff9800;
+            background: #1a2a4e;
+        }
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            max-width: 50px;
+            max-height: 50px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9800, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            overflow: hidden;
+        }
+        .admin-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .admin-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .admin-name {
+            font-weight: bold;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .admin-id {
+            font-size: 0.7rem;
+            color: #999;
+            word-break: break-all;
+        }
+        .admin-badge {
+            background: #ff9800;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+        
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .box { width: 150px; height: 210px; }
             .box-icon { font-size: 2.5rem; }
             .roulette-item { min-width: 140px; padding: 25px 15px; }
-            .avatar { width: 60px; height: 60px; min-width: 60px; min-height: 60px; max-width: 60px; max-height: 60px; flex-shrink: 0; }
+            .avatar {
+                width: 60px;
+                height: 60px;
+                min-width: 60px;
+                min-height: 60px;
+                max-width: 60px;
+                max-height: 60px;
+                flex-shrink: 0;
+            }
             .integrations { flex-direction: column; }
             .achievement-item { min-width: 100px; max-width: 140px; }
             .profile-name { font-size: 1rem; }
             .profile-prefix { font-size: 0.75rem; }
             .auth-btn { right: 75px; }
-            .history-item { flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); }
+            .history-item {
+                flex: 0 0 calc(33.33% - 5px);
+                max-width: calc(33.33% - 5px);
+            }
         }
     </style>
 </head>
@@ -575,7 +1449,7 @@
     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
 
     <script>
-        // ===== FIREBASE CONFIG =====
+        // ===== FIREBASE =====
         var firebaseConfig = {
             apiKey: "AIzaSyBqTL4JISrjJDFlBSevAe9GruNyV3ZGMPQ",
             authDomain: "admincase-27bec.firebaseapp.com",
@@ -588,34 +1462,15 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        // ===== ОПТИМИЗАЦИЯ: КЭШИРОВАНИЕ =====
-        var cache = {
-            promoCodes: { data: null, time: 0 },
-            topUsers: { data: null, time: 0 },
-            onlineCount: { data: 0, time: 0 },
-            adminList: { data: null, time: 0 }
-        };
-        
-        var CACHE_TTL = {
-            promoCodes: 300000,
-            topUsers: 300000,
-            onlineCount: 60000,
-            adminList: 600000
-        };
+        var adminIDs = [
+            "12425616",
+            "86858801",
+            "50579855",
+            "",
+            "",
+            ""
+        ];
 
-        function getCached(key, loader, ttl) {
-            var now = Date.now();
-            if (cache[key].data && (now - cache[key].time < ttl)) {
-                return Promise.resolve(cache[key].data);
-            }
-            return loader().then(function(data) {
-                cache[key].data = data;
-                cache[key].time = now;
-                return data;
-            });
-        }
-
-        var adminIDs = ["12425616", "86858801", "50579855"];
         var adminNames = {
             "12425616": "Vladislav Smith",
             "86858801": "Grozka Irons",
@@ -677,6 +1532,7 @@
         ];
 
         var currentCase = null;
+        var usedCodes = {};
         var openedCount = 0;
         var winHistory = [];
         var isSpinning = false;
@@ -691,6 +1547,8 @@
         var userName = 'Игрок';
         var avatarData = null;
         var lastNameChangeTime = 0;
+        var serverTakenNames = [];
+        var namesLoaded = false;
         var userUID = '';
         var userID = '';
         var registrationDate = null;
@@ -699,6 +1557,7 @@
         var visitCount = 0;
         var isAdmin = false;
         var currentOtherAvatar = null;
+        var dynamicPromoCodes = {};
         var isLoggedIn = false;
         var loggedInAccountName = '';
         var loggedInAccountID = '';
@@ -706,166 +1565,288 @@
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
-        // ===== ФУНКЦИИ =====
         function showCustomModal(title, content) {
-            document.getElementById('customModalContent').innerHTML = '<h2>' + title + '</h2>' + content + '<br><button class="btn btn-close" onclick="closeCustomModal()">Закрыть</button>';
-            document.getElementById('customModal').classList.add('active');
+            var modal = document.getElementById('customModal');
+            var modalContent = document.getElementById('customModalContent');
+            modalContent.innerHTML = '<h2>' + title + '</h2>' + content + '<br><button class="btn btn-close" onclick="closeCustomModal()">Закрыть</button>';
+            modal.classList.add('active');
         }
 
         function closeCustomModal() {
             document.getElementById('customModal').classList.remove('active');
         }
 
-        function loadPromoCodes() {
-            return getCached('promoCodes', function() {
-                return db.collection('active_promos').get().then(function(snapshot) {
-                    var promos = {};
-                    var deletePromises = [];
-                    var now = Date.now();
-                    
-                    snapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        if (data.expiresAt && data.expiresAt < now) {
-                            deletePromises.push(doc.ref.delete());
-                            return;
-                        }
-                        if (data.activationsLeft <= 0) {
-                            deletePromises.push(doc.ref.delete());
-                            return;
-                        }
-                        promos[data.code] = {
-                            caseType: data.caseType,
-                            docId: doc.id,
-                            activationsLeft: data.activationsLeft,
-                            expiresAt: data.expiresAt
-                        };
-                    });
-                    
-                    if (deletePromises.length > 0) {
-                        Promise.all(deletePromises).catch(function() {});
-                    }
-                    
-                    return promos;
-                });
-            }, CACHE_TTL.promoCodes);
-        }
+        document.getElementById('customModal').onclick = function(e) {
+            if (e.target === this) {
+                closeCustomModal();
+            }
+        };
 
-        function loadOnlineCount() {
-            return getCached('onlineCount', function() {
-                var now = Date.now();
-                var fiveMinAgo = now - 5 * 60 * 1000;
-                return db.collection('online_users')
-                    .where('lastSeen', '>', fiveMinAgo)
-                    .get()
-                    .then(function(snapshot) {
-                        return snapshot.size;
-                    })
-                    .catch(function() {
-                        return 0;
-                    });
-            }, CACHE_TTL.onlineCount).then(function(count) {
-                document.getElementById('onlineCount').textContent = count;
+        function loadDynamicPromoCodes() {
+            db.collection('active_promos').get().then(function(snapshot) {
+                dynamicPromoCodes = {};
+                snapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    if (data.expiresAt && data.expiresAt < Date.now()) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    if (data.activationsLeft <= 0) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    dynamicPromoCodes[data.code] = {
+                        caseType: data.caseType,
+                        docId: doc.id,
+                        activationsLeft: data.activationsLeft,
+                        expiresAt: data.expiresAt
+                    };
+                });
+            }).catch(function() {});
+        }
+        loadDynamicPromoCodes();
+        setInterval(loadDynamicPromoCodes, 30000);
+
+        function createPromoCode() {
+            var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
+            var caseType = document.getElementById('adminPromoCase').value;
+            var activations = parseInt(document.getElementById('adminPromoActivations').value);
+            var hours = parseInt(document.getElementById('adminPromoHours').value);
+            
+            if (!code) {
+                showCustomModal('Ошибка', '<p>Введите код промокода!</p>');
+                return;
+            }
+            
+            if (code.length < 3) {
+                showCustomModal('Ошибка', '<p>Код должен быть не короче 3 символов!</p>');
+                return;
+            }
+            
+            if (!activations || activations < 1) {
+                showCustomModal('Ошибка', '<p>Введите корректное количество активаций!</p>');
+                return;
+            }
+            
+            if (!hours || hours < 1) {
+                showCustomModal('Ошибка', '<p>Введите корректное время работы!</p>');
+                return;
+            }
+            
+            if (dynamicPromoCodes[code]) {
+                showCustomModal('Ошибка', '<p>Такой промокод уже существует!</p>');
+                return;
+            }
+            
+            var expiresAt = Date.now() + hours * 60 * 60 * 1000;
+            
+            db.collection('active_promos').add({
+                code: code,
+                caseType: caseType,
+                activationsLeft: activations,
+                totalActivations: activations,
+                expiresAt: expiresAt,
+                createdAt: Date.now(),
+                createdBy: userName,
+                createdByID: userID
+            }).then(function() {
+                document.getElementById('adminPromoCode').value = '';
+                loadDynamicPromoCodes();
+                showActivePromos();
+                showCustomModal('✅ Успех!', '<p>Промокод ' + code + ' создан!</p>');
+            }).catch(function(error) {
+                showCustomModal('Ошибка', '<p>' + error.message + '</p>');
             });
         }
 
-        function loadTopUsers() {
-            return getCached('topUsers', function() {
-                return db.collection('case_openings').get().then(function(caseSnapshot) {
-                    var users = {};
-                    
-                    caseSnapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        if (adminIDs.indexOf(data.userID) !== -1) return;
-                        
-                        if (!users[data.userID]) {
-                            users[data.userID] = {
-                                name: data.userName || 'Неизвестно',
-                                userID: data.userID || 'Неизвестно',
-                                openedCount: 0,
-                                avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null
-                            };
-                        }
-                        users[data.userID].openedCount++;
-                        if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                            users[data.userID].avatar = data.avatar;
-                        }
-                        if (data.userName && data.userName !== 'Неизвестно') {
-                            users[data.userID].name = data.userName;
-                        }
-                    });
-                    
-                    return db.collection('taken_names').get().then(function(nameSnapshot) {
-                        nameSnapshot.forEach(function(doc) {
-                            var data = doc.data();
-                            if (!data.name || data.name === 'Игрок') return;
-                            if (adminIDs.indexOf(data.userID) !== -1) return;
-                            
-                            if (!users[data.userID]) {
-                                users[data.userID] = {
-                                    name: data.name,
-                                    userID: data.userID || 'Неизвестно',
-                                    openedCount: 0,
-                                    avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null
-                                };
-                            }
-                            users[data.userID].name = data.name;
-                            if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                                users[data.userID].avatar = data.avatar;
-                            }
-                        });
-                        
-                        var sortedUsers = Object.values(users).sort(function(a, b) {
-                            return b.openedCount - a.openedCount;
-                        });
-                        
-                        return sortedUsers.slice(0, 10);
-                    });
-                });
-            }, CACHE_TTL.topUsers);
-        }
-
-        function loadAdminList() {
-            return getCached('adminList', function() {
-                var promises = [];
-                for (var i = 0; i < adminIDs.length; i++) {
-                    (function(adminID) {
-                        promises.push(
-                            db.collection('case_openings')
-                                .where('userID', '==', adminID)
-                                .limit(1)
-                                .get()
-                                .then(function(snapshot) {
-                                    var adminData = {
-                                        userID: adminID,
-                                        name: adminNames[adminID] || 'Админ',
-                                        avatar: null
-                                    };
-                                    
-                                    snapshot.forEach(function(doc) {
-                                        var data = doc.data();
-                                        if (data.userName) adminData.name = data.userName;
-                                        if (data.avatar) adminData.avatar = data.avatar;
-                                    });
-                                    
-                                    return adminData;
-                                })
-                                .catch(function() {
-                                    return {
-                                        userID: adminID,
-                                        name: adminNames[adminID] || 'Админ',
-                                        avatar: null
-                                    };
-                                })
-                        );
-                    })(adminIDs[i]);
+        function showActivePromos() {
+            var list = document.getElementById('activePromosList');
+            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
+            
+            db.collection('active_promos').get().then(function(snapshot) {
+                list.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
+                    return;
                 }
                 
-                return Promise.all(promises);
-            }, CACHE_TTL.adminList);
+                snapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    
+                    if (data.expiresAt && data.expiresAt < Date.now()) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    
+                    if (data.activationsLeft <= 0) {
+                        doc.ref.delete().catch(function() {});
+                        return;
+                    }
+                    
+                    var div = document.createElement('div');
+                    div.className = 'promo-item';
+                    
+                    var expiresDate = new Date(data.expiresAt);
+                    var expiresStr = expiresDate.toLocaleString('ru-RU');
+                    var creatorName = data.createdBy || 'Неизвестно';
+                    
+                    div.innerHTML = 
+                        '<div class="promo-info">' +
+                            '<div class="promo-code">' + data.code + '</div>' +
+                            '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
+                            ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
+                            ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
+                        '</div>' +
+                        '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
+                    
+                    list.appendChild(div);
+                });
+            }).catch(function(error) {
+                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
+            });
         }
+
+        function deletePromoCode(docId) {
+            db.collection('active_promos').doc(docId).delete()
+                .then(function() {
+                    loadDynamicPromoCodes();
+                    showActivePromos();
+                    showCustomModal('✅ Успех!', '<p>Промокод удалён!</p>');
+                })
+                .catch(function(error) {
+                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                });
+        }
+
+        function showAdminPanel() {
+            hideAllPages();
+            document.getElementById('adminPanel').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'admin'); } catch(e) {}
+            showActivePromos();
+            window.scrollTo(0, 0);
+        }
+
+        function showAdminListPage() {
+            hideAllPages();
+            document.getElementById('adminListPage').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'admin_list'); } catch(e) {}
+            
+            adminReturnPage = 'admin_list';
+            
+            var list = document.getElementById('adminListContainer');
+            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
+            
+            var adminItems = [];
+            
+            var adminPromises = [];
+            for (var a = 0; a < adminIDs.length; a++) {
+                if (!adminIDs[a]) continue;
+                (function(adminID) {
+                    adminPromises.push(
+                        db.collection('case_openings')
+                            .where('userID', '==', adminID)
+                            .get()
+                            .then(function(caseSnapshot) {
+                                var adminData = {
+                                    userID: adminID,
+                                    name: adminNames[adminID] || 'Админ',
+                                    avatar: null,
+                                    openedCount: caseSnapshot.size
+                                };
+                                
+                                caseSnapshot.forEach(function(doc) {
+                                    var data = doc.data();
+                                    if (data.userName) adminData.name = data.userName;
+                                    if (data.avatar) adminData.avatar = data.avatar;
+                                });
+                                
+                                if (!adminData.avatar) {
+                                    return db.collection('taken_names')
+                                        .where('userID', '==', adminID)
+                                        .get()
+                                        .then(function(nameSnapshot) {
+                                            nameSnapshot.forEach(function(doc) {
+                                                var data = doc.data();
+                                                if (data.name) adminData.name = data.name;
+                                                if (data.avatar) adminData.avatar = data.avatar;
+                                            });
+                                            adminItems.push(adminData);
+                                        });
+                                } else {
+                                    adminItems.push(adminData);
+                                }
+                            })
+                            .catch(function() {
+                                adminItems.push({
+                                    userID: adminID,
+                                    name: adminNames[adminID] || 'Админ',
+                                    avatar: null,
+                                    openedCount: 0
+                                });
+                            })
+                    );
+                })(adminIDs[a]);
+            }
+            
+            Promise.all(adminPromises).then(function() {
+                list.innerHTML = '';
+                
+                if (adminItems.length === 0) {
+                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
+                    return;
+                }
+                
+                for (var i = 0; i < adminItems.length; i++) {
+                    (function(admin) {
+                        var div = document.createElement('div');
+                        div.className = 'admin-item';
+                        
+                        var avatarHtml = '<span>👑</span>';
+                        if (admin.avatar && admin.avatar !== 'undefined' && admin.avatar !== 'null') {
+                            avatarHtml = '<img src="' + admin.avatar + '" alt="">';
+                        }
+                        
+                        div.innerHTML = 
+                            '<div class="admin-avatar">' + avatarHtml + '</div>' +
+                            '<div class="admin-info">' +
+                                '<div class="admin-name">' + admin.name + '</div>' +
+                                '<div class="admin-id">ID: ' + admin.userID + '</div>' +
+                            '</div>' +
+                            '<span class="admin-badge">ADMIN</span>';
+                        
+                        div.onclick = function() {
+                            adminReturnPage = 'admin_list';
+                            showOtherProfile(admin.userID);
+                        };
+                        
+                        list.appendChild(div);
+                    })(adminItems[i]);
+                }
+            });
+            
+            window.scrollTo(0, 0);
+        }
+
+        function loadServerNames() {
+            db.collection('taken_names').get().then(function(snapshot) {
+                serverTakenNames = [];
+                snapshot.forEach(function(doc) {
+                    var name = doc.data().name;
+                    if (name !== 'Игрок' && serverTakenNames.indexOf(name) === -1) {
+                        serverTakenNames.push(name);
+                    }
+                });
+                namesLoaded = true;
+            }).catch(function() {
+                namesLoaded = true;
+            });
+        }
+        loadServerNames();
 
         // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
         function loadUserData(callback) {
+            // Сначала проверяем, вошёл ли пользователь в аккаунт
             var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
             
             if (savedLoggedInID) {
@@ -874,14 +1855,13 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
-                // Загружаем данные из Firebase для зарегистрированного аккаунта
+                // Загружаем данные аккаунта из Firebase
                 db.collection('case_openings')
                     .where('userID', '==', userID)
                     .get()
                     .then(function(caseSnapshot) {
                         openedCount = caseSnapshot.size;
                         winHistory = [];
-                        
                         caseSnapshot.forEach(function(doc) {
                             var data = doc.data();
                             winHistory.push({
@@ -892,6 +1872,7 @@
                             });
                         });
                         
+                        // Загружаем имя
                         return db.collection('taken_names')
                             .where('userID', '==', userID)
                             .get()
@@ -907,7 +1888,7 @@
                                     }
                                 });
                                 
-                                // Сохраняем в localStorage для быстрого доступа
+                                // Сохраняем в localStorage
                                 try {
                                     localStorage.setItem('admincase_opened_count', openedCount);
                                     localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
@@ -919,81 +1900,174 @@
                             });
                     })
                     .catch(function() {
-                        // При ошибке загружаем из localStorage
-                        loadLocalData(callback);
+                        if (callback) callback();
                     });
             } else {
                 // Обычная загрузка из localStorage
-                loadLocalData(callback);
+                try {
+                    var savedCount = localStorage.getItem('admincase_opened_count');
+                    if (savedCount) openedCount = parseInt(savedCount);
+                } catch(e) {}
+
+                try {
+                    var savedHistory = localStorage.getItem('admincase_win_history');
+                    if (savedHistory) {
+                        winHistory = JSON.parse(savedHistory);
+                        for (var h = 0; h < winHistory.length; h++) {
+                            if (!winHistory[h].timestamp) {
+                                winHistory[h].timestamp = Date.now() - (winHistory.length - h) * 60000;
+                            }
+                        }
+                    }
+                } catch(e) {}
+
+                try {
+                    var savedName = localStorage.getItem('admincase_user_name');
+                    if (savedName) userName = savedName;
+                } catch(e) {}
+
+                try {
+                    var savedAvatar = localStorage.getItem('admincase_user_avatar');
+                    if (savedAvatar) avatarData = savedAvatar;
+                } catch(e) {}
+
+                if (callback) callback();
             }
         }
 
-        function loadLocalData(callback) {
+        // Загружаем данные и инициализируем
+        loadUserData(function() {
             try {
-                openedCount = parseInt(localStorage.getItem('admincase_opened_count') || '0');
-            } catch(e) { openedCount = 0; }
-            
-            try {
-                winHistory = JSON.parse(localStorage.getItem('admincase_win_history') || '[]');
-            } catch(e) { winHistory = []; }
-            
-            try {
-                userName = localStorage.getItem('admincase_user_name') || 'Игрок';
-            } catch(e) { userName = 'Игрок'; }
-            
-            try {
-                avatarData = localStorage.getItem('admincase_user_avatar') || null;
-            } catch(e) { avatarData = null; }
-            
-            if (callback) callback();
-        }
-
-        function saveUserData() {
-            try {
-                localStorage.setItem('admincase_opened_count', openedCount);
-                localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
-                localStorage.setItem('admincase_user_name', userName);
-                if (avatarData) {
-                    localStorage.setItem('admincase_user_avatar', avatarData);
+                var savedUID = localStorage.getItem('admincase_user_uid');
+                if (savedUID) {
+                    userUID = savedUID;
+                } else {
+                    userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('admincase_user_uid', userUID);
                 }
-                localStorage.setItem('admincase_achievements', JSON.stringify(unlockedAchievements));
-            } catch(e) {}
-            
-            // Если пользователь зарегистрирован, сохраняем в Firebase
-            if (isLoggedIn || isRegisteredAccount(userID)) {
-                updateFirebaseUserData();
+            } catch(e) {
+                userUID = 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                try { localStorage.setItem('admincase_user_uid', userUID); } catch(e2) {}
             }
-        }
 
-        function isRegisteredAccount(uid) {
-            // Проверяем, есть ли аккаунт в Firebase
-            if (!uid) return false;
-            // Админы считаются зарегистрированными
-            if (adminIDs.indexOf(uid) !== -1) return true;
-            // Проверяем localStorage
-            return localStorage.getItem('admincase_logged_in') === 'true';
-        }
+            if (!userID) {
+                try {
+                    var savedID = localStorage.getItem('admincase_user_id');
+                    if (savedID) {
+                        userID = savedID;
+                    } else {
+                        userID = String(Math.floor(10000000 + Math.random() * 90000000));
+                        localStorage.setItem('admincase_user_id', userID);
+                    }
+                } catch(e) {
+                    userID = String(Math.floor(10000000 + Math.random() * 90000000));
+                    try { localStorage.setItem('admincase_user_id', userID); } catch(e2) {}
+                }
+            }
 
-        function updateFirebaseUserData() {
-            if (openedCount === 0 && userName === 'Игрок') return;
-            
-            // Обновляем имя и аватар в taken_names
-            db.collection('taken_names')
-                .where('userID', '==', userID)
-                .get()
-                .then(function(snapshot) {
-                    var updatePromises = [];
-                    snapshot.forEach(function(doc) {
-                        updatePromises.push(doc.ref.update({
-                            name: userName,
-                            avatar: avatarData,
-                            timestamp: Date.now()
-                        }).catch(function() {}));
+            isAdmin = adminIDs.indexOf(userID) !== -1;
+
+            try {
+                var savedNameTime = localStorage.getItem('admincase_name_change_time');
+                if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
+            } catch(e) {}
+
+            try {
+                var savedRegDate = localStorage.getItem('admincase_reg_date');
+                if (savedRegDate) {
+                    registrationDate = parseInt(savedRegDate);
+                } else {
+                    registrationDate = Date.now();
+                    localStorage.setItem('admincase_reg_date', registrationDate);
+                }
+            } catch(e) {
+                registrationDate = Date.now();
+                try { localStorage.setItem('admincase_reg_date', registrationDate); } catch(e2) {}
+            }
+
+            try {
+                var savedAchievements = localStorage.getItem('admincase_achievements');
+                if (savedAchievements) unlockedAchievements = JSON.parse(savedAchievements);
+            } catch(e) { unlockedAchievements = []; }
+
+            try {
+                var savedVisits = localStorage.getItem('admincase_visit_count');
+                if (savedVisits) {
+                    visitCount = parseInt(savedVisits) + 1;
+                } else {
+                    visitCount = 1;
+                }
+                localStorage.setItem('admincase_visit_count', visitCount);
+            } catch(e) { visitCount = 1; }
+
+            try {
+                var savedTheme = localStorage.getItem('admincase_theme');
+                if (savedTheme && themes.indexOf(savedTheme) !== -1) {
+                    currentTheme = savedTheme;
+                    if (currentTheme !== 'dark') {
+                        document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+                    }
+                }
+            } catch(e) {}
+
+            applyProfileData();
+
+            try {
+                var savedPage = localStorage.getItem('admincase_current_page');
+                if (savedPage === 'profile') {
+                    showProfile();
+                } else if (savedPage === 'top') {
+                    showTopPage();
+                } else if (savedPage === 'other_profile') {
+                    var savedOtherID = localStorage.getItem('admincase_other_profile_id');
+                    if (savedOtherID) showOtherProfile(savedOtherID);
+                } else if (savedPage === 'admin') {
+                    if (isAdmin) showAdminPanel();
+                } else if (savedPage === 'admin_list') {
+                    showAdminListPage();
+                } else {
+                    document.getElementById('mainPage').style.display = 'block';
+                }
+            } catch(e) {
+                document.getElementById('mainPage').style.display = 'block';
+            }
+
+            if (openedCount > 0 || userName !== 'Игрок') {
+                db.collection('logins').add({
+                    userName: userName,
+                    userID: userID,
+                    timestamp: Date.now()
+                }).catch(function() {});
+            }
+
+            function updateOnlineStatus() {
+                if (openedCount > 0 || userName !== 'Игрок') {
+                    db.collection('online_users').doc(userID).set({
+                        userName: userName,
+                        userID: userID,
+                        lastSeen: Date.now()
+                    }).catch(function() {});
+                }
+            }
+            updateOnlineStatus();
+            setInterval(updateOnlineStatus, 30000);
+
+            function loadOnlineCount() {
+                var now = Date.now();
+                var fiveMinAgo = now - 5 * 60 * 1000;
+                db.collection('online_users')
+                    .where('lastSeen', '>', fiveMinAgo)
+                    .get()
+                    .then(function(snapshot) {
+                        document.getElementById('onlineCount').textContent = snapshot.size;
+                    })
+                    .catch(function() {
+                        document.getElementById('onlineCount').textContent = '0';
                     });
-                    return Promise.all(updatePromises);
-                })
-                .catch(function() {});
-        }
+            }
+            loadOnlineCount();
+            setInterval(loadOnlineCount, 10000);
+        });
 
         function getPrefix(openCount) {
             if (openCount < 10) return { icon: '🌱', name: 'Новичок', cssClass: 'prefix-novice' };
@@ -1026,12 +2100,13 @@
             
             if (registrationDate) {
                 var d = new Date(registrationDate);
-                document.getElementById('profileRegDate').textContent = 'Регистрация: ' + 
-                    String(d.getDate()).padStart(2, '0') + '.' + 
-                    String(d.getMonth() + 1).padStart(2, '0') + '.' + 
-                    d.getFullYear();
+                var day = String(d.getDate()).padStart(2, '0');
+                var month = String(d.getMonth() + 1).padStart(2, '0');
+                var year = d.getFullYear();
+                document.getElementById('profileRegDate').textContent = 'Регистрация: ' + day + '.' + month + '.' + year;
             }
             
+            // Обновляем аватар
             var avatarImg = document.getElementById('avatarImg');
             var avatarEmoji = document.getElementById('avatarEmoji');
             if (avatarData) {
@@ -1044,8 +2119,112 @@
             }
         }
 
+        function updateUserDataInFirebase() {
+            if (openedCount === 0 && userName === 'Игрок') return;
+            
+            db.collection('case_openings')
+                .where('userID', '==', userID)
+                .get()
+                .then(function(snapshot) {
+                    var updatePromises = [];
+                    snapshot.forEach(function(doc) {
+                        updatePromises.push(doc.ref.update({
+                            userName: userName,
+                            avatar: avatarData
+                        }).catch(function() {}));
+                    });
+                    return Promise.all(updatePromises);
+                })
+                .catch(function() {});
+
+            db.collection('taken_names')
+                .where('userID', '==', userID)
+                .get()
+                .then(function(snapshot) {
+                    var updatePromises = [];
+                    snapshot.forEach(function(doc) {
+                        updatePromises.push(doc.ref.update({
+                            name: userName,
+                            avatar: avatarData,
+                            timestamp: Date.now()
+                        }).catch(function() {}));
+                    });
+                    return Promise.all(updatePromises);
+                })
+                .catch(function() {});
+        }
+
+        function checkAchievements() {
+            var newAchievements = [];
+            
+            if (openedCount >= 1 && unlockedAchievements.indexOf('first_case') === -1) {
+                newAchievements.push('first_case');
+            }
+            if (openedCount >= 10 && unlockedAchievements.indexOf('ten_cases') === -1) {
+                newAchievements.push('ten_cases');
+            }
+            if (openedCount >= 50 && unlockedAchievements.indexOf('fifty_cases') === -1) {
+                newAchievements.push('fifty_cases');
+            }
+            if (openedCount >= 100 && unlockedAchievements.indexOf('hundred_cases') === -1) {
+                newAchievements.push('hundred_cases');
+            }
+            if (visitCount >= 3 && unlockedAchievements.indexOf('returning') === -1) {
+                newAchievements.push('returning');
+            }
+            if (userName !== 'Игрок' && unlockedAchievements.indexOf('first_name_change') === -1) {
+                newAchievements.push('first_name_change');
+            }
+            if (avatarData && unlockedAchievements.indexOf('avatar_change') === -1) {
+                newAchievements.push('avatar_change');
+            }
+            
+            for (var i = 0; i < winHistory.length; i++) {
+                if (winHistory[i].rarity === 'legendary' && unlockedAchievements.indexOf('legendary_win') === -1) {
+                    newAchievements.push('legendary_win');
+                }
+                if (winHistory[i].rarity === 'epic' && unlockedAchievements.indexOf('epic_win') === -1) {
+                    newAchievements.push('epic_win');
+                }
+                if (winHistory[i].rarity === 'rare' && unlockedAchievements.indexOf('rare_win') === -1) {
+                    newAchievements.push('rare_win');
+                }
+            }
+            
+            if (newAchievements.length > 0) {
+                for (var j = 0; j < newAchievements.length; j++) {
+                    if (unlockedAchievements.indexOf(newAchievements[j]) === -1) {
+                        unlockedAchievements.push(newAchievements[j]);
+                    }
+                }
+                try {
+                    localStorage.setItem('admincase_achievements', JSON.stringify(unlockedAchievements));
+                } catch(e) {}
+            }
+        }
+
+        function displayAchievements() {
+            var list = document.getElementById('achievementsList');
+            list.innerHTML = '';
+            
+            for (var i = 0; i < achievements.length; i++) {
+                (function(achievement) {
+                    var div = document.createElement('div');
+                    var unlocked = unlockedAchievements.indexOf(achievement.id) !== -1;
+                    div.className = 'achievement-item ' + (unlocked ? 'unlocked' : 'locked');
+                    div.innerHTML = 
+                        '<div class="achievement-icon">' + achievement.icon + '</div>' +
+                        '<div class="achievement-name">' + achievement.name + '</div>' +
+                        '<div class="achievement-desc">' + achievement.desc + '</div>';
+                    list.appendChild(div);
+                })(achievements[i]);
+            }
+        }
+
         function getRarity(chance, rarityOverride) {
-            if (rarityOverride) return 'rarity-' + rarityOverride;
+            if (rarityOverride) {
+                return 'rarity-' + rarityOverride;
+            }
             if (chance >= 50) return 'rarity-common';
             if (chance >= 20) return 'rarity-uncommon';
             if (chance >= 5) return 'rarity-rare';
@@ -1057,24 +2236,24 @@
             if (!timestamp) return 'Дата неизвестна';
             var d = new Date(timestamp);
             if (isNaN(d.getTime())) return 'Дата неизвестна';
-            return String(d.getDate()).padStart(2, '0') + '.' + 
-                   String(d.getMonth() + 1).padStart(2, '0') + '.' + 
-                   d.getFullYear() + ' ' + 
-                   String(d.getHours()).padStart(2, '0') + ':' + 
-                   String(d.getMinutes()).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var year = d.getFullYear();
+            var hours = String(d.getHours()).padStart(2, '0');
+            var minutes = String(d.getMinutes()).padStart(2, '0');
+            return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
         }
 
         function hideAllPages() {
-            var pages = ['mainPage', 'profilePage', 'roulettePage', 'topPage', 'otherProfilePage', 'adminListPage', 'adminPanel'];
-            for (var i = 0; i < pages.length; i++) {
-                var el = document.getElementById(pages[i]);
-                if (pages[i] === 'mainPage') {
-                    el.style.display = 'none';
-                } else {
-                    el.classList.remove('active');
-                }
-            }
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('profilePage').classList.remove('active');
+            document.getElementById('roulettePage').classList.remove('active');
+            document.getElementById('topPage').classList.remove('active');
+            document.getElementById('otherProfilePage').classList.remove('active');
+            document.getElementById('adminListPage').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
             
+            // Останавливаем анимацию рулетки если она была
             if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
             if (spinAnimFrame) cancelAnimationFrame(spinAnimFrame);
             bgAnimFrame = null;
@@ -1085,13 +2264,15 @@
         function showMainPage() {
             hideAllPages();
             document.getElementById('mainPage').style.display = 'block';
-            loadOnlineCount();
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
             window.scrollTo(0, 0);
         }
 
         function showProfile() {
+            loadServerNames();
             hideAllPages();
             document.getElementById('profilePage').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
             applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
@@ -1124,9 +2305,16 @@
                         var btn = document.createElement('button');
                         btn.className = 'history-info-circle';
                         btn.textContent = '!';
+                        var tooltip = document.createElement('span');
+                        tooltip.className = 'history-tooltip';
+                        var tooltipText = item.source || 'Неизвестный кейс';
+                        tooltipText += ' • ' + formatDate(item.timestamp);
+                        tooltip.textContent = tooltipText;
+                        btn.appendChild(tooltip);
                         btn.onclick = function(e) {
                             e.stopPropagation();
-                            showCustomModal('Информация', '<p>' + (item.source || 'Неизвестный кейс') + ' • ' + formatDate(item.timestamp) + '</p>');
+                            tooltip.classList.toggle('show');
+                            setTimeout(function() { tooltip.classList.remove('show'); }, 3000);
                         };
                         div.appendChild(btn);
                         list.appendChild(div);
@@ -1134,139 +2322,124 @@
                 }
             }
             
+            checkAchievements();
             displayAchievements();
             window.scrollTo(0, 0);
-        }
-
-        function displayAchievements() {
-            var list = document.getElementById('achievementsList');
-            list.innerHTML = '';
-            
-            for (var i = 0; i < achievements.length; i++) {
-                var unlocked = unlockedAchievements.indexOf(achievements[i].id) !== -1;
-                var div = document.createElement('div');
-                div.className = 'achievement-item ' + (unlocked ? 'unlocked' : 'locked');
-                div.innerHTML = 
-                    '<div class="achievement-icon">' + achievements[i].icon + '</div>' +
-                    '<div class="achievement-name">' + achievements[i].name + '</div>' +
-                    '<div class="achievement-desc">' + achievements[i].desc + '</div>';
-                list.appendChild(div);
-            }
-        }
-
-        function checkAchievements() {
-            var newAchievements = [];
-            
-            if (openedCount >= 1 && unlockedAchievements.indexOf('first_case') === -1) newAchievements.push('first_case');
-            if (openedCount >= 10 && unlockedAchievements.indexOf('ten_cases') === -1) newAchievements.push('ten_cases');
-            if (openedCount >= 50 && unlockedAchievements.indexOf('fifty_cases') === -1) newAchievements.push('fifty_cases');
-            if (openedCount >= 100 && unlockedAchievements.indexOf('hundred_cases') === -1) newAchievements.push('hundred_cases');
-            if (visitCount >= 3 && unlockedAchievements.indexOf('returning') === -1) newAchievements.push('returning');
-            if (userName !== 'Игрок' && unlockedAchievements.indexOf('first_name_change') === -1) newAchievements.push('first_name_change');
-            if (avatarData && unlockedAchievements.indexOf('avatar_change') === -1) newAchievements.push('avatar_change');
-            
-            for (var i = 0; i < winHistory.length; i++) {
-                if (winHistory[i].rarity === 'legendary' && unlockedAchievements.indexOf('legendary_win') === -1) newAchievements.push('legendary_win');
-                if (winHistory[i].rarity === 'epic' && unlockedAchievements.indexOf('epic_win') === -1) newAchievements.push('epic_win');
-                if (winHistory[i].rarity === 'rare' && unlockedAchievements.indexOf('rare_win') === -1) newAchievements.push('rare_win');
-            }
-            
-            if (newAchievements.length > 0) {
-                for (var j = 0; j < newAchievements.length; j++) {
-                    if (unlockedAchievements.indexOf(newAchievements[j]) === -1) {
-                        unlockedAchievements.push(newAchievements[j]);
-                    }
-                }
-                try {
-                    localStorage.setItem('admincase_achievements', JSON.stringify(unlockedAchievements));
-                } catch(e) {}
-            }
         }
 
         function showTopPage() {
             adminReturnPage = 'top';
             hideAllPages();
             document.getElementById('topPage').classList.add('active');
+            try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
             
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            loadTopUsers().then(function(top10) {
-                if (top10.length === 0) {
-                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
-                    return;
-                }
+            db.collection('case_openings').get().then(function(caseSnapshot) {
+                var users = [];
                 
-                list.innerHTML = '';
-                
-                for (var j = 0; j < top10.length; j++) {
-                    (function(user, index) {
-                        var div = document.createElement('div');
-                        div.className = 'top-item';
-                        var avatarHtml = '<span>👤</span>';
-                        if (user.avatar && user.avatar !== 'undefined' && user.avatar !== 'null') {
-                            avatarHtml = '<img src="' + user.avatar + '" alt="">';
+                caseSnapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    if (adminIDs.indexOf(data.userID) !== -1) return;
+                    
+                    var found = false;
+                    for (var i = 0; i < users.length; i++) {
+                        if (users[i].userID === data.userID) {
+                            users[i].openedCount++;
+                            if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
+                                users[i].avatar = data.avatar;
+                            }
+                            if (data.userName && data.userName !== 'Неизвестно') {
+                                users[i].name = data.userName;
+                            }
+                            found = true;
+                            break;
                         }
-                        var prefix = getPrefix(user.openedCount);
-                        div.innerHTML = 
-                            '<div class="top-place">' + (index + 1) + '</div>' +
-                            '<div class="top-avatar" onclick="event.stopPropagation(); openAvatarViewer(\'' + (user.avatar || '') + '\')">' + avatarHtml + '</div>' +
-                            '<div class="top-info">' +
-                                '<div class="top-name">' + user.name + '</div>' +
-                                '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
-                                '<div class="top-id">ID: ' + user.userID + '</div>' +
-                            '</div>' +
-                            '<div class="top-count">' + user.openedCount + '</div>';
-                        div.onclick = function() {
-                            showOtherProfile(user.userID);
-                        };
-                        list.appendChild(div);
-                    })(top10[j], j);
-                }
-            }).catch(function() {
-                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка загрузки</p>';
-            });
-            
-            window.scrollTo(0, 0);
-        }
-
-        function showAdminListPage() {
-            hideAllPages();
-            document.getElementById('adminListPage').classList.add('active');
-            
-            adminReturnPage = 'admin_list';
-            
-            var list = document.getElementById('adminListContainer');
-            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
-            loadAdminList().then(function(adminItems) {
-                list.innerHTML = '';
+                    }
+                    if (!found) {
+                        users.push({
+                            name: data.userName || 'Неизвестно',
+                            userID: data.userID || 'Неизвестно',
+                            openedCount: 1,
+                            avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null,
+                            timestamp: data.timestamp || 0
+                        });
+                    }
+                });
                 
-                for (var i = 0; i < adminItems.length; i++) {
-                    (function(admin) {
-                        var div = document.createElement('div');
-                        div.className = 'admin-item';
+                return db.collection('taken_names').get().then(function(nameSnapshot) {
+                    nameSnapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        if (!data.name || data.name === 'Игрок') return;
+                        if (adminIDs.indexOf(data.userID) !== -1) return;
                         
-                        var avatarHtml = '<span>👑</span>';
-                        if (admin.avatar && admin.avatar !== 'undefined' && admin.avatar !== 'null') {
-                            avatarHtml = '<img src="' + admin.avatar + '" alt="">';
+                        var found = false;
+                        for (var i = 0; i < users.length; i++) {
+                            if (users[i].userID === data.userID) {
+                                if ((data.timestamp || 0) > users[i].timestamp) {
+                                    users[i].name = data.name;
+                                    users[i].timestamp = data.timestamp || 0;
+                                }
+                                if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
+                                    users[i].avatar = data.avatar;
+                                }
+                                found = true;
+                                break;
+                            }
                         }
-                        
-                        div.innerHTML = 
-                            '<div class="admin-avatar">' + avatarHtml + '</div>' +
-                            '<div class="admin-info">' +
-                                '<div class="admin-name">' + admin.name + '</div>' +
-                                '<div class="admin-id">ID: ' + admin.userID + '</div>' +
-                            '</div>' +
-                            '<span class="admin-badge">ADMIN</span>';
-                        
-                        div.onclick = function() {
-                            showOtherProfile(admin.userID);
-                        };
-                        
-                        list.appendChild(div);
-                    })(adminItems[i]);
-                }
+                        if (!found) {
+                            users.push({
+                                name: data.name,
+                                userID: data.userID || 'Неизвестно',
+                                openedCount: 0,
+                                avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null,
+                                timestamp: data.timestamp || 0
+                            });
+                        }
+                    });
+                    
+                    users.sort(function(a, b) {
+                        return b.openedCount - a.openedCount;
+                    });
+                    
+                    var top10 = users.slice(0, 10);
+                    
+                    if (top10.length === 0) {
+                        list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
+                        return;
+                    }
+                    
+                    list.innerHTML = '';
+                    
+                    for (var j = 0; j < top10.length; j++) {
+                        (function(user, index) {
+                            var div = document.createElement('div');
+                            div.className = 'top-item';
+                            var avatarHtml = '<span>👤</span>';
+                            if (user.avatar && user.avatar !== 'undefined' && user.avatar !== 'null') {
+                                avatarHtml = '<img src="' + user.avatar + '" alt="">';
+                            }
+                            var prefix = getPrefix(user.openedCount);
+                            div.innerHTML = 
+                                '<div class="top-place">' + (index + 1) + '</div>' +
+                                '<div class="top-avatar" onclick="event.stopPropagation(); openAvatarViewer(\'' + (user.avatar || '') + '\')">' + avatarHtml + '</div>' +
+                                '<div class="top-info">' +
+                                    '<div class="top-name">' + user.name + '</div>' +
+                                    '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
+                                    '<div class="top-id">ID: ' + user.userID + '</div>' +
+                                '</div>' +
+                                '<div class="top-count">' + user.openedCount + '</div>';
+                            div.onclick = function() {
+                                adminReturnPage = 'top';
+                                showOtherProfile(user.userID);
+                            };
+                            list.appendChild(div);
+                        })(top10[j], j);
+                    }
+                });
+            }).catch(function(error) {
+                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
             });
             
             window.scrollTo(0, 0);
@@ -1275,6 +2448,10 @@
         function showOtherProfile(targetUserID) {
             hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
+            try {
+                localStorage.setItem('admincase_current_page', 'other_profile');
+                localStorage.setItem('admincase_other_profile_id', targetUserID);
+            } catch(e) {}
             
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
@@ -1284,22 +2461,22 @@
             
             db.collection('case_openings')
                 .where('userID', '==', targetUserID)
-                .limit(50)
                 .get()
                 .then(function(caseSnapshot) {
                     var foundName = 'Неизвестно';
                     var foundAvatar = null;
-                    var count = caseSnapshot.size;
                     
                     caseSnapshot.forEach(function(doc) {
                         var data = doc.data();
                         if (data.userName) foundName = data.userName;
-                        if (data.avatar && !foundAvatar) foundAvatar = data.avatar;
+                        if (data.avatar && !foundAvatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
+                            foundAvatar = data.avatar;
+                        }
                     });
                     
                     document.getElementById('otherName').textContent = foundName;
                     document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
-                    document.getElementById('otherOpenedCount').textContent = count;
+                    document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
                     
                     if (isOtherAdmin) {
                         document.getElementById('otherName').classList.add('admin-name');
@@ -1309,7 +2486,7 @@
                         document.getElementById('otherAdminPrefix').style.display = 'none';
                     }
                     
-                    var prefix = getPrefix(count);
+                    var prefix = getPrefix(caseSnapshot.size);
                     var otherPrefixEl = document.getElementById('otherPrefix');
                     otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
                     otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
@@ -1321,97 +2498,166 @@
                     } else {
                         otherAvatar.innerHTML = '👤';
                     }
+                    
+                    return db.collection('taken_names')
+                        .where('userID', '==', targetUserID)
+                        .get()
+                        .then(function(nameSnapshot) {
+                            var latestTimestamp = 0;
+                            nameSnapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                var ts = data.timestamp || 0;
+                                if (ts > latestTimestamp && data.name) {
+                                    latestTimestamp = ts;
+                                    foundName = data.name;
+                                    if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
+                                        foundAvatar = data.avatar;
+                                    }
+                                }
+                            });
+                            
+                            document.getElementById('otherName').textContent = foundName;
+                            if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
+                                otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                            }
+                        });
                 })
-                .catch(function() {
+                .catch(function(error) {
                     document.getElementById('otherName').textContent = 'Ошибка';
+                    document.getElementById('otherID').textContent = error.message;
                 });
             
             window.scrollTo(0, 0);
         }
 
-        function showAdminPanel() {
-            hideAllPages();
-            document.getElementById('adminPanel').classList.add('active');
-            showActivePromos();
-            window.scrollTo(0, 0);
+        function enterEditMode() {
+            if (openedCount < 1) {
+                showCustomModal('Недоступно', '<p>Для смены имени нужно открыть хотя бы 1 кейс!</p>');
+                return;
+            }
+            
+            isEditMode = true;
+            document.getElementById('profileNameDisplay').style.display = 'none';
+            document.getElementById('editNameInput').style.display = 'block';
+            document.getElementById('editNameInput').value = userName;
+            document.getElementById('editActions').style.display = 'flex';
+            document.getElementById('avatarEditIcon').style.display = 'flex';
         }
 
-        function showActivePromos() {
-            var list = document.getElementById('activePromosList');
-            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
-            loadPromoCodes().then(function(promos) {
-                var keys = Object.keys(promos);
-                
-                if (keys.length === 0) {
-                    list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
+        function exitEditMode() {
+            isEditMode = false;
+            document.getElementById('profileNameDisplay').style.display = 'block';
+            document.getElementById('editNameInput').style.display = 'none';
+            document.getElementById('editActions').style.display = 'none';
+            document.getElementById('avatarEditIcon').style.display = 'none';
+        }
+
+        function confirmEdit() {
+            var newName = document.getElementById('editNameInput').value.trim();
+            if (newName && newName !== userName) {
+                var now = Date.now();
+                if (now - lastNameChangeTime < 60000) {
+                    showCustomModal('Ошибка', '<p>Подождите 1 минуту перед сменой имени</p>');
                     return;
                 }
                 
-                list.innerHTML = '';
-                
-                for (var i = 0; i < keys.length; i++) {
-                    var data = promos[keys[i]];
-                    var div = document.createElement('div');
-                    div.className = 'promo-item';
-                    
-                    var expiresDate = new Date(data.expiresAt);
-                    
-                    div.innerHTML = 
-                        '<div class="promo-info">' +
-                            '<div class="promo-code">' + keys[i] + '</div>' +
-                            '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
-                            ' | Активаций: ' + data.activationsLeft +
-                            ' | До: ' + expiresDate.toLocaleString('ru-RU') + '</div>' +
-                        '</div>' +
-                        '<button class="promo-delete" onclick="deletePromoCode(\'' + data.docId + '\')">Удалить</button>';
-                    
-                    list.appendChild(div);
+                if (!namesLoaded) {
+                    showCustomModal('Ошибка', '<p>Подождите, идёт загрузка списка имён...</p>');
+                    return;
                 }
-            });
-        }
-
-        function createPromoCode() {
-            var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
-            var caseType = document.getElementById('adminPromoCase').value;
-            var activations = parseInt(document.getElementById('adminPromoActivations').value);
-            var hours = parseInt(document.getElementById('adminPromoHours').value);
-            
-            if (!code || code.length < 3) {
-                showCustomModal('Ошибка', '<p>Введите корректный код (мин. 3 символа)!</p>');
+                
+                if (serverTakenNames.indexOf(newName) !== -1) {
+                    showCustomModal('Ошибка', '<p>Это имя уже занято!</p>');
+                    return;
+                }
+                
+                var oldName = userName;
+                
+                if (userName !== 'Игрок') {
+                    db.collection('taken_names')
+                        .where('uid', '==', userUID)
+                        .get()
+                        .then(function(snapshot) {
+                            var deletePromises = [];
+                            snapshot.forEach(function(doc) {
+                                deletePromises.push(doc.ref.delete());
+                            });
+                            return Promise.all(deletePromises);
+                        })
+                        .then(function() {
+                            return db.collection('taken_names').add({
+                                name: newName,
+                                uid: userUID,
+                                userID: userID,
+                                avatar: avatarData,
+                                timestamp: now
+                            });
+                        })
+                        .then(function() {
+                            userName = newName;
+                            lastNameChangeTime = now;
+                            serverTakenNames.push(newName);
+                            try {
+                                localStorage.setItem('admincase_user_name', userName);
+                                localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                            } catch(e) {}
+                            
+                            db.collection('name_changes').add({
+                                userName: newName,
+                                userID: userID,
+                                oldName: oldName,
+                                newName: newName,
+                                timestamp: now
+                            }).catch(function() {});
+                            
+                            updateUserDataInFirebase();
+                            checkAchievements();
+                            
+                            applyProfileData();
+                            exitEditMode();
+                            showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
+                        })
+                        .catch(function() {
+                            showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
+                        });
+                } else {
+                    db.collection('taken_names').add({
+                        name: newName,
+                        uid: userUID,
+                        userID: userID,
+                        avatar: avatarData,
+                        timestamp: now
+                    }).then(function() {
+                        userName = newName;
+                        lastNameChangeTime = now;
+                        serverTakenNames.push(newName);
+                        try {
+                            localStorage.setItem('admincase_user_name', userName);
+                            localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                        } catch(e) {}
+                        
+                        db.collection('name_changes').add({
+                            userName: newName,
+                            userID: userID,
+                            oldName: oldName,
+                            newName: newName,
+                            timestamp: now
+                        }).catch(function() {});
+                        
+                        updateUserDataInFirebase();
+                        checkAchievements();
+                        
+                        applyProfileData();
+                        exitEditMode();
+                        showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
+                    }).catch(function() {
+                        showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
+                    });
+                }
                 return;
             }
-            
-            if (!activations || activations < 1 || !hours || hours < 1) {
-                showCustomModal('Ошибка', '<p>Введите корректные значения!</p>');
-                return;
-            }
-            
-            var expiresAt = Date.now() + hours * 60 * 60 * 1000;
-            
-            db.collection('active_promos').add({
-                code: code,
-                caseType: caseType,
-                activationsLeft: activations,
-                totalActivations: activations,
-                expiresAt: expiresAt,
-                createdAt: Date.now(),
-                createdBy: userName,
-                createdByID: userID
-            }).then(function() {
-                document.getElementById('adminPromoCode').value = '';
-                cache.promoCodes.time = 0;
-                showActivePromos();
-                showCustomModal('✅ Успех!', '<p>Промокод ' + code + ' создан!</p>');
-            });
-        }
-
-        function deletePromoCode(docId) {
-            db.collection('active_promos').doc(docId).delete().then(function() {
-                cache.promoCodes.time = 0;
-                showActivePromos();
-                showCustomModal('✅ Успех!', '<p>Промокод удалён!</p>');
-            });
+            applyProfileData();
+            exitEditMode();
         }
 
         function openPromoModal(caseType) {
@@ -1426,53 +2672,65 @@
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
             document.getElementById('promoInput').value = '';
             document.getElementById('promoMessage').className = 'message';
+            document.getElementById('promoMessage').textContent = '';
         }
 
         function checkPromo() {
             var input = document.getElementById('promoInput').value.trim().toUpperCase();
             var msg = document.getElementById('promoMessage');
+            msg.className = 'message';
+            msg.textContent = '';
+
+            if (!input) { msg.className = 'message error'; msg.textContent = 'Введите промокод!'; return; }
             
-            if (!input) {
-                msg.className = 'message error';
-                msg.textContent = 'Введите промокод!';
+            if (dynamicPromoCodes[input] !== undefined) {
+                var promoData = dynamicPromoCodes[input];
+                
+                if (promoData.expiresAt && promoData.expiresAt < Date.now()) {
+                    db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                    delete dynamicPromoCodes[input];
+                    msg.className = 'message error';
+                    msg.textContent = 'Промокод истёк!';
+                    return;
+                }
+                
+                if (promoData.activationsLeft <= 0) {
+                    db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                    delete dynamicPromoCodes[input];
+                    msg.className = 'message error';
+                    msg.textContent = 'Промокод больше не действителен!';
+                    return;
+                }
+                
+                if (promoData.caseType !== currentCase) {
+                    msg.className = 'message error';
+                    msg.textContent = 'Этот код для другого кейса!';
+                    return;
+                }
+                
+                var newActivations = promoData.activationsLeft - 1;
+                db.collection('active_promos').doc(promoData.docId).update({
+                    activationsLeft: newActivations
+                }).then(function() {
+                    if (newActivations <= 0) {
+                        db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
+                        delete dynamicPromoCodes[input];
+                    } else {
+                        dynamicPromoCodes[input].activationsLeft = newActivations;
+                    }
+                }).catch(function() {});
+                
+                msg.className = 'message success';
+                msg.textContent = '✅ Код активирован!';
+                setTimeout(function() {
+                    document.getElementById('promoModal').classList.remove('active');
+                    showRoulettePage(currentCase);
+                }, 500);
                 return;
             }
             
-            loadPromoCodes().then(function(promos) {
-                if (promos[input] !== undefined) {
-                    var promoData = promos[input];
-                    
-                    if (promoData.expiresAt < Date.now()) {
-                        db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
-                        msg.className = 'message error';
-                        msg.textContent = 'Промокод истёк!';
-                        return;
-                    }
-                    
-                    if (promoData.caseType !== currentCase) {
-                        msg.className = 'message error';
-                        msg.textContent = 'Этот код для другого кейса!';
-                        return;
-                    }
-                    
-                    var newActivations = promoData.activationsLeft - 1;
-                    db.collection('active_promos').doc(promoData.docId).update({
-                        activationsLeft: newActivations
-                    }).then(function() {
-                        cache.promoCodes.time = 0;
-                    }).catch(function() {});
-                    
-                    msg.className = 'message success';
-                    msg.textContent = '✅ Код активирован!';
-                    setTimeout(function() {
-                        document.getElementById('promoModal').classList.remove('active');
-                        showRoulettePage(currentCase);
-                    }, 500);
-                } else {
-                    msg.className = 'message error';
-                    msg.textContent = 'Неверный промокод!';
-                }
-            });
+            msg.className = 'message error';
+            msg.textContent = 'Неверный промокод!';
         }
 
         function showRoulettePage(caseType) {
@@ -1509,6 +2767,7 @@
                 track.appendChild(div);
             }
             
+            if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
             bgPosition = 0;
             bgLastTime = null;
             function bgAnim(currentTime) {
@@ -1530,11 +2789,33 @@
                     var div = document.createElement('div');
                     div.className = 'reward-item ' + getRarity(item.chance, item.rarity);
                     div.innerHTML = '<span class="reward-name">' + item.name + '</span>' +
-                        '<button class="reward-info-circle" onclick="showCustomModal(\'Информация\', \'<p>Шанс: ' + item.chance + '% | Редкость: ' + (item.rarity || 'обычная') + '</p>\')">!</button>';
+                        '<button class="reward-info-circle">!</button>' +
+                        '<span class="reward-tooltip">Шанс: ' + item.chance + '% | Редкость: ' + (item.rarity || 'обычная') + '</span>';
+                    var btn = div.querySelector('.reward-info-circle');
+                    btn.onclick = function(e) {
+                        e.stopPropagation();
+                        var tip = div.querySelector('.reward-tooltip');
+                        tip.classList.toggle('show');
+                        setTimeout(function() { tip.classList.remove('show'); }, 2000);
+                    };
                     rewardsList.appendChild(div);
                 })(caseContents[caseType][m]);
             }
             window.scrollTo(0, 0);
+        }
+
+        function getItemUnderArrow() {
+            var container = document.getElementById('rouletteContainer');
+            var rect = container.getBoundingClientRect();
+            var arrowX = rect.left + rect.width / 2;
+            var items = document.querySelectorAll('.roulette-item');
+            for (var i = 0; i < items.length; i++) {
+                var itemRect = items[i].getBoundingClientRect();
+                if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
+                    return items[i].getAttribute('data-name');
+                }
+            }
+            return items.length > 0 ? items[0].getAttribute('data-name') : 'Неизвестно';
         }
 
         function spinRoulette() {
@@ -1552,6 +2833,7 @@
             btn.disabled = true;
             var msg = document.getElementById('resultMessage');
             msg.className = 'message';
+            msg.textContent = '';
             
             var track = document.getElementById('rouletteTrack');
             var itemWidth = 180;
@@ -1562,7 +2844,12 @@
             var containerWidth = document.getElementById('rouletteContainer').offsetWidth;
             var centerOffset = containerWidth / 2 - itemWidth / 2;
             var winIndex = Math.floor(Math.random() * totalItems);
+            var stopPosition = -(winIndex * itemWidth) + centerOffset;
             var totalDistance = 8 * itemWidth;
+            var finalPosition = stopPosition - totalDistance;
+            
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
             
             var startTime = performance.now();
             var duration = 6000;
@@ -1589,27 +2876,14 @@
                     spinAnimFrame = requestAnimationFrame(animateSpin);
                 } else {
                     setTimeout(function() {
-                        var container = document.getElementById('rouletteContainer');
-                        var rect = container.getBoundingClientRect();
-                        var arrowX = rect.left + rect.width / 2;
-                        var actualWin = 'Неизвестно';
+                        var actualWin = getItemUnderArrow();
                         var actualRarity = null;
-                        
-                        for (var i = 0; i < items.length; i++) {
-                            var itemRect = items[i].getBoundingClientRect();
-                            if (arrowX >= itemRect.left && arrowX <= itemRect.right) {
-                                actualWin = items[i].getAttribute('data-name');
-                                break;
-                            }
-                        }
-                        
                         for (var ri = 0; ri < rouletteItems.length; ri++) {
                             if (rouletteItems[ri].name === actualWin) {
                                 actualRarity = rouletteItems[ri].rarity;
                                 break;
                             }
                         }
-                        
                         openedCount++;
                         winHistory.push({ 
                             name: actualWin,
@@ -1617,22 +2891,20 @@
                             source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             timestamp: Date.now()
                         });
+                        try {
+                            localStorage.setItem('admincase_opened_count', openedCount);
+                            localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
+                        } catch(e) {}
                         
-                        // Сохраняем данные
-                        saveUserData();
-                        
-                        // Если пользователь зарегистрирован или админ, сохраняем в Firebase
-                        if (isLoggedIn || isAdmin) {
-                            db.collection('case_openings').add({
-                                userName: userName,
-                                userID: userID,
-                                avatar: avatarData,
-                                caseType: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                                reward: actualWin,
-                                rarity: actualRarity,
-                                timestamp: Date.now()
-                            }).catch(function() {});
-                        }
+                        db.collection('case_openings').add({
+                            userName: userName,
+                            userID: userID,
+                            avatar: avatarData,
+                            caseType: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                            reward: actualWin,
+                            rarity: actualRarity,
+                            timestamp: Date.now()
+                        }).catch(function() {});
                         
                         checkAchievements();
                         
@@ -1640,6 +2912,7 @@
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
                         isSpinning = false;
                         btn.disabled = false;
+                        
                         document.getElementById('rouletteBackBtn').classList.add('show');
                     }, 500);
                 }
@@ -1664,7 +2937,12 @@
             for (var o = 0; o < options.length; o++) {
                 options[o].classList.remove('active');
             }
-            if (btn) btn.classList.add('active');
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+                if (activeBtn) activeBtn.classList.add('active');
+            }
             
             closeThemeMenu();
         }
@@ -1689,23 +2967,32 @@
             document.getElementById('avatarModal').classList.remove('active');
         }
 
+        document.getElementById('avatarModal').onclick = function(e) {
+            if (e.target === this) {
+                closeAvatarViewer();
+            }
+        };
+
         function showAuthModal() {
+            var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
             
             if (isLoggedIn) {
-                content.innerHTML = '<h2>Аккаунт</h2>' +
-                    '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>' +
-                    '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + loggedInAccountID + '</p>' +
-                    '<button class="btn btn-logout" onclick="handleLogout()">Выйти с аккаунта</button>' +
-                    '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                var html = '<h2>Аккаунт</h2>';
+                html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
+                html += '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + loggedInAccountID + '</p>';
+                html += '<button class="btn btn-logout" onclick="handleLogout()">Выйти с аккаунта</button>';
+                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                content.innerHTML = html;
             } else {
-                content.innerHTML = '<h2>Вход / Регистрация</h2>' +
-                    '<button class="btn btn-login" onclick="showLoginForm()">Войти</button>' +
-                    '<button class="btn btn-register" onclick="showRegisterForm()">Регистрация</button>' +
-                    '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                var html = '<h2>Вход / Регистрация</h2>';
+                html += '<button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
+                html += '<button class="btn btn-register" onclick="showRegisterForm()">Регистрация</button>';
+                html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+                content.innerHTML = html;
             }
             
-            document.getElementById('authModal').classList.add('active');
+            modal.classList.add('active');
         }
 
         function closeAuthModal() {
@@ -1713,6 +3000,7 @@
         }
 
         function handleLogout() {
+            // Очищаем все данные пользователя
             try {
                 localStorage.removeItem('admincase_logged_in');
                 localStorage.removeItem('admincase_logged_in_name');
@@ -1724,61 +3012,65 @@
                 localStorage.removeItem('admincase_achievements');
                 localStorage.removeItem('admincase_name_change_time');
                 localStorage.removeItem('admincase_user_id');
+                localStorage.removeItem('admincase_current_page');
+                localStorage.removeItem('admincase_other_profile_id');
             } catch(e) {}
             
             closeAuthModal();
+            
+            // Перезагружаем страницу для сброса к состоянию по умолчанию
             showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
         }
 
         function showLoginForm() {
-            document.getElementById('authModalContent').innerHTML = 
-                '<h2>Вход в аккаунт</h2>' +
-                '<div class="auth-label">ID аккаунта:</div>' +
-                '<input type="text" class="auth-input" id="loginID" placeholder="Введите ID">' +
-                '<div class="auth-label">Пароль:</div>' +
-                '<div class="password-input-wrapper">' +
-                '<input type="password" class="auth-input" id="loginPassword" placeholder="Введите пароль">' +
-                '<button class="auth-eye-btn" onclick="togglePassword(\'loginPassword\', this)">👁️</button>' +
-                '</div>' +
-                '<button class="btn btn-login" onclick="handleLogin()">Войти</button>' +
-                '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>' +
-                '<div class="message" id="authMessage"></div>';
+            var content = document.getElementById('authModalContent');
+            
+            var html = '<h2>Вход в аккаунт</h2>';
+            html += '<div class="auth-label">ID аккаунта:</div>';
+            html += '<input type="text" class="auth-input" id="loginID" placeholder="Введите ID">';
+            html += '<div class="auth-label">Пароль:</div>';
+            html += '<div class="password-input-wrapper">';
+            html += '<input type="password" class="auth-input" id="loginPassword" placeholder="Введите пароль">';
+            html += '<button class="auth-eye-btn" onclick="togglePassword(\'loginPassword\', this)">👁️</button>';
+            html += '</div>';
+            html += '<button class="btn btn-login" onclick="handleLogin()">Войти</button>';
+            html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
+            html += '<div class="message" id="authMessage"></div>';
+            
+            content.innerHTML = html;
         }
 
         function showRegisterForm() {
+            var content = document.getElementById('authModalContent');
+            
             if (openedCount < 10) {
-                document.getElementById('authModalContent').innerHTML = 
-                    '<h2>Регистрация недоступна</h2>' +
-                    '<p style="margin-bottom:15px;">Для регистрации нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p>' +
-                    '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
+                content.innerHTML = '<h2>Регистрация недоступна</h2><p style="margin-bottom:15px;">Для регистрации нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p><button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
                 return;
             }
             
             if (userName === 'Игрок') {
-                document.getElementById('authModalContent').innerHTML = 
-                    '<h2>Регистрация недоступна</h2>' +
-                    '<p style="margin-bottom:15px;">Для регистрации нужно изменить имя в профиле.</p>' +
-                    '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
+                content.innerHTML = '<h2>Регистрация недоступна</h2><p style="margin-bottom:15px;">Для регистрации нужно изменить имя в профиле.</p><button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
                 return;
             }
             
-            document.getElementById('authModalContent').innerHTML = 
-                '<h2>Регистрация аккаунта</h2>' +
-                '<div class="auth-label">ID аккаунта (автоматически):</div>' +
-                '<input type="text" class="auth-input" id="regID" value="' + userID + '" readonly style="opacity:0.5;">' +
-                '<div class="auth-label">Пароль (6-10 символов):</div>' +
-                '<div class="password-input-wrapper">' +
-                '<input type="password" class="auth-input" id="regPassword" placeholder="Введите пароль" maxlength="10">' +
-                '<button class="auth-eye-btn" onclick="togglePassword(\'regPassword\', this)">👁️</button>' +
-                '</div>' +
-                '<div class="auth-label">Повторите пароль:</div>' +
-                '<div class="password-input-wrapper">' +
-                '<input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" maxlength="10">' +
-                '<button class="auth-eye-btn" onclick="togglePassword(\'regPasswordConfirm\', this)">👁️</button>' +
-                '</div>' +
-                '<button class="btn btn-register" onclick="handleRegister()">Зарегистрироваться</button>' +
-                '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>' +
-                '<div class="message" id="authMessage"></div>';
+            var html = '<h2>Регистрация аккаунта</h2>';
+            html += '<div class="auth-label">ID аккаунта (автоматически):</div>';
+            html += '<input type="text" class="auth-input" id="regID" value="' + userID + '" readonly style="opacity:0.5;">';
+            html += '<div class="auth-label">Пароль (6-10 символов):</div>';
+            html += '<div class="password-input-wrapper">';
+            html += '<input type="password" class="auth-input" id="regPassword" placeholder="Введите пароль" maxlength="10">';
+            html += '<button class="auth-eye-btn" onclick="togglePassword(\'regPassword\', this)">👁️</button>';
+            html += '</div>';
+            html += '<div class="auth-label">Повторите пароль:</div>';
+            html += '<div class="password-input-wrapper">';
+            html += '<input type="password" class="auth-input" id="regPasswordConfirm" placeholder="Повторите пароль" maxlength="10">';
+            html += '<button class="auth-eye-btn" onclick="togglePassword(\'regPasswordConfirm\', this)">👁️</button>';
+            html += '</div>';
+            html += '<button class="btn btn-register" onclick="handleRegister()">Зарегистрироваться</button>';
+            html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
+            html += '<div class="message" id="authMessage"></div>';
+            
+            content.innerHTML = html;
         }
 
         function togglePassword(inputId, btn) {
@@ -1797,7 +3089,16 @@
             var passwordConfirm = document.getElementById('regPasswordConfirm').value;
             var msg = document.getElementById('authMessage');
             
-            if (!password || password.length < 6 || password.length > 10) {
+            msg.className = 'message';
+            msg.textContent = '';
+            
+            if (!password || !passwordConfirm) {
+                msg.className = 'message error';
+                msg.textContent = 'Заполните все поля!';
+                return;
+            }
+            
+            if (password.length < 6 || password.length > 10) {
                 msg.className = 'message error';
                 msg.textContent = 'Пароль должен быть от 6 до 10 символов!';
                 return;
@@ -1825,38 +3126,13 @@
                         password: password,
                         createdAt: Date.now()
                     }).then(function() {
-                        // Сохраняем текущие данные пользователя в Firebase
-                        if (winHistory.length > 0) {
-                            var batch = db.batch();
-                            for (var i = 0; i < winHistory.length; i++) {
-                                var docRef = db.collection('case_openings').doc();
-                                batch.set(docRef, {
-                                    userName: userName,
-                                    userID: userID,
-                                    avatar: avatarData,
-                                    caseType: winHistory[i].source || 'Неизвестный кейс',
-                                    reward: winHistory[i].name,
-                                    rarity: winHistory[i].rarity,
-                                    timestamp: winHistory[i].timestamp || Date.now()
-                                });
-                            }
-                            batch.commit().catch(function() {});
-                        }
-                        
-                        db.collection('taken_names').add({
-                            name: userName,
-                            uid: userUID,
-                            userID: userID,
-                            avatar: avatarData,
-                            timestamp: Date.now()
-                        }).catch(function() {});
-                        
-                        document.getElementById('authModalContent').innerHTML = 
-                            '<h2>✅ Успех!</h2>' +
-                            '<p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p>' +
-                            '<p>ID: ' + userID + '</p>' +
-                            '<button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
+                        var content = document.getElementById('authModalContent');
+                        content.innerHTML = '<h2>✅ Успех!</h2><p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p><p>ID: ' + userID + '</p><button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
                     });
+                })
+                .catch(function(error) {
+                    msg.className = 'message error';
+                    msg.textContent = 'Ошибка: ' + error.message;
                 });
         }
 
@@ -1864,6 +3140,9 @@
             var inputID = document.getElementById('loginID').value.trim();
             var password = document.getElementById('loginPassword').value;
             var msg = document.getElementById('authMessage');
+            
+            msg.className = 'message';
+            msg.textContent = '';
             
             if (!inputID || !password) {
                 msg.className = 'message error';
@@ -1887,6 +3166,7 @@
                         if (data.password === password) {
                             found = true;
                             
+                            // Сохраняем данные в localStorage
                             try {
                                 localStorage.setItem('admincase_logged_in', 'true');
                                 localStorage.setItem('admincase_logged_in_name', data.userName);
@@ -1902,136 +3182,50 @@
                         msg.className = 'message error';
                         msg.textContent = 'Неверный пароль!';
                     }
+                })
+                .catch(function(error) {
+                    msg.className = 'message error';
+                    msg.textContent = 'Ошибка: ' + error.message;
                 });
         }
 
-        function enterEditMode() {
-            if (openedCount < 1) {
-                showCustomModal('Недоступно', '<p>Для смены имени нужно открыть хотя бы 1 кейс!</p>');
-                return;
+        document.getElementById('authModal').onclick = function(e) {
+            if (e.target === this) {
+                closeAuthModal();
             }
-            
-            isEditMode = true;
-            document.getElementById('profileNameDisplay').style.display = 'none';
-            document.getElementById('editNameInput').style.display = 'block';
-            document.getElementById('editNameInput').value = userName;
-            document.getElementById('editActions').style.display = 'flex';
-            document.getElementById('avatarEditIcon').style.display = 'flex';
-        }
+        };
 
-        function exitEditMode() {
-            isEditMode = false;
-            document.getElementById('profileNameDisplay').style.display = 'block';
-            document.getElementById('editNameInput').style.display = 'none';
-            document.getElementById('editActions').style.display = 'none';
-            document.getElementById('avatarEditIcon').style.display = 'none';
-        }
+        document.getElementById('authBtn').onclick = function() {
+            showAuthModal();
+        };
 
-        function confirmEdit() {
-            var newName = document.getElementById('editNameInput').value.trim();
-            if (newName && newName !== userName) {
-                var now = Date.now();
-                if (now - lastNameChangeTime < 60000) {
-                    showCustomModal('Ошибка', '<p>Подождите 1 минуту перед сменой имени</p>');
-                    return;
-                }
-                
-                userName = newName;
-                lastNameChangeTime = now;
-                
-                saveUserData();
-                
-                if (isLoggedIn || isAdmin) {
-                    db.collection('taken_names').add({
-                        name: newName,
-                        uid: userUID,
-                        userID: userID,
-                        avatar: avatarData,
-                        timestamp: now
-                    }).catch(function() {});
-                }
-                
-                applyProfileData();
-                exitEditMode();
-                showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
-                return;
-            }
-            applyProfileData();
-            exitEditMode();
-        }
-
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
-        try {
-            userUID = localStorage.getItem('admincase_user_uid') || ('uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
-            localStorage.setItem('admincase_user_uid', userUID);
-        } catch(e) {
-            userUID = 'uid_' + Date.now();
-        }
-        
-        try {
-            userID = localStorage.getItem('admincase_user_id') || String(Math.floor(10000000 + Math.random() * 90000000));
-            localStorage.setItem('admincase_user_id', userID);
-        } catch(e) {
-            userID = String(Math.floor(10000000 + Math.random() * 90000000));
-        }
-        
-        try {
-            registrationDate = parseInt(localStorage.getItem('admincase_reg_date') || String(Date.now()));
-            localStorage.setItem('admincase_reg_date', registrationDate);
-        } catch(e) {
-            registrationDate = Date.now();
-        }
-        
-        try {
-            visitCount = parseInt(localStorage.getItem('admincase_visit_count') || '0') + 1;
-            localStorage.setItem('admincase_visit_count', visitCount);
-        } catch(e) { visitCount = 1; }
-        
-        try {
-            currentTheme = localStorage.getItem('admincase_theme') || 'dark';
-            if (currentTheme !== 'dark' && themes.indexOf(currentTheme) !== -1) {
-                document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
-            }
-        } catch(e) { currentTheme = 'dark'; }
-        
-        try {
-            unlockedAchievements = JSON.parse(localStorage.getItem('admincase_achievements') || '[]');
-        } catch(e) { unlockedAchievements = []; }
-        
-        try {
-            lastNameChangeTime = parseInt(localStorage.getItem('admincase_name_change_time') || '0');
-        } catch(e) { lastNameChangeTime = 0; }
-        
-        // Загружаем данные пользователя
-        loadUserData(function() {
-            isAdmin = adminIDs.indexOf(userID) !== -1;
-            applyProfileData();
-            loadOnlineCount();
-            showMainPage();
-        });
-
-        // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
-        document.getElementById('authBtn').onclick = showAuthModal;
         document.getElementById('burgerBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.toggle('show');
         };
+
         document.getElementById('profileBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
             showProfile();
         };
+
         document.getElementById('topBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
             showTopPage();
         };
+
         document.getElementById('adminPanelBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
             showAdminPanel();
         };
-        document.getElementById('backBtn').onclick = showMainPage;
-        document.getElementById('topBackBtn').onclick = showMainPage;
-        document.getElementById('adminListBackBtn').onclick = showMainPage;
-        document.getElementById('adminBackBtn').onclick = showMainPage;
-        document.getElementById('rouletteBackBtn').onclick = showMainPage;
+
+        document.getElementById('backBtn').onclick = function() {
+            showMainPage();
+        };
+
+        document.getElementById('topBackBtn').onclick = function() {
+            showMainPage();
+        };
+
         document.getElementById('otherBackBtn').onclick = function() {
             if (adminReturnPage === 'admin_list') {
                 showAdminListPage();
@@ -2039,33 +3233,67 @@
                 showTopPage();
             }
         };
-        document.getElementById('cheapBox').onclick = function() { openPromoModal('cheap'); };
-        document.getElementById('expensiveBox').onclick = function() { openPromoModal('expensive'); };
+
+        document.getElementById('adminListBackBtn').onclick = function() {
+            showMainPage();
+        };
+
+        document.getElementById('adminBackBtn').onclick = function() {
+            showMainPage();
+        };
+
+        document.getElementById('rouletteBackBtn').onclick = function() {
+            showMainPage();
+        };
+
+        document.getElementById('cheapBox').onclick = function() {
+            openPromoModal('cheap');
+        };
+
+        document.getElementById('expensiveBox').onclick = function() {
+            openPromoModal('expensive');
+        };
+
         document.getElementById('infoCheap').onclick = function(e) {
             e.stopPropagation();
             document.getElementById('tooltipCheap').classList.toggle('show');
         };
+
         document.getElementById('infoExpensive').onclick = function(e) {
             e.stopPropagation();
             document.getElementById('tooltipExpensive').classList.toggle('show');
         };
+
         document.getElementById('closeModalBtn').onclick = function() {
             document.getElementById('promoModal').classList.remove('active');
         };
-        document.getElementById('activateBtn').onclick = checkPromo;
-        document.getElementById('spinBtn').onclick = spinRoulette;
-        document.getElementById('settingsBtn').onclick = enterEditMode;
-        document.getElementById('confirmEditBtn').onclick = confirmEdit;
-        document.getElementById('cancelEditBtn').onclick = exitEditMode;
-        document.getElementById('themeBtn').onclick = function(e) {
-            e.stopPropagation();
-            if (document.getElementById('themeDropdown').classList.contains('show')) {
-                closeThemeMenu();
-            } else {
-                openThemeMenu();
+
+        document.getElementById('activateBtn').onclick = function() {
+            checkPromo();
+        };
+
+        document.getElementById('spinBtn').onclick = function() {
+            spinRoulette();
+        };
+
+        document.getElementById('promoModal').onclick = function(e) {
+            if (e.target === this) {
+                document.getElementById('promoModal').classList.remove('active');
             }
         };
-        document.getElementById('themeOverlay').onclick = closeThemeMenu;
+
+        document.getElementById('settingsBtn').onclick = function() {
+            enterEditMode();
+        };
+
+        document.getElementById('confirmEditBtn').onclick = function() {
+            confirmEdit();
+        };
+
+        document.getElementById('cancelEditBtn').onclick = function() {
+            exitEditMode();
+        };
+
         document.getElementById('avatar').onclick = function() {
             if (isEditMode) {
                 document.getElementById('avatarFileInput').click();
@@ -2073,6 +3301,7 @@
                 openAvatarViewer(avatarData);
             }
         };
+
         document.getElementById('avatarFileInput').onchange = function(e) {
             var file = e.target.files[0];
             if (file) {
@@ -2093,8 +3322,9 @@
                         document.getElementById('avatarImg').src = avatarData;
                         document.getElementById('avatarImg').style.display = 'block';
                         document.getElementById('avatarEmoji').style.display = 'none';
+                        try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
                         
-                        saveUserData();
+                        updateUserDataInFirebase();
                         checkAchievements();
                     };
                     img.src = ev.target.result;
@@ -2102,30 +3332,36 @@
                 reader.readAsDataURL(file);
             }
         };
-        document.getElementById('promoModal').onclick = function(e) {
-            if (e.target === this) document.getElementById('promoModal').classList.remove('active');
+
+        document.getElementById('themeBtn').onclick = function(e) {
+            e.stopPropagation();
+            if (document.getElementById('themeDropdown').classList.contains('show')) {
+                closeThemeMenu();
+            } else {
+                openThemeMenu();
+            }
         };
-        document.getElementById('authModal').onclick = function(e) {
-            if (e.target === this) closeAuthModal();
+
+        document.getElementById('themeOverlay').onclick = function() {
+            closeThemeMenu();
         };
-        document.getElementById('avatarModal').onclick = function(e) {
-            if (e.target === this) closeAvatarViewer();
-        };
-        document.getElementById('customModal').onclick = function(e) {
-            if (e.target === this) closeCustomModal();
-        };
+
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.theme-wrapper') && !e.target.closest('.theme-dropdown')) {
                 closeThemeMenu();
             }
+            
+            // Закрываем выпадающее меню при клике вне его
             if (!e.target.closest('.burger-btn') && !e.target.closest('.dropdown-menu')) {
                 document.getElementById('dropdownMenu').classList.remove('show');
             }
         });
 
-        // Обновление онлайн-счетчика каждые 60 секунд
-        setInterval(loadOnlineCount, 60000);
+        (function() {
+            var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+        })();
     </script>
 
 </body>
-    </html>
+            </html>
