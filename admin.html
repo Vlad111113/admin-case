@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Логи</title>
+    <title>AdminCase - Логи (Оптимизированные)</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
@@ -80,6 +80,17 @@
         .btn-refresh:hover { background: #45a049; }
         .btn-logout { background: #ff9800; color: #fff; }
         .btn-logout:hover { background: #e68900; }
+        .btn-pagination {
+            background: #16213e;
+            color: #fff;
+            border: 2px solid #0f3460;
+            padding: 10px 15px;
+        }
+        .btn-pagination:hover:not(:disabled) { background: #1a2a4e; }
+        .btn-pagination:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
         .dropdown-wrapper {
             position: relative;
@@ -169,6 +180,19 @@
         .empty-message { text-align: center; opacity: 0.5; padding: 40px; font-size: 1.2rem; }
         .count-info { text-align: center; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .pagination-info {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
         .user-info {
             text-align: center;
             margin-bottom: 15px;
@@ -223,6 +247,12 @@
             
             <div class="count-info" id="countInfo">Загрузка...</div>
             <div id="logsList"></div>
+            
+            <div class="pagination" id="pagination">
+                <button class="btn btn-pagination" id="prevPageBtn" onclick="changePage(-1)">◀ Назад</button>
+                <span class="pagination-info" id="pageInfo">Страница 1</span>
+                <button class="btn btn-pagination" id="nextPageBtn" onclick="changePage(1)">Вперед ▶</button>
+            </div>
         </div>
     </div>
 
@@ -253,6 +283,8 @@
 
         var currentFilter = 'all';
         var allLogsData = [];
+        var currentPage = 1;
+        var logsPerPage = 20; // 20 логов на страницу
 
         // ===== ПРОВЕРКА ВХОДА =====
         function checkSavedLogin() {
@@ -321,6 +353,7 @@
 
         function setFilter(filter, label, btn) {
             currentFilter = filter;
+            currentPage = 1; // Сбрасываем на первую страницу
             document.getElementById('currentFilterLabel').textContent = label;
             document.getElementById('dropdownContent').classList.remove('show');
             
@@ -369,85 +402,136 @@
             }
         }
 
+        // ===== ЗАГРУЗКА ЛОГОВ С ПАГИНАЦИЕЙ =====
         function loadLogs() {
             var list = document.getElementById('logsList');
             list.innerHTML = '<p class="empty-message">Загрузка...</p>';
             allLogsData = [];
             
-            var promises = [];
-            
-            promises.push(
-                db.collection('taken_names').get().then(function(snapshot) {
-                    snapshot.forEach(function(doc) {
+            // Сначала получаем список зарегистрированных аккаунтов
+            db.collection('registered_accounts').get()
+                .then(function(registeredSnapshot) {
+                    var registeredIDs = [];
+                    registeredSnapshot.forEach(function(doc) {
                         var data = doc.data();
-                        allLogsData.push({
-                            id: doc.id,
-                            type: 'names',
-                            collection: 'taken_names',
-                            title: 'Имя: ' + data.name,
-                            detail: 'ID: ' + (data.userID || 'Неизвестно'),
-                            timestamp: data.timestamp || Date.now()
-                        });
+                        if (data.userID && registeredIDs.indexOf(data.userID) === -1) {
+                            registeredIDs.push(data.userID);
+                        }
                     });
+                    
+                    // Также ID из taken_names с непустым именем считаем зарегистрированными
+                    return db.collection('taken_names').get()
+                        .then(function(nameSnapshot) {
+                            nameSnapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                if (data.userID && registeredIDs.indexOf(data.userID) === -1) {
+                                    registeredIDs.push(data.userID);
+                                }
+                            });
+                            return registeredIDs;
+                        });
                 })
-            );
-            
-            promises.push(
-                db.collection('case_openings').get().then(function(snapshot) {
-                    snapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        allLogsData.push({
-                            id: doc.id,
-                            type: 'cases',
-                            collection: 'case_openings',
-                            title: data.userName + ' открыл ' + data.caseType,
-                            detail: 'Награда: ' + data.reward + ' | ID: ' + (data.userID || 'Неизвестно'),
-                            timestamp: data.timestamp || Date.now()
-                        });
+                .then(function(registeredIDs) {
+                    var promises = [];
+                    
+                    // 1. ИМЕНА - только зарегистрированные аккаунты
+                    promises.push(
+                        db.collection('taken_names').get().then(function(snapshot) {
+                            snapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                var userID = data.userID || '';
+                                // Только зарегистрированные
+                                if (registeredIDs.indexOf(userID) !== -1) {
+                                    allLogsData.push({
+                                        id: doc.id,
+                                        type: 'names',
+                                        collection: 'taken_names',
+                                        title: 'Имя: ' + data.name,
+                                        detail: 'ID: ' + (data.userID || 'Неизвестно'),
+                                        timestamp: data.timestamp || Date.now()
+                                    });
+                                }
+                            });
+                        })
+                    );
+                    
+                    // 2. КЕЙСЫ - только 30 последних
+                    promises.push(
+                        db.collection('case_openings')
+                            .orderBy('timestamp', 'desc')
+                            .limit(30)
+                            .get()
+                            .then(function(snapshot) {
+                                snapshot.forEach(function(doc) {
+                                    var data = doc.data();
+                                    allLogsData.push({
+                                        id: doc.id,
+                                        type: 'cases',
+                                        collection: 'case_openings',
+                                        title: data.userName + ' открыл ' + data.caseType,
+                                        detail: 'Награда: ' + data.reward + ' | ID: ' + (data.userID || 'Неизвестно'),
+                                        timestamp: data.timestamp || Date.now()
+                                    });
+                                });
+                            })
+                            .catch(function() {})
+                    );
+                    
+                    // 3. СМЕНА ИМЕНИ - все (обычно немного)
+                    promises.push(
+                        db.collection('name_changes').get().then(function(snapshot) {
+                            snapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                allLogsData.push({
+                                    id: doc.id,
+                                    type: 'changes',
+                                    collection: 'name_changes',
+                                    title: data.userName + ' сменил имя',
+                                    detail: 'С "' + data.oldName + '" на "' + data.newName + '" | ID: ' + (data.userID || 'Неизвестно'),
+                                    timestamp: data.timestamp || Date.now()
+                                });
+                            });
+                        }).catch(function() {})
+                    );
+                    
+                    // 4. ВХОДЫ - только 30 последних от зарегистрированных
+                    promises.push(
+                        db.collection('logins')
+                            .orderBy('timestamp', 'desc')
+                            .limit(30)
+                            .get()
+                            .then(function(snapshot) {
+                                snapshot.forEach(function(doc) {
+                                    var data = doc.data();
+                                    var userID = data.userID || '';
+                                    // Только зарегистрированные
+                                    if (registeredIDs.indexOf(userID) !== -1) {
+                                        allLogsData.push({
+                                            id: doc.id,
+                                            type: 'logins',
+                                            collection: 'logins',
+                                            title: data.userName + ' вошёл на сайт',
+                                            detail: 'ID: ' + (data.userID || 'Неизвестно'),
+                                            timestamp: data.timestamp || Date.now()
+                                        });
+                                    }
+                                });
+                            })
+                            .catch(function() {})
+                    );
+                    
+                    return Promise.all(promises);
+                })
+                .then(function() {
+                    allLogsData.sort(function(a, b) {
+                        return (b.timestamp || 0) - (a.timestamp || 0);
                     });
-                }).catch(function() {})
-            );
-            
-            promises.push(
-                db.collection('name_changes').get().then(function(snapshot) {
-                    snapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        allLogsData.push({
-                            id: doc.id,
-                            type: 'changes',
-                            collection: 'name_changes',
-                            title: data.userName + ' сменил имя',
-                            detail: 'С "' + data.oldName + '" на "' + data.newName + '" | ID: ' + (data.userID || 'Неизвестно'),
-                            timestamp: data.timestamp || Date.now()
-                        });
-                    });
-                }).catch(function() {})
-            );
-            
-            promises.push(
-                db.collection('logins').get().then(function(snapshot) {
-                    snapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        allLogsData.push({
-                            id: doc.id,
-                            type: 'logins',
-                            collection: 'logins',
-                            title: data.userName + ' вошёл на сайт',
-                            detail: 'ID: ' + (data.userID || 'Неизвестно'),
-                            timestamp: data.timestamp || Date.now()
-                        });
-                    });
-                }).catch(function() {})
-            );
-            
-            Promise.all(promises).then(function() {
-                allLogsData.sort(function(a, b) {
-                    return (b.timestamp || 0) - (a.timestamp || 0);
+                    currentPage = 1;
+                    displayLogs();
+                })
+                .catch(function(error) {
+                    list.innerHTML = '<p class="empty-message" style="color:#f44336;">Ошибка: ' + error.message + '</p>';
                 });
-                displayLogs();
-            }).catch(function(error) {
-                list.innerHTML = '<p class="empty-message" style="color:#f44336;">Ошибка: ' + error.message + '</p>';
-            });
         }
 
         function displayLogs() {
@@ -467,37 +551,56 @@
                 });
             }
             
-            countInfo.textContent = 'Показано: ' + filtered.length + ' из ' + allLogsData.length;
+            // Пагинация
+            var totalPages = Math.max(1, Math.ceil(filtered.length / logsPerPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
             
-            if (filtered.length === 0) {
+            var startIndex = (currentPage - 1) * logsPerPage;
+            var endIndex = Math.min(startIndex + logsPerPage, filtered.length);
+            var pageItems = filtered.slice(startIndex, endIndex);
+            
+            countInfo.textContent = 'Показано: ' + pageItems.length + ' из ' + filtered.length + ' | Страница ' + currentPage + ' из ' + totalPages;
+            
+            if (pageItems.length === 0) {
                 list.innerHTML = '<p class="empty-message">Нет данных</p>';
-                return;
+            } else {
+                list.innerHTML = '';
+                
+                for (var i = 0; i < pageItems.length; i++) {
+                    (function(log) {
+                        var div = document.createElement('div');
+                        div.className = 'log-item';
+                        
+                        var badgeClass = '';
+                        var badgeText = '';
+                        if (log.type === 'cases') { badgeClass = 'badge-case'; badgeText = 'Кейс'; }
+                        else if (log.type === 'names') { badgeClass = 'badge-name'; badgeText = 'Имя'; }
+                        else if (log.type === 'changes') { badgeClass = 'badge-change'; badgeText = 'Смена'; }
+                        else if (log.type === 'logins') { badgeClass = 'badge-login'; badgeText = 'Вход'; }
+                        
+                        div.innerHTML = 
+                            '<div class="log-left">' +
+                                '<span class="log-type-badge ' + badgeClass + '">' + badgeText + '</span>' +
+                                '<div class="log-title">' + log.title + '</div>' +
+                                '<div class="log-detail">' + log.detail + '</div>' +
+                                '<div class="log-time">' + formatDate(log.timestamp) + '</div>' +
+                            '</div>';
+                        list.appendChild(div);
+                    })(pageItems[i]);
+                }
             }
             
-            list.innerHTML = '';
-            
-            for (var i = 0; i < filtered.length; i++) {
-                (function(log) {
-                    var div = document.createElement('div');
-                    div.className = 'log-item';
-                    
-                    var badgeClass = '';
-                    var badgeText = '';
-                    if (log.type === 'cases') { badgeClass = 'badge-case'; badgeText = 'Кейс'; }
-                    else if (log.type === 'names') { badgeClass = 'badge-name'; badgeText = 'Имя'; }
-                    else if (log.type === 'changes') { badgeClass = 'badge-change'; badgeText = 'Смена'; }
-                    else if (log.type === 'logins') { badgeClass = 'badge-login'; badgeText = 'Вход'; }
-                    
-                    div.innerHTML = 
-                        '<div class="log-left">' +
-                            '<span class="log-type-badge ' + badgeClass + '">' + badgeText + '</span>' +
-                            '<div class="log-title">' + log.title + '</div>' +
-                            '<div class="log-detail">' + log.detail + '</div>' +
-                            '<div class="log-time">' + formatDate(log.timestamp) + '</div>' +
-                        '</div>';
-                    list.appendChild(div);
-                })(filtered[i]);
-            }
+            // Обновляем кнопки пагинации
+            document.getElementById('prevPageBtn').disabled = (currentPage <= 1);
+            document.getElementById('nextPageBtn').disabled = (currentPage >= totalPages);
+            document.getElementById('pageInfo').textContent = 'Страница ' + currentPage + ' из ' + totalPages;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            if (currentPage < 1) currentPage = 1;
+            displayLogs();
         }
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
@@ -507,4 +610,4 @@
     </script>
 
 </body>
-</html>
+    </html>
