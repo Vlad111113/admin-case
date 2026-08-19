@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Логи (Без Входов)</title>
+    <title>AdminCase - Логи</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -18,7 +17,6 @@
         }
         h1 { text-align: center; color: #ff6b6b; margin-bottom: 20px; font-size: 2rem; }
         .container { max-width: 800px; margin: 0 auto; }
-
         .login-screen {
             display: none;
             background: #16213e;
@@ -50,10 +48,8 @@
             display: none;
         }
         .login-error.show { display: block; }
-
         .main-content { display: none; }
         .main-content.active { display: block; }
-
         .controls {
             display: flex;
             gap: 10px;
@@ -92,7 +88,6 @@
             opacity: 0.4;
             cursor: not-allowed;
         }
-
         .dropdown-wrapper {
             position: relative;
             display: inline-block;
@@ -126,7 +121,6 @@
         }
         .dropdown-option:hover { background: rgba(255,255,255,0.1); }
         .dropdown-option.active { background: #4caf50; }
-
         .search-container {
             display: flex;
             gap: 10px;
@@ -150,7 +144,6 @@
             margin-bottom: 15px;
             text-align: center;
         }
-
         .log-item {
             background: #16213e;
             border: 1px solid #0f3460;
@@ -179,7 +172,6 @@
         .badge-change { background: #ff9800; color: #fff; }
         .empty-message { text-align: center; opacity: 0.5; padding: 40px; font-size: 1.2rem; }
         .count-info { text-align: center; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
-
         .pagination {
             display: flex;
             justify-content: center;
@@ -192,14 +184,12 @@
             color: #ccc;
             font-size: 0.9rem;
         }
-
         .user-info {
             text-align: center;
             margin-bottom: 15px;
             color: #ccc;
             font-size: 0.9rem;
         }
-
         @media (max-width: 480px) {
             h1 { font-size: 1.5rem; }
             .dropdown-content { min-width: 180px; }
@@ -212,7 +202,6 @@
     <div class="container">
         <h1>📋 Логи AdminCase</h1>
 
-        <!-- Экран входа -->
         <div class="login-screen" id="loginScreen">
             <h2>🔐 Вход в логи</h2>
             <input type="text" class="login-input" id="loginUsername" placeholder="Логин" autocomplete="off">
@@ -221,7 +210,6 @@
             <button class="btn btn-refresh" onclick="handleLogin()">Войти</button>
         </div>
 
-        <!-- Основной контент -->
         <div class="main-content" id="mainContent">
             <div class="user-info" id="userInfo"></div>
             
@@ -267,18 +255,8 @@
         };
         
         firebase.initializeApp(firebaseConfig);
-
-        // Включаем App Check
-        try {
-            const appCheck = firebase.appCheck();
-            appCheck.activate('6LcxGY4tAAAAAHBEDQ_JW1oZ69Ce0OhIGJOuLNHm');
-        } catch(e) {
-            console.error('App Check error:', e);
-        }
-
         var db = firebase.firestore();
 
-        // ===== АККАУНТЫ АДМИНОВ =====
         var adminAccounts = [
             { username: "Vasek_Mayor", password: "GrozkaTop228", name: "Главный Администратор" },
             { username: "Grozka_Irons", password: "VladTop228", name: "Куратор Администрации" },
@@ -290,7 +268,6 @@
         var currentPage = 1;
         var logsPerPage = 20;
 
-        // ===== ПРОВЕРКА ВХОДА =====
         function checkSavedLogin() {
             try {
                 var savedLogin = localStorage.getItem('admincase_logs_login');
@@ -350,7 +327,6 @@
             document.getElementById('loginError').classList.remove('show');
         }
 
-        // ===== ФУНКЦИИ ЛОГОВ =====
         function toggleDropdown() {
             document.getElementById('dropdownContent').classList.toggle('show');
         }
@@ -406,13 +382,11 @@
             }
         }
 
-        // ===== ЗАГРУЗКА ЛОГОВ (БЕЗ ВХОДОВ) =====
         function loadLogs() {
             var list = document.getElementById('logsList');
             list.innerHTML = '<p class="empty-message">Загрузка...</p>';
             allLogsData = [];
             
-            // Получаем список зарегистрированных аккаунтов
             db.collection('registered_accounts').get()
                 .then(function(registeredSnapshot) {
                     var registeredIDs = [];
@@ -437,7 +411,6 @@
                 .then(function(registeredIDs) {
                     var promises = [];
                     
-                    // 1. ИМЕНА - только зарегистрированные аккаунты
                     promises.push(
                         db.collection('taken_names').get().then(function(snapshot) {
                             snapshot.forEach(function(doc) {
@@ -457,7 +430,6 @@
                         })
                     );
                     
-                    // 2. КЕЙСЫ - только 30 последних
                     promises.push(
                         db.collection('case_openings')
                             .orderBy('timestamp', 'desc')
@@ -479,7 +451,6 @@
                             .catch(function() {})
                     );
                     
-                    // 3. СМЕНА ИМЕНИ - все
                     promises.push(
                         db.collection('name_changes').get().then(function(snapshot) {
                             snapshot.forEach(function(doc) {
@@ -576,7 +547,6 @@
             displayLogs();
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         if (!checkSavedLogin()) {
             document.getElementById('loginScreen').classList.add('active');
         }
