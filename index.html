@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Финальная оптимизация</title>
+    <title>AdminCase</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check-compat.js"></script>
     <style>
-        /* Все стили остаются без изменений (сокращено для экономии места) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -19,6 +19,7 @@
             flex-direction: column;
             transition: all 0.3s ease;
         }
+
         body.theme-neon { background: #0a0a0a; color: #00ffcc; }
         body.theme-neon .box, body.theme-neon .profile-header, body.theme-neon .history-section,
         body.theme-neon .top-item, body.theme-neon .other-profile-header, body.theme-neon .modal-content,
@@ -31,6 +32,7 @@
         body.theme-neon h1 { color: #00ffcc; text-shadow: 0 0 20px #00ffcc; }
         body.theme-neon .btn-open { background: #00ffcc; color: #000; }
         body.theme-neon .stat-value { color: #00ffcc; }
+
         body.theme-gold { background: #1a1608; color: #fff8e1; }
         body.theme-gold .box, body.theme-gold .profile-header, body.theme-gold .history-section,
         body.theme-gold .top-item, body.theme-gold .other-profile-header, body.theme-gold .modal-content,
@@ -43,6 +45,7 @@
         body.theme-gold h1 { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         body.theme-gold .btn-open { background: #ffd700; color: #000; }
         body.theme-gold .stat-value { color: #ffd700; }
+
         body.theme-cyberpunk { background: #0d001a; color: #00ffff; }
         body.theme-cyberpunk .box, body.theme-cyberpunk .profile-header, body.theme-cyberpunk .history-section,
         body.theme-cyberpunk .top-item, body.theme-cyberpunk .other-profile-header, body.theme-cyberpunk .modal-content,
@@ -55,6 +58,7 @@
         body.theme-cyberpunk h1 { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
         body.theme-cyberpunk .btn-open { background: #ff00ff; color: #fff; }
         body.theme-cyberpunk .stat-value { color: #ff00ff; }
+
         body.theme-space { background: #000010; color: #e8eaf6; }
         body.theme-space .box, body.theme-space .profile-header, body.theme-space .history-section,
         body.theme-space .top-item, body.theme-space .other-profile-header, body.theme-space .modal-content,
@@ -67,6 +71,7 @@
         body.theme-space h1 { color: #b388ff; text-shadow: 0 0 20px #7c4dff; }
         body.theme-space .btn-open { background: #7c4dff; color: #fff; }
         body.theme-space .stat-value { color: #b388ff; }
+
         body.theme-blood { background: #0a0000; color: #ffcccc; }
         body.theme-blood .box, body.theme-blood .profile-header, body.theme-blood .history-section,
         body.theme-blood .top-item, body.theme-blood .other-profile-header, body.theme-blood .modal-content,
@@ -79,6 +84,7 @@
         body.theme-blood h1 { color: #ff3333; text-shadow: 0 0 20px #cc0000; }
         body.theme-blood .btn-open { background: #cc0000; color: #fff; }
         body.theme-blood .stat-value { color: #ff3333; }
+
         body.theme-emerald { background: #001a0a; color: #ccffe8; }
         body.theme-emerald .box, body.theme-emerald .profile-header, body.theme-emerald .history-section,
         body.theme-emerald .top-item, body.theme-emerald .other-profile-header, body.theme-emerald .modal-content,
@@ -91,6 +97,7 @@
         body.theme-emerald h1 { color: #00ffaa; text-shadow: 0 0 20px #00cc88; }
         body.theme-emerald .btn-open { background: #00cc88; color: #000; }
         body.theme-emerald .stat-value { color: #00ffaa; }
+
         body.theme-ice { background: #000a14; color: #e0f7fa; }
         body.theme-ice .box, body.theme-ice .profile-header, body.theme-ice .history-section,
         body.theme-ice .top-item, body.theme-ice .other-profile-header, body.theme-ice .modal-content,
@@ -103,6 +110,7 @@
         body.theme-ice h1 { color: #80deea; text-shadow: 0 0 20px #4dd0e1; }
         body.theme-ice .btn-open { background: #4dd0e1; color: #000; }
         body.theme-ice .stat-value { color: #80deea; }
+
         body.theme-fire { background: #140000; color: #ffe0cc; }
         body.theme-fire .box, body.theme-fire .profile-header, body.theme-fire .history-section,
         body.theme-fire .top-item, body.theme-fire .other-profile-header, body.theme-fire .modal-content,
@@ -115,6 +123,7 @@
         body.theme-fire h1 { color: #ff6b35; text-shadow: 0 0 20px #ff4500; }
         body.theme-fire .btn-open { background: #ff4500; color: #fff; }
         body.theme-fire .stat-value { color: #ff6b35; }
+
         body.theme-twilight { background: #0a0a1a; color: #e1bee7; }
         body.theme-twilight .box, body.theme-twilight .profile-header, body.theme-twilight .history-section,
         body.theme-twilight .top-item, body.theme-twilight .other-profile-header, body.theme-twilight .modal-content,
@@ -139,6 +148,7 @@
             color: #ffd700;
             font-size: 1.3rem;
         }
+
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn {
             position: fixed; top: 20px; right: 20px;
@@ -1297,6 +1307,15 @@
         };
         
         firebase.initializeApp(firebaseConfig);
+
+        // Включаем App Check
+        try {
+            const appCheck = firebase.appCheck();
+            appCheck.activate('6LcxGY4tAAAAAHBEDQ_JW1oZ69Ce0OhIGJOuLNHm');
+        } catch(e) {
+            console.error('App Check error:', e);
+        }
+
         var db = firebase.firestore();
 
         var adminIDs = ["12425616", "86858801", "50579855", "", "", ""];
@@ -1794,19 +1813,9 @@
                 document.getElementById('mainPage').style.display = 'block';
             }
 
-            if (openedCount > 0 || userName !== 'Игрок') {
-                db.collection('logins').add({
-                    userName: userName,
-                    userID: userID,
-                    isRegistered: isLoggedIn,
-                    timestamp: Date.now()
-                }).catch(function() {});
-            }
-
             // ===== ОНЛАЙН-СЧЕТЧИК (1 ЧТЕНИЕ ВМЕСТО 50!) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
-                    // Обновляем lastSeen пользователя (запись, не чтение)
                     db.collection('online_users').doc(userID).set({
                         userName: userName,
                         userID: userID,
@@ -1820,9 +1829,7 @@
                 var minutes = now.getMinutes();
                 var currentTime = now.getHours() * 60 + minutes;
                 
-                // Проверяем, четное ли время (каждые 30 минут)
                 if (currentTime % 30 === 0) {
-                    // Читаем ОДИН документ со счетчиком (1 чтение!)
                     db.collection('stats').doc('online_counter').get()
                         .then(function(doc) {
                             var count = 0;
@@ -1840,17 +1847,14 @@
                             document.getElementById('onlineCount').textContent = cached || '0';
                         });
                 } else {
-                    // Показываем из localStorage (0 чтений Firebase)
                     var cached = localStorage.getItem('admincase_online_count');
                     document.getElementById('onlineCount').textContent = cached || '0';
                 }
             }
 
-            // При загрузке страницы
             loadOnlineCount();
             updateOnlineStatus();
             
-            // Проверяем каждые 60 секунд
             setInterval(function() {
                 var now = new Date();
                 var minutes = now.getMinutes();
