@@ -1391,6 +1391,8 @@
         var loggedInAccountName = '';
         var loggedInAccountID = '';
         var adminReturnPage = 'top';
+        var profileLoaded = false;
+        var userDataCache = {};
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
@@ -1411,35 +1413,31 @@
             }
         };
 
-        // ===== REALTIME LISTENER ДЛЯ ПРОМОКОДОВ =====
-        function subscribeToPromoCodes() {
-            db.collection('active_promos').onSnapshot(function(snapshot) {
-                dynamicPromoCodes = {};
-                snapshot.forEach(function(doc) {
-                    var data = doc.data();
-                    if (data.expiresAt && data.expiresAt < Date.now()) {
-                        doc.ref.delete().catch(function() {});
-                        return;
-                    }
-                    if (data.activationsLeft <= 0) {
-                        doc.ref.delete().catch(function() {});
-                        return;
-                    }
-                    dynamicPromoCodes[data.code] = {
-                        caseType: data.caseType,
-                        docId: doc.id,
-                        activationsLeft: data.activationsLeft,
-                        expiresAt: data.expiresAt
-                    };
+        // ===== ЗАГРУЗКА ПРОМОКОДОВ (БЕЗ REALTIME) =====
+        function loadPromoCodes() {
+            db.collection('active_promos').get()
+                .then(function(snapshot) {
+                    dynamicPromoCodes = {};
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        if (data.expiresAt && data.expiresAt < Date.now()) {
+                            return;
+                        }
+                        if (data.activationsLeft <= 0) {
+                            return;
+                        }
+                        dynamicPromoCodes[data.code] = {
+                            caseType: data.caseType,
+                            docId: doc.id,
+                            activationsLeft: data.activationsLeft,
+                            expiresAt: data.expiresAt
+                        };
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Ошибка загрузки промокодов:', error);
                 });
-                if (document.getElementById('adminPanel').classList.contains('active')) {
-                    showActivePromos();
-                }
-            }, function(error) {
-                console.error('Ошибка подписки на промокоды:', error);
-            });
         }
-        subscribeToPromoCodes();
 
         function createPromoCode() {
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
@@ -1466,6 +1464,7 @@
                 createdByID: userID
             }).then(function() {
                 document.getElementById('adminPromoCode').value = '';
+                loadPromoCodes();
                 showActivePromos();
                 showCustomModal('✅ Успех!', '<p>Промокод ' + code + ' создан!</p>');
             }).catch(function(error) {
@@ -1485,33 +1484,19 @@
             for (var i = 0; i < promoCodes.length; i++) {
                 (function(codeKey) {
                     var promoData = dynamicPromoCodes[codeKey];
-                    db.collection('active_promos').doc(promoData.docId).get()
-                        .then(function(doc) {
-                            if (!doc.exists) return;
-                            var data = doc.data();
-                            var div = document.createElement('div');
-                            div.className = 'promo-item';
-                            var expiresDate = new Date(data.expiresAt);
-                            var expiresStr = expiresDate.toLocaleString('ru-RU');
-                            var creatorName = data.createdBy || 'Неизвестно';
-                            div.innerHTML = 
-                                '<div class="promo-info">' +
-                                    '<div class="promo-code">' + data.code + '</div>' +
-                                    '<div class="promo-details">Кейс: ' + (data.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
-                                    ' | Активаций: ' + data.activationsLeft + '/' + data.totalActivations +
-                                    ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
-                                '</div>' +
-                                '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
-                            var container = document.getElementById('activePromosList');
-                            var existingItem = container.querySelector('[data-code="' + data.code + '"]');
-                            if (existingItem) {
-                                existingItem.replaceWith(div);
-                            } else {
-                                container.appendChild(div);
-                            }
-                            div.setAttribute('data-code', data.code);
-                        })
-                        .catch(function() {});
+                    var div = document.createElement('div');
+                    div.className = 'promo-item';
+                    var expiresDate = new Date(promoData.expiresAt);
+                    var expiresStr = expiresDate.toLocaleString('ru-RU');
+                    div.innerHTML = 
+                        '<div class="promo-info">' +
+                            '<div class="promo-code">' + codeKey + '</div>' +
+                            '<div class="promo-details">Кейс: ' + (promoData.caseType === 'cheap' ? 'Дешевый' : 'Дорогой') +
+                            ' | Активаций: ' + promoData.activationsLeft +
+                            ' | До: ' + expiresStr + '</div>' +
+                        '</div>' +
+                        '<button class="promo-delete" onclick="deletePromoCode(\'' + promoData.docId + '\')">Удалить</button>';
+                    list.appendChild(div);
                 })(promoCodes[i]);
             }
         }
@@ -1519,6 +1504,7 @@
         function deletePromoCode(docId) {
             db.collection('active_promos').doc(docId).delete()
                 .then(function() {
+                    loadPromoCodes();
                     showActivePromos();
                     showCustomModal('✅ Успех!', '<p>Промокод удалён!</p>');
                 })
@@ -1531,6 +1517,7 @@
             hideAllPages();
             document.getElementById('adminPanel').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin'); } catch(e) {}
+            loadPromoCodes();
             showActivePromos();
             window.scrollTo(0, 0);
         }
@@ -1618,23 +1605,11 @@
                     namesLoaded = true;
                 })
                 .catch(function() {
-                    db.collection('taken_names').get().then(function(snapshot) {
-                        serverTakenNames = [];
-                        snapshot.forEach(function(doc) {
-                            var name = doc.data().name;
-                            if (name !== 'Игрок' && serverTakenNames.indexOf(name) === -1) {
-                                serverTakenNames.push(name);
-                            }
-                        });
-                        namesLoaded = true;
-                    }).catch(function() {
-                        namesLoaded = true;
-                    });
+                    namesLoaded = true;
                 });
         }
-        loadServerNames();
 
-        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ (ОПТИМИЗИРОВАНО) =====
+        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ (С КЭШЕМ) =====
         function loadUserData(callback) {
             var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
             
@@ -1644,6 +1619,17 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
+                // Проверяем кэш (5 минут)
+                if (userDataCache[userID] && Date.now() - userDataCache[userID].timestamp < 300000) {
+                    var cached = userDataCache[userID];
+                    openedCount = cached.openedCount;
+                    winHistory = cached.winHistory;
+                    userName = cached.userName;
+                    avatarData = cached.avatar;
+                    if (callback) callback();
+                    return;
+                }
+                
                 db.collection('user_stats').doc(userID).get()
                     .then(function(doc) {
                         if (doc.exists) {
@@ -1652,6 +1638,15 @@
                             winHistory = data.winHistory || [];
                             userName = data.userName || 'Игрок';
                             avatarData = data.avatar || null;
+                            
+                            // Кэшируем
+                            userDataCache[userID] = {
+                                openedCount: openedCount,
+                                winHistory: winHistory,
+                                userName: userName,
+                                avatar: avatarData,
+                                timestamp: Date.now()
+                            };
                         } else {
                             openedCount = 0;
                             winHistory = [];
@@ -1773,6 +1768,8 @@
             } catch(e) {}
 
             applyProfileData();
+            loadPromoCodes();
+            loadServerNames();
 
             try {
                 var savedPage = localStorage.getItem('admincase_current_page');
@@ -1802,7 +1799,6 @@
             }
 
             function updateOnlineCounter() {
-                // Читаем счетчик из Firebase только в четное время (00 или 30 минут)
                 if (isEvenHalfHour()) {
                     db.collection('stats').doc('online_counter').get()
                         .then(function(doc) {
@@ -1817,21 +1813,17 @@
                             } catch(e) {}
                         })
                         .catch(function() {
-                            // Если ошибка - показываем из localStorage
                             var cached = localStorage.getItem('admincase_online_count');
                             document.getElementById('onlineCount').textContent = cached || '0';
                         });
                 } else {
-                    // Показываем из localStorage (с прошлого захода)
                     var cached = localStorage.getItem('admincase_online_count');
                     document.getElementById('onlineCount').textContent = cached || '0';
                 }
             }
 
-            // При загрузке страницы
             updateOnlineCounter();
 
-            // Проверяем каждую минуту, чтобы поймать четное время (00 или 30 минут)
             setInterval(function() {
                 updateOnlineCounter();
             }, 60 * 1000);
@@ -1888,54 +1880,38 @@
 
         function updateUserStats(caseType, reward, rarity) {
             var userStatsRef = db.collection('user_stats').doc(userID);
-            userStatsRef.get().then(function(doc) {
-                if (doc.exists) {
-                    var data = doc.data();
-                    var newWinHistory = data.winHistory || [];
-                    newWinHistory.push({
-                        name: reward,
-                        rarity: rarity,
-                        source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                        timestamp: Date.now()
-                    });
-                    if (newWinHistory.length > 20) {
-                        newWinHistory = newWinHistory.slice(-20);
-                    }
-                    userStatsRef.update({
-                        openedCount: firebase.firestore.FieldValue.increment(1),
-                        winHistory: newWinHistory,
-                        lastUpdated: Date.now()
-                    }).catch(function() {});
-                } else {
-                    userStatsRef.set({
-                        userID: userID,
-                        userName: userName,
-                        avatar: avatarData,
-                        openedCount: 1,
-                        winHistory: [{
-                            name: reward,
-                            rarity: rarity,
-                            source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                            timestamp: Date.now()
-                        }],
-                        lastUpdated: Date.now()
-                    }).catch(function() {});
-                }
-            }).catch(function() {
-                userStatsRef.set({
-                    userID: userID,
-                    userName: userName,
-                    avatar: avatarData,
-                    openedCount: 1,
-                    winHistory: [{
-                        name: reward,
-                        rarity: rarity,
-                        source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                        timestamp: Date.now()
-                    }],
-                    lastUpdated: Date.now()
-                }).catch(function() {});
+            
+            // Используем данные из переменных (не читаем Firebase)
+            var currentHistory = winHistory.slice();
+            currentHistory.push({
+                name: reward,
+                rarity: rarity,
+                source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                timestamp: Date.now()
             });
+            
+            if (currentHistory.length > 20) {
+                currentHistory = currentHistory.slice(-20);
+            }
+            
+            // Одна запись вместо read + write
+            userStatsRef.set({
+                userID: userID,
+                userName: userName,
+                avatar: avatarData,
+                openedCount: openedCount,
+                winHistory: currentHistory,
+                lastUpdated: Date.now()
+            }, { merge: true }).catch(function() {});
+            
+            // Обновляем кэш
+            userDataCache[userID] = {
+                openedCount: openedCount,
+                winHistory: currentHistory,
+                userName: userName,
+                avatar: avatarData,
+                timestamp: Date.now()
+            };
         }
 
         function checkAchievements() {
@@ -2025,10 +2001,20 @@
         }
 
         function showProfile() {
-            loadServerNames();
             hideAllPages();
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
+            
+            if (profileLoaded) {
+                // Показываем из кэша, не читаем Firebase
+                applyProfileData();
+                document.getElementById('openedCount').textContent = openedCount;
+                displayAchievements();
+                window.scrollTo(0, 0);
+                return;
+            }
+            
+            profileLoaded = true;
             
             if (userID) {
                 db.collection('user_stats').doc(userID).get()
@@ -2298,56 +2284,31 @@
                     showCustomModal('Ошибка', '<p>Это имя уже занято!</p>');
                     return;
                 }
-                var oldName = userName;
-                db.collection('user_stats').doc(userID).update({
-                    userName: newName,
-                    lastUpdated: now
-                }).catch(function() {
-                    db.collection('user_stats').doc(userID).set({
-                        userID: userID,
-                        userName: newName,
-                        avatar: avatarData,
-                        openedCount: openedCount,
-                        winHistory: winHistory,
-                        lastUpdated: now
-                    }).catch(function() {});
-                });
-                db.collection('taken_names').add({
-                    name: newName,
-                    uid: userUID,
+                
+                // Обновляем user_stats
+                db.collection('user_stats').doc(userID).set({
                     userID: userID,
+                    userName: newName,
                     avatar: avatarData,
-                    timestamp: now
-                }).catch(function() {});
-                db.collection('stats').doc('taken_names').get()
-                    .then(function(doc) {
-                        var names = [];
-                        if (doc.exists) {
-                            names = doc.data().names || [];
-                        }
-                        if (names.indexOf(newName) === -1) {
-                            names.push(newName);
-                            return db.collection('stats').doc('taken_names').set({
-                                names: names,
-                                updatedAt: now
-                            });
-                        }
-                    })
-                    .catch(function() {});
+                    openedCount: openedCount,
+                    winHistory: winHistory,
+                    lastUpdated: now
+                }, { merge: true }).catch(function() {});
+                
+                // Обновляем taken_names
+                serverTakenNames.push(newName);
+                db.collection('stats').doc('taken_names').set({
+                    names: serverTakenNames,
+                    updatedAt: now
+                }, { merge: true }).catch(function() {});
+                
                 userName = newName;
                 lastNameChangeTime = now;
-                serverTakenNames.push(newName);
                 try {
                     localStorage.setItem('admincase_user_name', userName);
                     localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                 } catch(e) {}
-                db.collection('name_changes').add({
-                    userName: newName,
-                    userID: userID,
-                    oldName: oldName,
-                    newName: newName,
-                    timestamp: now
-                }).catch(function() {});
+                
                 checkAchievements();
                 applyProfileData();
                 exitEditMode();
@@ -2969,10 +2930,10 @@
                         document.getElementById('avatarImg').style.display = 'block';
                         document.getElementById('avatarEmoji').style.display = 'none';
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
-                        db.collection('user_stats').doc(userID).update({
+                        db.collection('user_stats').doc(userID).set({
                             avatar: avatarData,
                             lastUpdated: Date.now()
-                        }).catch(function() {});
+                        }, { merge: true }).catch(function() {});
                         checkAchievements();
                     };
                     img.src = ev.target.result;
