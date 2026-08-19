@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Оптимизированный v4</title>
+    <title>AdminCase - Финальная оптимизация</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* Все стили остаются без изменений (сокращено) */
+        /* Все стили остаются без изменений (сокращено для экономии места) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -1803,9 +1803,10 @@
                 }).catch(function() {});
             }
 
-            // ===== ОНЛАЙН-СЧЕТЧИК (оптимизировано: 1 чтение вместо 50) =====
+            // ===== ОНЛАЙН-СЧЕТЧИК (1 ЧТЕНИЕ ВМЕСТО 50!) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
+                    // Обновляем lastSeen пользователя (запись, не чтение)
                     db.collection('online_users').doc(userID).set({
                         userName: userName,
                         userID: userID,
@@ -1821,7 +1822,7 @@
                 
                 // Проверяем, четное ли время (каждые 30 минут)
                 if (currentTime % 30 === 0) {
-                    // Читаем ОДИН документ со счетчиком
+                    // Читаем ОДИН документ со счетчиком (1 чтение!)
                     db.collection('stats').doc('online_counter').get()
                         .then(function(doc) {
                             var count = 0;
@@ -1833,12 +1834,6 @@
                                 localStorage.setItem('admincase_online_count', count);
                                 localStorage.setItem('admincase_online_count_time', Date.now());
                             } catch(e) {}
-                            
-                            // Если документ устарел (больше 25 минут), обновляем
-                            var updatedAt = doc.exists ? (doc.data().updatedAt || 0) : 0;
-                            if (Date.now() - updatedAt > 25 * 60 * 1000) {
-                                updateOnlineCounter();
-                            }
                         })
                         .catch(function() {
                             var cached = localStorage.getItem('admincase_online_count');
@@ -1850,32 +1845,6 @@
                     document.getElementById('onlineCount').textContent = cached || '0';
                 }
             }
-            
-            // Функция обновления счетчика (считает онлайн и сохраняет в один документ)
-            function updateOnlineCounter() {
-                var now = Date.now();
-                var tenMinAgo = now - 10 * 60 * 1000;
-                
-                db.collection('online_users')
-                    .where('lastSeen', '>', tenMinAgo)
-                    .get()
-                    .then(function(snapshot) {
-                        var count = snapshot.size;
-                        
-                        // Сохраняем в ОДИН документ
-                        db.collection('stats').doc('online_counter').set({
-                            count: count,
-                            updatedAt: now
-                        }).catch(function() {});
-                        
-                        document.getElementById('onlineCount').textContent = count;
-                        try {
-                            localStorage.setItem('admincase_online_count', count);
-                            localStorage.setItem('admincase_online_count_time', now);
-                        } catch(e) {}
-                    })
-                    .catch(function() {});
-            }
 
             // При загрузке страницы
             loadOnlineCount();
@@ -1886,7 +1855,6 @@
                 var now = new Date();
                 var minutes = now.getMinutes();
                 var currentTime = now.getHours() * 60 + minutes;
-                
                 if (currentTime % 30 === 0) {
                     loadOnlineCount();
                 }
@@ -3075,4 +3043,4 @@
     </script>
 
 </body>
-                    </html>
+    </html>
