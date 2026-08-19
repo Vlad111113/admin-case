@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Оптимизированный v2</title>
+    <title>AdminCase - Оптимизированный v4</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* Все стили остаются без изменений */
+        /* Все стили остаются без изменений (сокращено) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -19,264 +19,110 @@
             flex-direction: column;
             transition: all 0.3s ease;
         }
-
-        body.theme-neon {
-            background: #0a0a0a;
-            color: #00ffcc;
-        }
-        body.theme-neon .box,
-        body.theme-neon .profile-header,
-        body.theme-neon .history-section,
-        body.theme-neon .top-item,
-        body.theme-neon .other-profile-header,
-        body.theme-neon .modal-content,
-        body.theme-neon .dropdown-menu,
-        body.theme-neon .reward-item,
-        body.theme-neon .integration-btn,
-        body.theme-neon .achievements-section,
-        body.theme-neon .theme-dropdown,
-        body.theme-neon .admin-item,
-        body.theme-neon .custom-modal-content,
-        body.theme-neon .auth-modal-content,
-        body.theme-neon .promo-item,
-        body.theme-neon .admin-panel,
-        body.theme-neon .admin-section {
-            background: #111;
-            border-color: #00ffcc;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
-            color: #00ffcc;
+        body.theme-neon { background: #0a0a0a; color: #00ffcc; }
+        body.theme-neon .box, body.theme-neon .profile-header, body.theme-neon .history-section,
+        body.theme-neon .top-item, body.theme-neon .other-profile-header, body.theme-neon .modal-content,
+        body.theme-neon .dropdown-menu, body.theme-neon .reward-item, body.theme-neon .integration-btn,
+        body.theme-neon .achievements-section, body.theme-neon .theme-dropdown, body.theme-neon .admin-item,
+        body.theme-neon .custom-modal-content, body.theme-neon .auth-modal-content, body.theme-neon .promo-item,
+        body.theme-neon .admin-panel, body.theme-neon .admin-section {
+            background: #111; border-color: #00ffcc; box-shadow: 0 0 15px rgba(0, 255, 204, 0.3); color: #00ffcc;
         }
         body.theme-neon h1 { color: #00ffcc; text-shadow: 0 0 20px #00ffcc; }
         body.theme-neon .btn-open { background: #00ffcc; color: #000; }
         body.theme-neon .stat-value { color: #00ffcc; }
-
-        body.theme-gold {
-            background: #1a1608;
-            color: #fff8e1;
-        }
-        body.theme-gold .box,
-        body.theme-gold .profile-header,
-        body.theme-gold .history-section,
-        body.theme-gold .top-item,
-        body.theme-gold .other-profile-header,
-        body.theme-gold .modal-content,
-        body.theme-gold .dropdown-menu,
-        body.theme-gold .reward-item,
-        body.theme-gold .integration-btn,
-        body.theme-gold .achievements-section,
-        body.theme-gold .theme-dropdown,
-        body.theme-gold .admin-item,
-        body.theme-gold .custom-modal-content,
-        body.theme-gold .auth-modal-content,
-        body.theme-gold .promo-item,
-        body.theme-gold .admin-panel,
-        body.theme-gold .admin-section {
-            background: #241e0a;
-            border-color: #ffd700;
-            color: #fff8e1;
+        body.theme-gold { background: #1a1608; color: #fff8e1; }
+        body.theme-gold .box, body.theme-gold .profile-header, body.theme-gold .history-section,
+        body.theme-gold .top-item, body.theme-gold .other-profile-header, body.theme-gold .modal-content,
+        body.theme-gold .dropdown-menu, body.theme-gold .reward-item, body.theme-gold .integration-btn,
+        body.theme-gold .achievements-section, body.theme-gold .theme-dropdown, body.theme-gold .admin-item,
+        body.theme-gold .custom-modal-content, body.theme-gold .auth-modal-content, body.theme-gold .promo-item,
+        body.theme-gold .admin-panel, body.theme-gold .admin-section {
+            background: #241e0a; border-color: #ffd700; color: #fff8e1;
         }
         body.theme-gold h1 { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         body.theme-gold .btn-open { background: #ffd700; color: #000; }
         body.theme-gold .stat-value { color: #ffd700; }
-
-        body.theme-cyberpunk {
-            background: #0d001a;
-            color: #00ffff;
-        }
-        body.theme-cyberpunk .box,
-        body.theme-cyberpunk .profile-header,
-        body.theme-cyberpunk .history-section,
-        body.theme-cyberpunk .top-item,
-        body.theme-cyberpunk .other-profile-header,
-        body.theme-cyberpunk .modal-content,
-        body.theme-cyberpunk .dropdown-menu,
-        body.theme-cyberpunk .reward-item,
-        body.theme-cyberpunk .integration-btn,
-        body.theme-cyberpunk .achievements-section,
-        body.theme-cyberpunk .theme-dropdown,
-        body.theme-cyberpunk .admin-item,
-        body.theme-cyberpunk .custom-modal-content,
-        body.theme-cyberpunk .auth-modal-content,
-        body.theme-cyberpunk .promo-item,
-        body.theme-cyberpunk .admin-panel,
-        body.theme-cyberpunk .admin-section {
-            background: #1a0030;
-            border-color: #ff00ff;
-            color: #00ffff;
+        body.theme-cyberpunk { background: #0d001a; color: #00ffff; }
+        body.theme-cyberpunk .box, body.theme-cyberpunk .profile-header, body.theme-cyberpunk .history-section,
+        body.theme-cyberpunk .top-item, body.theme-cyberpunk .other-profile-header, body.theme-cyberpunk .modal-content,
+        body.theme-cyberpunk .dropdown-menu, body.theme-cyberpunk .reward-item, body.theme-cyberpunk .integration-btn,
+        body.theme-cyberpunk .achievements-section, body.theme-cyberpunk .theme-dropdown, body.theme-cyberpunk .admin-item,
+        body.theme-cyberpunk .custom-modal-content, body.theme-cyberpunk .auth-modal-content, body.theme-cyberpunk .promo-item,
+        body.theme-cyberpunk .admin-panel, body.theme-cyberpunk .admin-section {
+            background: #1a0030; border-color: #ff00ff; color: #00ffff;
         }
         body.theme-cyberpunk h1 { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
         body.theme-cyberpunk .btn-open { background: #ff00ff; color: #fff; }
         body.theme-cyberpunk .stat-value { color: #ff00ff; }
-
-        body.theme-space {
-            background: #000010;
-            color: #e8eaf6;
-        }
-        body.theme-space .box,
-        body.theme-space .profile-header,
-        body.theme-space .history-section,
-        body.theme-space .top-item,
-        body.theme-space .other-profile-header,
-        body.theme-space .modal-content,
-        body.theme-space .dropdown-menu,
-        body.theme-space .reward-item,
-        body.theme-space .integration-btn,
-        body.theme-space .achievements-section,
-        body.theme-space .theme-dropdown,
-        body.theme-space .admin-item,
-        body.theme-space .custom-modal-content,
-        body.theme-space .auth-modal-content,
-        body.theme-space .promo-item,
-        body.theme-space .admin-panel,
-        body.theme-space .admin-section {
-            background: #0a0a2e;
-            border-color: #7c4dff;
-            color: #e8eaf6;
+        body.theme-space { background: #000010; color: #e8eaf6; }
+        body.theme-space .box, body.theme-space .profile-header, body.theme-space .history-section,
+        body.theme-space .top-item, body.theme-space .other-profile-header, body.theme-space .modal-content,
+        body.theme-space .dropdown-menu, body.theme-space .reward-item, body.theme-space .integration-btn,
+        body.theme-space .achievements-section, body.theme-space .theme-dropdown, body.theme-space .admin-item,
+        body.theme-space .custom-modal-content, body.theme-space .auth-modal-content, body.theme-space .promo-item,
+        body.theme-space .admin-panel, body.theme-space .admin-section {
+            background: #0a0a2e; border-color: #7c4dff; color: #e8eaf6;
         }
         body.theme-space h1 { color: #b388ff; text-shadow: 0 0 20px #7c4dff; }
         body.theme-space .btn-open { background: #7c4dff; color: #fff; }
         body.theme-space .stat-value { color: #b388ff; }
-
-        body.theme-blood {
-            background: #0a0000;
-            color: #ffcccc;
-        }
-        body.theme-blood .box,
-        body.theme-blood .profile-header,
-        body.theme-blood .history-section,
-        body.theme-blood .top-item,
-        body.theme-blood .other-profile-header,
-        body.theme-blood .modal-content,
-        body.theme-blood .dropdown-menu,
-        body.theme-blood .reward-item,
-        body.theme-blood .integration-btn,
-        body.theme-blood .achievements-section,
-        body.theme-blood .theme-dropdown,
-        body.theme-blood .admin-item,
-        body.theme-blood .custom-modal-content,
-        body.theme-blood .auth-modal-content,
-        body.theme-blood .promo-item,
-        body.theme-blood .admin-panel,
-        body.theme-blood .admin-section {
-            background: #1a0000;
-            border-color: #cc0000;
-            color: #ffcccc;
+        body.theme-blood { background: #0a0000; color: #ffcccc; }
+        body.theme-blood .box, body.theme-blood .profile-header, body.theme-blood .history-section,
+        body.theme-blood .top-item, body.theme-blood .other-profile-header, body.theme-blood .modal-content,
+        body.theme-blood .dropdown-menu, body.theme-blood .reward-item, body.theme-blood .integration-btn,
+        body.theme-blood .achievements-section, body.theme-blood .theme-dropdown, body.theme-blood .admin-item,
+        body.theme-blood .custom-modal-content, body.theme-blood .auth-modal-content, body.theme-blood .promo-item,
+        body.theme-blood .admin-panel, body.theme-blood .admin-section {
+            background: #1a0000; border-color: #cc0000; color: #ffcccc;
         }
         body.theme-blood h1 { color: #ff3333; text-shadow: 0 0 20px #cc0000; }
         body.theme-blood .btn-open { background: #cc0000; color: #fff; }
         body.theme-blood .stat-value { color: #ff3333; }
-
-        body.theme-emerald {
-            background: #001a0a;
-            color: #ccffe8;
-        }
-        body.theme-emerald .box,
-        body.theme-emerald .profile-header,
-        body.theme-emerald .history-section,
-        body.theme-emerald .top-item,
-        body.theme-emerald .other-profile-header,
-        body.theme-emerald .modal-content,
-        body.theme-emerald .dropdown-menu,
-        body.theme-emerald .reward-item,
-        body.theme-emerald .integration-btn,
-        body.theme-emerald .achievements-section,
-        body.theme-emerald .theme-dropdown,
-        body.theme-emerald .admin-item,
-        body.theme-emerald .custom-modal-content,
-        body.theme-emerald .auth-modal-content,
-        body.theme-emerald .promo-item,
-        body.theme-emerald .admin-panel,
-        body.theme-emerald .admin-section {
-            background: #002a14;
-            border-color: #00cc88;
-            color: #ccffe8;
+        body.theme-emerald { background: #001a0a; color: #ccffe8; }
+        body.theme-emerald .box, body.theme-emerald .profile-header, body.theme-emerald .history-section,
+        body.theme-emerald .top-item, body.theme-emerald .other-profile-header, body.theme-emerald .modal-content,
+        body.theme-emerald .dropdown-menu, body.theme-emerald .reward-item, body.theme-emerald .integration-btn,
+        body.theme-emerald .achievements-section, body.theme-emerald .theme-dropdown, body.theme-emerald .admin-item,
+        body.theme-emerald .custom-modal-content, body.theme-emerald .auth-modal-content, body.theme-emerald .promo-item,
+        body.theme-emerald .admin-panel, body.theme-emerald .admin-section {
+            background: #002a14; border-color: #00cc88; color: #ccffe8;
         }
         body.theme-emerald h1 { color: #00ffaa; text-shadow: 0 0 20px #00cc88; }
         body.theme-emerald .btn-open { background: #00cc88; color: #000; }
         body.theme-emerald .stat-value { color: #00ffaa; }
-
-        body.theme-ice {
-            background: #000a14;
-            color: #e0f7fa;
-        }
-        body.theme-ice .box,
-        body.theme-ice .profile-header,
-        body.theme-ice .history-section,
-        body.theme-ice .top-item,
-        body.theme-ice .other-profile-header,
-        body.theme-ice .modal-content,
-        body.theme-ice .dropdown-menu,
-        body.theme-ice .reward-item,
-        body.theme-ice .integration-btn,
-        body.theme-ice .achievements-section,
-        body.theme-ice .theme-dropdown,
-        body.theme-ice .admin-item,
-        body.theme-ice .custom-modal-content,
-        body.theme-ice .auth-modal-content,
-        body.theme-ice .promo-item,
-        body.theme-ice .admin-panel,
-        body.theme-ice .admin-section {
-            background: #001a28;
-            border-color: #4dd0e1;
-            color: #e0f7fa;
+        body.theme-ice { background: #000a14; color: #e0f7fa; }
+        body.theme-ice .box, body.theme-ice .profile-header, body.theme-ice .history-section,
+        body.theme-ice .top-item, body.theme-ice .other-profile-header, body.theme-ice .modal-content,
+        body.theme-ice .dropdown-menu, body.theme-ice .reward-item, body.theme-ice .integration-btn,
+        body.theme-ice .achievements-section, body.theme-ice .theme-dropdown, body.theme-ice .admin-item,
+        body.theme-ice .custom-modal-content, body.theme-ice .auth-modal-content, body.theme-ice .promo-item,
+        body.theme-ice .admin-panel, body.theme-ice .admin-section {
+            background: #001a28; border-color: #4dd0e1; color: #e0f7fa;
         }
         body.theme-ice h1 { color: #80deea; text-shadow: 0 0 20px #4dd0e1; }
         body.theme-ice .btn-open { background: #4dd0e1; color: #000; }
         body.theme-ice .stat-value { color: #80deea; }
-
-        body.theme-fire {
-            background: #140000;
-            color: #ffe0cc;
-        }
-        body.theme-fire .box,
-        body.theme-fire .profile-header,
-        body.theme-fire .history-section,
-        body.theme-fire .top-item,
-        body.theme-fire .other-profile-header,
-        body.theme-fire .modal-content,
-        body.theme-fire .dropdown-menu,
-        body.theme-fire .reward-item,
-        body.theme-fire .integration-btn,
-        body.theme-fire .achievements-section,
-        body.theme-fire .theme-dropdown,
-        body.theme-fire .admin-item,
-        body.theme-fire .custom-modal-content,
-        body.theme-fire .auth-modal-content,
-        body.theme-fire .promo-item,
-        body.theme-fire .admin-panel,
-        body.theme-fire .admin-section {
-            background: #280a00;
-            border-color: #ff4500;
-            color: #ffe0cc;
+        body.theme-fire { background: #140000; color: #ffe0cc; }
+        body.theme-fire .box, body.theme-fire .profile-header, body.theme-fire .history-section,
+        body.theme-fire .top-item, body.theme-fire .other-profile-header, body.theme-fire .modal-content,
+        body.theme-fire .dropdown-menu, body.theme-fire .reward-item, body.theme-fire .integration-btn,
+        body.theme-fire .achievements-section, body.theme-fire .theme-dropdown, body.theme-fire .admin-item,
+        body.theme-fire .custom-modal-content, body.theme-fire .auth-modal-content, body.theme-fire .promo-item,
+        body.theme-fire .admin-panel, body.theme-fire .admin-section {
+            background: #280a00; border-color: #ff4500; color: #ffe0cc;
         }
         body.theme-fire h1 { color: #ff6b35; text-shadow: 0 0 20px #ff4500; }
         body.theme-fire .btn-open { background: #ff4500; color: #fff; }
         body.theme-fire .stat-value { color: #ff6b35; }
-
-        body.theme-twilight {
-            background: #0a0a1a;
-            color: #e1bee7;
-        }
-        body.theme-twilight .box,
-        body.theme-twilight .profile-header,
-        body.theme-twilight .history-section,
-        body.theme-twilight .top-item,
-        body.theme-twilight .other-profile-header,
-        body.theme-twilight .modal-content,
-        body.theme-twilight .dropdown-menu,
-        body.theme-twilight .reward-item,
-        body.theme-twilight .integration-btn,
-        body.theme-twilight .achievements-section,
-        body.theme-twilight .theme-dropdown,
-        body.theme-twilight .admin-item,
-        body.theme-twilight .custom-modal-content,
-        body.theme-twilight .auth-modal-content,
-        body.theme-twilight .promo-item,
-        body.theme-twilight .admin-panel,
-        body.theme-twilight .admin-section {
-            background: #1a0a2e;
-            border-color: #9c27b0;
-            color: #e1bee7;
+        body.theme-twilight { background: #0a0a1a; color: #e1bee7; }
+        body.theme-twilight .box, body.theme-twilight .profile-header, body.theme-twilight .history-section,
+        body.theme-twilight .top-item, body.theme-twilight .other-profile-header, body.theme-twilight .modal-content,
+        body.theme-twilight .dropdown-menu, body.theme-twilight .reward-item, body.theme-twilight .integration-btn,
+        body.theme-twilight .achievements-section, body.theme-twilight .theme-dropdown, body.theme-twilight .admin-item,
+        body.theme-twilight .custom-modal-content, body.theme-twilight .auth-modal-content, body.theme-twilight .promo-item,
+        body.theme-twilight .admin-panel, body.theme-twilight .admin-section {
+            background: #1a0a2e; border-color: #9c27b0; color: #e1bee7;
         }
         body.theme-twilight h1 { color: #ce93d8; text-shadow: 0 0 20px #9c27b0; }
         body.theme-twilight .btn-open { background: #9c27b0; color: #fff; }
@@ -293,7 +139,6 @@
             color: #ffd700;
             font-size: 1.3rem;
         }
-
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn {
             position: fixed; top: 20px; right: 20px;
@@ -427,7 +272,6 @@
         .message.success { display: block; background: rgba(76,175,80,0.2); color: #4caf50; border: 1px solid #4caf50; }
         .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win { display: block; background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; font-size: 1.2rem; }
-        
         .auth-modal {
             display: none;
             position: fixed;
@@ -485,7 +329,6 @@
         .password-input-wrapper .auth-input {
             padding-right: 45px;
         }
-
         .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
@@ -960,7 +803,6 @@
         .rarity-rare { color: #2196f3; border-color: #2196f3; background: rgba(33,150,243,0.08); }
         .rarity-epic { color: #9b59b6; border-color: #9b59b6; background: rgba(155,89,182,0.08); }
         .rarity-legendary { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.08); }
-        
         .avatar-modal {
             display: none;
             position: fixed;
@@ -990,7 +832,6 @@
             background: none;
             border: none;
         }
-
         .custom-modal {
             display: none;
             position: fixed;
@@ -1017,7 +858,6 @@
         }
         .custom-modal-content h2 { margin-bottom: 15px; color: #ff6b6b; font-size: 1.2rem; }
         .custom-modal-content p { margin-bottom: 15px; font-size: 0.9rem; }
-
         .admin-panel {
             display: none;
             width: 100%;
@@ -1109,7 +949,6 @@
             font-size: 0.8rem;
         }
         .promo-delete:hover { background: #d32f2f; }
-        
         .admin-list-page {
             display: none;
             width: 100%;
@@ -1199,7 +1038,6 @@
             font-weight: bold;
             font-size: 0.7rem;
         }
-        
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .box { width: 150px; height: 210px; }
@@ -1243,7 +1081,7 @@
 
     <div id="mainPage">
         <h1>AdminCase</h1>
-        <div class="online-counter">🟢 Онлайн: <span id="onlineCount">0</span></div>
+        <div class="online-counter">🟢 Онлайн: <span id="onlineCount">—</span></div>
         <div class="boxes">
             <div class="box cheap" id="cheapBox">
                 <button class="info-circle" id="infoCheap">!</button>
@@ -1770,7 +1608,6 @@
         }
 
         function loadServerNames() {
-            // Загружаем имена из одного документа-агрегатора
             db.collection('stats').doc('taken_names').get()
                 .then(function(doc) {
                     serverTakenNames = [];
@@ -1781,7 +1618,6 @@
                     namesLoaded = true;
                 })
                 .catch(function() {
-                    // Если документа нет, пробуем загрузить из коллекции (для обратной совместимости)
                     db.collection('taken_names').get().then(function(snapshot) {
                         serverTakenNames = [];
                         snapshot.forEach(function(doc) {
@@ -1808,7 +1644,6 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
-                // Читаем ОДИН документ user_stats вместо чтения всех case_openings
                 db.collection('user_stats').doc(userID).get()
                     .then(function(doc) {
                         if (doc.exists) {
@@ -1823,14 +1658,12 @@
                             userName = localStorage.getItem('admincase_user_name') || 'Игрок';
                             avatarData = localStorage.getItem('admincase_user_avatar') || null;
                         }
-                        
                         try {
                             localStorage.setItem('admincase_opened_count', openedCount);
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                             localStorage.setItem('admincase_user_name', userName);
                             if (avatarData) localStorage.setItem('admincase_user_avatar', avatarData);
                         } catch(e) {}
-                        
                         if (callback) callback();
                     })
                     .catch(function() {
@@ -1970,7 +1803,7 @@
                 }).catch(function() {});
             }
 
-            // ===== ОНЛАЙН-СЧЕТЧИК (каждые 10 минут) =====
+            // ===== ОНЛАЙН-СЧЕТЧИК (оптимизировано: 1 чтение вместо 50) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
                     db.collection('online_users').doc(userID).set({
@@ -1980,24 +1813,84 @@
                     }).catch(function() {});
                 }
             }
-            updateOnlineStatus();
-            setInterval(updateOnlineStatus, 10 * 60 * 1000); // 10 минут
 
             function loadOnlineCount() {
+                var now = new Date();
+                var minutes = now.getMinutes();
+                var currentTime = now.getHours() * 60 + minutes;
+                
+                // Проверяем, четное ли время (каждые 30 минут)
+                if (currentTime % 30 === 0) {
+                    // Читаем ОДИН документ со счетчиком
+                    db.collection('stats').doc('online_counter').get()
+                        .then(function(doc) {
+                            var count = 0;
+                            if (doc.exists) {
+                                count = doc.data().count || 0;
+                            }
+                            document.getElementById('onlineCount').textContent = count;
+                            try {
+                                localStorage.setItem('admincase_online_count', count);
+                                localStorage.setItem('admincase_online_count_time', Date.now());
+                            } catch(e) {}
+                            
+                            // Если документ устарел (больше 25 минут), обновляем
+                            var updatedAt = doc.exists ? (doc.data().updatedAt || 0) : 0;
+                            if (Date.now() - updatedAt > 25 * 60 * 1000) {
+                                updateOnlineCounter();
+                            }
+                        })
+                        .catch(function() {
+                            var cached = localStorage.getItem('admincase_online_count');
+                            document.getElementById('onlineCount').textContent = cached || '0';
+                        });
+                } else {
+                    // Показываем из localStorage (0 чтений Firebase)
+                    var cached = localStorage.getItem('admincase_online_count');
+                    document.getElementById('onlineCount').textContent = cached || '0';
+                }
+            }
+            
+            // Функция обновления счетчика (считает онлайн и сохраняет в один документ)
+            function updateOnlineCounter() {
                 var now = Date.now();
                 var tenMinAgo = now - 10 * 60 * 1000;
+                
                 db.collection('online_users')
                     .where('lastSeen', '>', tenMinAgo)
                     .get()
                     .then(function(snapshot) {
-                        document.getElementById('onlineCount').textContent = snapshot.size;
+                        var count = snapshot.size;
+                        
+                        // Сохраняем в ОДИН документ
+                        db.collection('stats').doc('online_counter').set({
+                            count: count,
+                            updatedAt: now
+                        }).catch(function() {});
+                        
+                        document.getElementById('onlineCount').textContent = count;
+                        try {
+                            localStorage.setItem('admincase_online_count', count);
+                            localStorage.setItem('admincase_online_count_time', now);
+                        } catch(e) {}
                     })
-                    .catch(function() {
-                        document.getElementById('onlineCount').textContent = '0';
-                    });
+                    .catch(function() {});
             }
+
+            // При загрузке страницы
             loadOnlineCount();
-            setInterval(loadOnlineCount, 10 * 60 * 1000); // 10 минут
+            updateOnlineStatus();
+            
+            // Проверяем каждые 60 секунд
+            setInterval(function() {
+                var now = new Date();
+                var minutes = now.getMinutes();
+                var currentTime = now.getHours() * 60 + minutes;
+                
+                if (currentTime % 30 === 0) {
+                    loadOnlineCount();
+                }
+            }, 60 * 1000);
         });
 
         function getPrefix(openCount) {
@@ -2049,13 +1942,10 @@
             }
         }
 
-        // ===== ОБНОВЛЕНИЕ user_stats ПРИ ОТКРЫТИИ КЕЙСА =====
         function updateUserStats(caseType, reward, rarity) {
             var userStatsRef = db.collection('user_stats').doc(userID);
-            
             userStatsRef.get().then(function(doc) {
                 if (doc.exists) {
-                    // Обновляем существующий документ
                     var data = doc.data();
                     var newWinHistory = data.winHistory || [];
                     newWinHistory.push({
@@ -2064,19 +1954,15 @@
                         source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                         timestamp: Date.now()
                     });
-                    
-                    // Оставляем только последние 20
                     if (newWinHistory.length > 20) {
                         newWinHistory = newWinHistory.slice(-20);
                     }
-                    
                     userStatsRef.update({
                         openedCount: firebase.firestore.FieldValue.increment(1),
                         winHistory: newWinHistory,
                         lastUpdated: Date.now()
                     }).catch(function() {});
                 } else {
-                    // Создаем новый документ
                     userStatsRef.set({
                         userID: userID,
                         userName: userName,
@@ -2092,7 +1978,6 @@
                     }).catch(function() {});
                 }
             }).catch(function() {
-                // Если не удалось прочитать, пытаемся создать
                 userStatsRef.set({
                     userID: userID,
                     userName: userName,
@@ -2201,7 +2086,6 @@
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
-            // Перезагружаем данные из user_stats
             if (userID) {
                 db.collection('user_stats').doc(userID).get()
                     .then(function(doc) {
@@ -2211,7 +2095,6 @@
                             winHistory = data.winHistory || [];
                             userName = data.userName || userName;
                             avatarData = data.avatar || avatarData;
-                            
                             try {
                                 localStorage.setItem('admincase_opened_count', openedCount);
                                 localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
@@ -2221,7 +2104,6 @@
                         }
                         applyProfileData();
                         document.getElementById('openedCount').textContent = openedCount;
-                        
                         var bestWinText = '—';
                         if (winHistory.length > 0) {
                             var best = winHistory[0];
@@ -2231,7 +2113,6 @@
                             bestWinText = best.name;
                         }
                         document.getElementById('bestWin').textContent = bestWinText;
-                        
                         var list = document.getElementById('historyList');
                         list.innerHTML = '';
                         if (winHistory.length === 0) {
@@ -2264,7 +2145,6 @@
                                 })(sortedHistory[j]);
                             }
                         }
-                        
                         checkAchievements();
                         displayAchievements();
                         window.scrollTo(0, 0);
@@ -2283,23 +2163,18 @@
             }
         }
 
-        // ===== ТОП-5 С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ =====
+        // ===== ТОП-5 =====
         function showTopPage() {
             adminReturnPage = 'top';
             hideAllPages();
             document.getElementById('topPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'top'); } catch(e) {}
-            
-            // Проверяем, нужно ли обновить топ (раз в 24 часа)
             var now = Date.now();
             var lastUpdateStr = localStorage.getItem('admincase_top_last_update');
             var lastUpdate = lastUpdateStr ? parseInt(lastUpdateStr) : 0;
-            
-            // Если прошло больше 24 часов - обновляем
             if (now - lastUpdate > 24 * 60 * 60 * 1000) {
                 loadTopFromFirebase();
             } else {
-                // Пробуем загрузить из кэша
                 var cachedTop = localStorage.getItem('admincase_top5_data');
                 if (cachedTop) {
                     try {
@@ -2308,7 +2183,6 @@
                         return;
                     } catch(e) {}
                 }
-                // Если кэша нет - загружаем
                 loadTopFromFirebase();
             }
         }
@@ -2316,8 +2190,6 @@
         function loadTopFromFirebase() {
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
-            // Читаем ТОЛЬКО user_stats (5 документов вместо 1000+)
             db.collection('user_stats')
                 .orderBy('openedCount', 'desc')
                 .limit(5)
@@ -2334,13 +2206,10 @@
                             avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null
                         });
                     });
-                    
-                    // Сохраняем в localStorage
                     try {
                         localStorage.setItem('admincase_top5_data', JSON.stringify(topUsers));
                         localStorage.setItem('admincase_top_last_update', Date.now());
                     } catch(e) {}
-                    
                     displayTopList(topUsers);
                 })
                 .catch(function(error) {
@@ -2382,7 +2251,7 @@
             }
         }
 
-        // ===== ЧУЖОЙ ПРОФИЛЬ (ОПТИМИЗИРОВАНО) =====
+        // ===== ЧУЖОЙ ПРОФИЛЬ =====
         function showOtherProfile(targetUserID) {
             hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
@@ -2390,14 +2259,10 @@
                 localStorage.setItem('admincase_current_page', 'other_profile');
                 localStorage.setItem('admincase_other_profile_id', targetUserID);
             } catch(e) {}
-            
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
             document.getElementById('otherOpenedCount').textContent = '...';
-            
             var isOtherAdmin = adminIDs.indexOf(targetUserID) !== -1;
-            
-            // Читаем ОДИН документ user_stats
             db.collection('user_stats').doc(targetUserID).get()
                 .then(function(doc) {
                     if (doc.exists) {
@@ -2405,11 +2270,9 @@
                         var foundName = data.userName || 'Неизвестно';
                         var foundAvatar = data.avatar || null;
                         var foundOpenedCount = data.openedCount || 0;
-                        
                         document.getElementById('otherName').textContent = foundName;
                         document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
                         document.getElementById('otherOpenedCount').textContent = foundOpenedCount;
-                        
                         if (isOtherAdmin) {
                             document.getElementById('otherName').classList.add('admin-name');
                             document.getElementById('otherAdminPrefix').style.display = 'inline-block';
@@ -2417,12 +2280,10 @@
                             document.getElementById('otherName').classList.remove('admin-name');
                             document.getElementById('otherAdminPrefix').style.display = 'none';
                         }
-                        
                         var prefix = getPrefix(foundOpenedCount);
                         var otherPrefixEl = document.getElementById('otherPrefix');
                         otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
                         otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
-                        
                         currentOtherAvatar = foundAvatar;
                         var otherAvatar = document.getElementById('otherAvatar');
                         if (foundAvatar) {
@@ -2434,7 +2295,6 @@
                         document.getElementById('otherName').textContent = 'Неизвестно';
                         document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
                         document.getElementById('otherOpenedCount').textContent = '0';
-                        
                         if (isOtherAdmin) {
                             document.getElementById('otherName').classList.add('admin-name');
                             document.getElementById('otherAdminPrefix').style.display = 'inline-block';
@@ -2442,12 +2302,10 @@
                             document.getElementById('otherName').classList.remove('admin-name');
                             document.getElementById('otherAdminPrefix').style.display = 'none';
                         }
-                        
                         var prefix = getPrefix(0);
                         var otherPrefixEl = document.getElementById('otherPrefix');
                         otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
                         otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
-                        
                         currentOtherAvatar = null;
                         document.getElementById('otherAvatar').innerHTML = '👤';
                     }
@@ -2456,7 +2314,6 @@
                     document.getElementById('otherName').textContent = 'Ошибка';
                     document.getElementById('otherID').textContent = error.message;
                 });
-            
             window.scrollTo(0, 0);
         }
 
@@ -2497,15 +2354,11 @@
                     showCustomModal('Ошибка', '<p>Это имя уже занято!</p>');
                     return;
                 }
-                
                 var oldName = userName;
-                
-                // Обновляем имя в user_stats (1 документ)
                 db.collection('user_stats').doc(userID).update({
                     userName: newName,
                     lastUpdated: now
                 }).catch(function() {
-                    // Если документа нет - создаем
                     db.collection('user_stats').doc(userID).set({
                         userID: userID,
                         userName: newName,
@@ -2515,8 +2368,6 @@
                         lastUpdated: now
                     }).catch(function() {});
                 });
-                
-                // Обновляем имя в taken_names (для обратной совместимости)
                 db.collection('taken_names').add({
                     name: newName,
                     uid: userUID,
@@ -2524,8 +2375,6 @@
                     avatar: avatarData,
                     timestamp: now
                 }).catch(function() {});
-                
-                // Обновляем агрегатор имен
                 db.collection('stats').doc('taken_names').get()
                     .then(function(doc) {
                         var names = [];
@@ -2541,7 +2390,6 @@
                         }
                     })
                     .catch(function() {});
-                
                 userName = newName;
                 lastNameChangeTime = now;
                 serverTakenNames.push(newName);
@@ -2549,7 +2397,6 @@
                     localStorage.setItem('admincase_user_name', userName);
                     localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
                 } catch(e) {}
-                
                 db.collection('name_changes').add({
                     userName: newName,
                     userID: userID,
@@ -2557,7 +2404,6 @@
                     newName: newName,
                     timestamp: now
                 }).catch(function() {});
-                
                 checkAchievements();
                 applyProfileData();
                 exitEditMode();
@@ -2587,9 +2433,7 @@
             var msg = document.getElementById('promoMessage');
             msg.className = 'message';
             msg.textContent = '';
-
             if (!input) { msg.className = 'message error'; msg.textContent = 'Введите промокод!'; return; }
-            
             if (dynamicPromoCodes[input] !== undefined) {
                 var promoData = dynamicPromoCodes[input];
                 if (promoData.expiresAt && promoData.expiresAt < Date.now()) {
@@ -2611,7 +2455,6 @@
                     msg.textContent = 'Этот код для другого кейса!';
                     return;
                 }
-                
                 var newActivations = promoData.activationsLeft - 1;
                 db.collection('active_promos').doc(promoData.docId).update({
                     activationsLeft: newActivations
@@ -2623,7 +2466,6 @@
                         dynamicPromoCodes[input].activationsLeft = newActivations;
                     }
                 }).catch(function() {});
-                
                 msg.className = 'message success';
                 msg.textContent = '✅ Код активирован!';
                 setTimeout(function() {
@@ -2632,7 +2474,6 @@
                 }, 500);
                 return;
             }
-            
             msg.className = 'message error';
             msg.textContent = 'Неверный промокод!';
         }
@@ -2647,7 +2488,6 @@
             document.getElementById('rouletteBackBtn').classList.remove('show');
             isSpinning = false;
             hasSpun = false;
-            
             rouletteItems = [];
             for (var i = 0; i < caseContents[caseType].length; i++) {
                 var count = Math.max(1, Math.round(caseContents[caseType][i].chance));
@@ -2656,12 +2496,10 @@
                 }
             }
             rouletteItems.sort(function() { return Math.random() - 0.5; });
-            
             var track = document.getElementById('rouletteTrack');
             track.innerHTML = '';
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
-            
             allRouletteItems = rouletteItems.concat(rouletteItems);
             for (var k = 0; k < allRouletteItems.length; k++) {
                 var div = document.createElement('div');
@@ -2670,7 +2508,6 @@
                 div.setAttribute('data-name', allRouletteItems[k].name);
                 track.appendChild(div);
             }
-            
             if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
             bgPosition = 0;
             bgLastTime = null;
@@ -2685,7 +2522,6 @@
                 bgAnimFrame = requestAnimationFrame(bgAnim);
             }
             bgAnimFrame = requestAnimationFrame(bgAnim);
-            
             var rewardsList = document.getElementById('rewardsList');
             rewardsList.innerHTML = '';
             for (var m = 0; m < caseContents[caseType].length; m++) {
@@ -2730,20 +2566,16 @@
             if (isSpinning) return;
             isSpinning = true;
             hasSpun = true;
-            
             if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
-            
             var btn = document.getElementById('spinBtn');
             btn.disabled = true;
             var msg = document.getElementById('resultMessage');
             msg.className = 'message';
             msg.textContent = '';
-            
             var track = document.getElementById('rouletteTrack');
             var itemWidth = 180;
             var items = document.querySelectorAll('.roulette-item');
             if (items.length > 0) itemWidth = items[0].getBoundingClientRect().width;
-            
             var totalItems = rouletteItems.length;
             var containerWidth = document.getElementById('rouletteContainer').offsetWidth;
             var centerOffset = containerWidth / 2 - itemWidth / 2;
@@ -2751,17 +2583,13 @@
             var stopPosition = -(winIndex * itemWidth) + centerOffset;
             var totalDistance = 8 * itemWidth;
             var finalPosition = stopPosition - totalDistance;
-            
             track.style.transition = 'none';
             track.style.transform = 'translateX(0)';
-            
             var startTime = performance.now();
             var duration = 6000;
-            
             function animateSpin(currentTime) {
                 var elapsed = currentTime - startTime;
                 var progress = Math.min(elapsed / duration, 1);
-                
                 var position;
                 if (progress < 0.33) {
                     var p = progress / 0.33;
@@ -2773,9 +2601,7 @@
                     var p3 = (progress - 0.66) / 0.34;
                     position = -totalDistance * (1.5 + p3 * 0.5);
                 }
-                
                 track.style.transform = 'translateX(' + (position - (winIndex * itemWidth) + centerOffset) + 'px)';
-                
                 if (progress < 1) {
                     spinAnimFrame = requestAnimationFrame(animateSpin);
                 } else {
@@ -2795,21 +2621,14 @@
                             source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             timestamp: Date.now()
                         });
-                        
-                        // Оставляем только последние 20
                         if (winHistory.length > 20) {
                             winHistory = winHistory.slice(-20);
                         }
-                        
                         try {
                             localStorage.setItem('admincase_opened_count', openedCount);
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                         } catch(e) {}
-                        
-                        // Обновляем user_stats (1 документ)
                         updateUserStats(currentCase, actualWin, actualRarity);
-                        
-                        // Добавляем в case_openings для истории (1 запись)
                         db.collection('case_openings').add({
                             userName: userName,
                             userID: userID,
@@ -2819,14 +2638,11 @@
                             rarity: actualRarity,
                             timestamp: Date.now()
                         }).catch(function() {});
-                        
                         checkAchievements();
-                        
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
                         isSpinning = false;
                         btn.disabled = false;
-                        
                         document.getElementById('rouletteBackBtn').classList.add('show');
                     }, 500);
                 }
@@ -2885,7 +2701,6 @@
         function showAuthModal() {
             var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
-            
             if (isLoggedIn) {
                 var html = '<h2>Аккаунт</h2>';
                 html += '<p style="margin-bottom:15px;">Вы вошли как: ' + loggedInAccountName + '</p>';
@@ -2923,6 +2738,8 @@
                 localStorage.removeItem('admincase_other_profile_id');
                 localStorage.removeItem('admincase_top5_data');
                 localStorage.removeItem('admincase_top_last_update');
+                localStorage.removeItem('admincase_online_count');
+                localStorage.removeItem('admincase_online_count_time');
             } catch(e) {}
             closeAuthModal();
             showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
@@ -3020,7 +2837,6 @@
                         password: password,
                         createdAt: Date.now()
                     }).then(function() {
-                        // Создаем user_stats при регистрации
                         db.collection('user_stats').doc(userID).set({
                             userID: userID,
                             userName: userName,
@@ -3029,7 +2845,6 @@
                             winHistory: winHistory,
                             lastUpdated: Date.now()
                         }).catch(function() {});
-                        
                         var content = document.getElementById('authModalContent');
                         content.innerHTML = '<h2>✅ Успех!</h2><p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p><p>ID: ' + userID + '</p><button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
                     });
@@ -3219,13 +3034,10 @@
                         document.getElementById('avatarImg').style.display = 'block';
                         document.getElementById('avatarEmoji').style.display = 'none';
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
-                        
-                        // Обновляем user_stats
                         db.collection('user_stats').doc(userID).update({
                             avatar: avatarData,
                             lastUpdated: Date.now()
                         }).catch(function() {});
-                        
                         checkAchievements();
                     };
                     img.src = ev.target.result;
@@ -3263,4 +3075,4 @@
     </script>
 
 </body>
-    </html>
+                    </html>
