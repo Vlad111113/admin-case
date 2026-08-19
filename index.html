@@ -1794,35 +1794,16 @@
                 document.getElementById('mainPage').style.display = 'block';
             }
 
-            if (openedCount > 0 || userName !== 'Игрок') {
-                db.collection('logins').add({
-                    userName: userName,
-                    userID: userID,
-                    isRegistered: isLoggedIn,
-                    timestamp: Date.now()
-                }).catch(function() {});
-            }
-
-            // ===== ОНЛАЙН-СЧЕТЧИК (1 ЧТЕНИЕ ВМЕСТО 50!) =====
-            function updateOnlineStatus() {
-                if (openedCount > 0 || userName !== 'Игрок') {
-                    // Обновляем lastSeen пользователя (запись, не чтение)
-                    db.collection('online_users').doc(userID).set({
-                        userName: userName,
-                        userID: userID,
-                        lastSeen: Date.now()
-                    }).catch(function() {});
-                }
-            }
-
-            function loadOnlineCount() {
+            // ===== ОНЛАЙН-СЧЕТЧИК (ОБНОВЛЕНИЕ РАЗ В 30 МИНУТ В ЧЕТНОЕ ВРЕМЯ) =====
+            function isEvenHalfHour() {
                 var now = new Date();
                 var minutes = now.getMinutes();
-                var currentTime = now.getHours() * 60 + minutes;
-                
-                // Проверяем, четное ли время (каждые 30 минут)
-                if (currentTime % 30 === 0) {
-                    // Читаем ОДИН документ со счетчиком (1 чтение!)
+                return minutes === 0 || minutes === 30;
+            }
+
+            function updateOnlineCounter() {
+                // Читаем счетчик из Firebase только в четное время (00 или 30 минут)
+                if (isEvenHalfHour()) {
                     db.collection('stats').doc('online_counter').get()
                         .then(function(doc) {
                             var count = 0;
@@ -1836,28 +1817,23 @@
                             } catch(e) {}
                         })
                         .catch(function() {
+                            // Если ошибка - показываем из localStorage
                             var cached = localStorage.getItem('admincase_online_count');
                             document.getElementById('onlineCount').textContent = cached || '0';
                         });
                 } else {
-                    // Показываем из localStorage (0 чтений Firebase)
+                    // Показываем из localStorage (с прошлого захода)
                     var cached = localStorage.getItem('admincase_online_count');
                     document.getElementById('onlineCount').textContent = cached || '0';
                 }
             }
 
             // При загрузке страницы
-            loadOnlineCount();
-            updateOnlineStatus();
-            
-            // Проверяем каждые 60 секунд
+            updateOnlineCounter();
+
+            // Проверяем каждую минуту, чтобы поймать четное время (00 или 30 минут)
             setInterval(function() {
-                var now = new Date();
-                var minutes = now.getMinutes();
-                var currentTime = now.getHours() * 60 + minutes;
-                if (currentTime % 30 === 0) {
-                    loadOnlineCount();
-                }
+                updateOnlineCounter();
             }, 60 * 1000);
         });
 
@@ -2597,15 +2573,6 @@
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                         } catch(e) {}
                         updateUserStats(currentCase, actualWin, actualRarity);
-                        db.collection('case_openings').add({
-                            userName: userName,
-                            userID: userID,
-                            avatar: avatarData,
-                            caseType: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                            reward: actualWin,
-                            rarity: actualRarity,
-                            timestamp: Date.now()
-                        }).catch(function() {});
                         checkAchievements();
                         msg.className = 'message win';
                         msg.textContent = '🎉 Вы выиграли: ' + actualWin + '!';
@@ -3043,4 +3010,4 @@
     </script>
 
 </body>
-                    </html>
+    </html>
