@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Оптимизированный</title>
+    <title>AdminCase - Оптимизированный v2</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
@@ -1110,7 +1110,6 @@
         }
         .promo-delete:hover { background: #d32f2f; }
         
-        /* Стили для страницы администрации */
         .admin-list-page {
             display: none;
             width: 100%;
@@ -1462,15 +1461,7 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        var adminIDs = [
-            "12425616",
-            "86858801",
-            "50579855",
-            "",
-            "",
-            ""
-        ];
-
+        var adminIDs = ["12425616", "86858801", "50579855", "", "", ""];
         var adminNames = {
             "12425616": "Vladislav Smith",
             "86858801": "Grozka Irons",
@@ -1563,10 +1554,6 @@
         var loggedInAccountID = '';
         var adminReturnPage = 'top';
 
-        // Переменная для хранения последнего обновления топа
-        var lastTopUpdateTime = 0;
-        var TOP_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; // 24 часа в миллисекундах
-
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
         function showCustomModal(title, content) {
@@ -1586,13 +1573,12 @@
             }
         };
 
-        // ===== REALTIME LISTENER ДЛЯ ПРОМОКОДОВ (оптимизировано) =====
+        // ===== REALTIME LISTENER ДЛЯ ПРОМОКОДОВ =====
         function subscribeToPromoCodes() {
             db.collection('active_promos').onSnapshot(function(snapshot) {
                 dynamicPromoCodes = {};
                 snapshot.forEach(function(doc) {
                     var data = doc.data();
-                    
                     if (data.expiresAt && data.expiresAt < Date.now()) {
                         doc.ref.delete().catch(function() {});
                         return;
@@ -1608,8 +1594,6 @@
                         expiresAt: data.expiresAt
                     };
                 });
-                
-                // Обновляем список активных промокодов в админ-панели, если она открыта
                 if (document.getElementById('adminPanel').classList.contains('active')) {
                     showActivePromos();
                 }
@@ -1617,8 +1601,6 @@
                 console.error('Ошибка подписки на промокоды:', error);
             });
         }
-        
-        // Запускаем подписку один раз
         subscribeToPromoCodes();
 
         function createPromoCode() {
@@ -1627,30 +1609,11 @@
             var activations = parseInt(document.getElementById('adminPromoActivations').value);
             var hours = parseInt(document.getElementById('adminPromoHours').value);
             
-            if (!code) {
-                showCustomModal('Ошибка', '<p>Введите код промокода!</p>');
-                return;
-            }
-            
-            if (code.length < 3) {
-                showCustomModal('Ошибка', '<p>Код должен быть не короче 3 символов!</p>');
-                return;
-            }
-            
-            if (!activations || activations < 1) {
-                showCustomModal('Ошибка', '<p>Введите корректное количество активаций!</p>');
-                return;
-            }
-            
-            if (!hours || hours < 1) {
-                showCustomModal('Ошибка', '<p>Введите корректное время работы!</p>');
-                return;
-            }
-            
-            if (dynamicPromoCodes[code]) {
-                showCustomModal('Ошибка', '<p>Такой промокод уже существует!</p>');
-                return;
-            }
+            if (!code) { showCustomModal('Ошибка', '<p>Введите код промокода!</p>'); return; }
+            if (code.length < 3) { showCustomModal('Ошибка', '<p>Код должен быть не короче 3 символов!</p>'); return; }
+            if (!activations || activations < 1) { showCustomModal('Ошибка', '<p>Введите корректное количество активаций!</p>'); return; }
+            if (!hours || hours < 1) { showCustomModal('Ошибка', '<p>Введите корректное время работы!</p>'); return; }
+            if (dynamicPromoCodes[code]) { showCustomModal('Ошибка', '<p>Такой промокод уже существует!</p>'); return; }
             
             var expiresAt = Date.now() + hours * 60 * 60 * 1000;
             
@@ -1675,34 +1638,24 @@
         function showActivePromos() {
             var list = document.getElementById('activePromosList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
-            // Используем данные из локального кэша (dynamicPromoCodes), обновленного через listener
             var promoCodes = Object.keys(dynamicPromoCodes);
-            
             if (promoCodes.length === 0) {
                 list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет активных промокодов</p>';
                 return;
             }
-            
             list.innerHTML = '';
-            
             for (var i = 0; i < promoCodes.length; i++) {
                 (function(codeKey) {
                     var promoData = dynamicPromoCodes[codeKey];
-                    
-                    // Дополнительно получаем полные данные для отображения
                     db.collection('active_promos').doc(promoData.docId).get()
                         .then(function(doc) {
                             if (!doc.exists) return;
-                            
                             var data = doc.data();
                             var div = document.createElement('div');
                             div.className = 'promo-item';
-                            
                             var expiresDate = new Date(data.expiresAt);
                             var expiresStr = expiresDate.toLocaleString('ru-RU');
                             var creatorName = data.createdBy || 'Неизвестно';
-                            
                             div.innerHTML = 
                                 '<div class="promo-info">' +
                                     '<div class="promo-code">' + data.code + '</div>' +
@@ -1711,8 +1664,6 @@
                                     ' | До: ' + expiresStr + '<br>Создал: ' + creatorName + '</div>' +
                                 '</div>' +
                                 '<button class="promo-delete" onclick="deletePromoCode(\'' + doc.id + '\')">Удалить</button>';
-                            
-                            // Вставляем в правильном порядке
                             var container = document.getElementById('activePromosList');
                             var existingItem = container.querySelector('[data-code="' + data.code + '"]');
                             if (existingItem) {
@@ -1750,51 +1701,30 @@
             hideAllPages();
             document.getElementById('adminListPage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin_list'); } catch(e) {}
-            
             adminReturnPage = 'admin_list';
-            
             var list = document.getElementById('adminListContainer');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
             var adminItems = [];
-            
             var adminPromises = [];
             for (var a = 0; a < adminIDs.length; a++) {
                 if (!adminIDs[a]) continue;
                 (function(adminID) {
                     adminPromises.push(
-                        db.collection('case_openings')
-                            .where('userID', '==', adminID)
-                            .get()
-                            .then(function(caseSnapshot) {
+                        db.collection('user_stats').doc(adminID).get()
+                            .then(function(doc) {
                                 var adminData = {
                                     userID: adminID,
                                     name: adminNames[adminID] || 'Админ',
                                     avatar: null,
-                                    openedCount: caseSnapshot.size
+                                    openedCount: 0
                                 };
-                                
-                                caseSnapshot.forEach(function(doc) {
+                                if (doc.exists) {
                                     var data = doc.data();
-                                    if (data.userName) adminData.name = data.userName;
-                                    if (data.avatar) adminData.avatar = data.avatar;
-                                });
-                                
-                                if (!adminData.avatar) {
-                                    return db.collection('taken_names')
-                                        .where('userID', '==', adminID)
-                                        .get()
-                                        .then(function(nameSnapshot) {
-                                            nameSnapshot.forEach(function(doc) {
-                                                var data = doc.data();
-                                                if (data.name) adminData.name = data.name;
-                                                if (data.avatar) adminData.avatar = data.avatar;
-                                            });
-                                            adminItems.push(adminData);
-                                        });
-                                } else {
-                                    adminItems.push(adminData);
+                                    adminData.name = data.userName || adminNames[adminID] || 'Админ';
+                                    adminData.avatar = data.avatar || null;
+                                    adminData.openedCount = data.openedCount || 0;
                                 }
+                                adminItems.push(adminData);
                             })
                             .catch(function() {
                                 adminItems.push({
@@ -1807,25 +1737,20 @@
                     );
                 })(adminIDs[a]);
             }
-            
             Promise.all(adminPromises).then(function() {
                 list.innerHTML = '';
-                
                 if (adminItems.length === 0) {
                     list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
                     return;
                 }
-                
                 for (var i = 0; i < adminItems.length; i++) {
                     (function(admin) {
                         var div = document.createElement('div');
                         div.className = 'admin-item';
-                        
                         var avatarHtml = '<span>👑</span>';
                         if (admin.avatar && admin.avatar !== 'undefined' && admin.avatar !== 'null') {
                             avatarHtml = '<img src="' + admin.avatar + '" alt="">';
                         }
-                        
                         div.innerHTML = 
                             '<div class="admin-avatar">' + avatarHtml + '</div>' +
                             '<div class="admin-info">' +
@@ -1833,37 +1758,47 @@
                                 '<div class="admin-id">ID: ' + admin.userID + '</div>' +
                             '</div>' +
                             '<span class="admin-badge">ADMIN</span>';
-                        
                         div.onclick = function() {
                             adminReturnPage = 'admin_list';
                             showOtherProfile(admin.userID);
                         };
-                        
                         list.appendChild(div);
                     })(adminItems[i]);
                 }
             });
-            
             window.scrollTo(0, 0);
         }
 
         function loadServerNames() {
-            db.collection('taken_names').get().then(function(snapshot) {
-                serverTakenNames = [];
-                snapshot.forEach(function(doc) {
-                    var name = doc.data().name;
-                    if (name !== 'Игрок' && serverTakenNames.indexOf(name) === -1) {
-                        serverTakenNames.push(name);
+            // Загружаем имена из одного документа-агрегатора
+            db.collection('stats').doc('taken_names').get()
+                .then(function(doc) {
+                    serverTakenNames = [];
+                    if (doc.exists) {
+                        var data = doc.data();
+                        serverTakenNames = data.names || [];
                     }
+                    namesLoaded = true;
+                })
+                .catch(function() {
+                    // Если документа нет, пробуем загрузить из коллекции (для обратной совместимости)
+                    db.collection('taken_names').get().then(function(snapshot) {
+                        serverTakenNames = [];
+                        snapshot.forEach(function(doc) {
+                            var name = doc.data().name;
+                            if (name !== 'Игрок' && serverTakenNames.indexOf(name) === -1) {
+                                serverTakenNames.push(name);
+                            }
+                        });
+                        namesLoaded = true;
+                    }).catch(function() {
+                        namesLoaded = true;
+                    });
                 });
-                namesLoaded = true;
-            }).catch(function() {
-                namesLoaded = true;
-            });
         }
         loadServerNames();
 
-        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
+        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ (ОПТИМИЗИРОВАНО) =====
         function loadUserData(callback) {
             var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
             
@@ -1873,46 +1808,30 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
-                db.collection('case_openings')
-                    .where('userID', '==', userID)
-                    .get()
-                    .then(function(caseSnapshot) {
-                        openedCount = caseSnapshot.size;
-                        winHistory = [];
-                        caseSnapshot.forEach(function(doc) {
+                // Читаем ОДИН документ user_stats вместо чтения всех case_openings
+                db.collection('user_stats').doc(userID).get()
+                    .then(function(doc) {
+                        if (doc.exists) {
                             var data = doc.data();
-                            winHistory.push({
-                                name: data.reward,
-                                rarity: data.rarity,
-                                source: data.caseType,
-                                timestamp: data.timestamp
-                            });
-                        });
+                            openedCount = data.openedCount || 0;
+                            winHistory = data.winHistory || [];
+                            userName = data.userName || 'Игрок';
+                            avatarData = data.avatar || null;
+                        } else {
+                            openedCount = 0;
+                            winHistory = [];
+                            userName = localStorage.getItem('admincase_user_name') || 'Игрок';
+                            avatarData = localStorage.getItem('admincase_user_avatar') || null;
+                        }
                         
-                        return db.collection('taken_names')
-                            .where('userID', '==', userID)
-                            .get()
-                            .then(function(nameSnapshot) {
-                                var latestTimestamp = 0;
-                                nameSnapshot.forEach(function(doc) {
-                                    var data = doc.data();
-                                    var ts = data.timestamp || 0;
-                                    if (ts > latestTimestamp && data.name) {
-                                        latestTimestamp = ts;
-                                        userName = data.name;
-                                        if (data.avatar) avatarData = data.avatar;
-                                    }
-                                });
-                                
-                                try {
-                                    localStorage.setItem('admincase_opened_count', openedCount);
-                                    localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
-                                    localStorage.setItem('admincase_user_name', userName);
-                                    if (avatarData) localStorage.setItem('admincase_user_avatar', avatarData);
-                                } catch(e) {}
-                                
-                                if (callback) callback();
-                            });
+                        try {
+                            localStorage.setItem('admincase_opened_count', openedCount);
+                            localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
+                            localStorage.setItem('admincase_user_name', userName);
+                            if (avatarData) localStorage.setItem('admincase_user_avatar', avatarData);
+                        } catch(e) {}
+                        
+                        if (callback) callback();
                     })
                     .catch(function() {
                         if (callback) callback();
@@ -1922,7 +1841,6 @@
                     var savedCount = localStorage.getItem('admincase_opened_count');
                     if (savedCount) openedCount = parseInt(savedCount);
                 } catch(e) {}
-
                 try {
                     var savedHistory = localStorage.getItem('admincase_win_history');
                     if (savedHistory) {
@@ -1934,17 +1852,14 @@
                         }
                     }
                 } catch(e) {}
-
                 try {
                     var savedName = localStorage.getItem('admincase_user_name');
                     if (savedName) userName = savedName;
                 } catch(e) {}
-
                 try {
                     var savedAvatar = localStorage.getItem('admincase_user_avatar');
                     if (savedAvatar) avatarData = savedAvatar;
                 } catch(e) {}
-
                 if (callback) callback();
             }
         }
@@ -2050,11 +1965,12 @@
                 db.collection('logins').add({
                     userName: userName,
                     userID: userID,
+                    isRegistered: isLoggedIn,
                     timestamp: Date.now()
                 }).catch(function() {});
             }
 
-            // ===== ОНЛАЙН-СЧЕТЧИК (оптимизировано: каждые 5 минут) =====
+            // ===== ОНЛАЙН-СЧЕТЧИК (каждые 10 минут) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
                     db.collection('online_users').doc(userID).set({
@@ -2065,13 +1981,13 @@
                 }
             }
             updateOnlineStatus();
-            setInterval(updateOnlineStatus, 5 * 60 * 1000); // 5 минут
+            setInterval(updateOnlineStatus, 10 * 60 * 1000); // 10 минут
 
             function loadOnlineCount() {
                 var now = Date.now();
-                var fiveMinAgo = now - 5 * 60 * 1000;
+                var tenMinAgo = now - 10 * 60 * 1000;
                 db.collection('online_users')
-                    .where('lastSeen', '>', fiveMinAgo)
+                    .where('lastSeen', '>', tenMinAgo)
                     .get()
                     .then(function(snapshot) {
                         document.getElementById('onlineCount').textContent = snapshot.size;
@@ -2081,7 +1997,7 @@
                     });
             }
             loadOnlineCount();
-            setInterval(loadOnlineCount, 5 * 60 * 1000); // 5 минут вместо 10 секунд
+            setInterval(loadOnlineCount, 10 * 60 * 1000); // 10 минут
         });
 
         function getPrefix(openCount) {
@@ -2133,78 +2049,80 @@
             }
         }
 
-        function updateUserDataInFirebase() {
-            if (openedCount === 0 && userName === 'Игрок') return;
+        // ===== ОБНОВЛЕНИЕ user_stats ПРИ ОТКРЫТИИ КЕЙСА =====
+        function updateUserStats(caseType, reward, rarity) {
+            var userStatsRef = db.collection('user_stats').doc(userID);
             
-            db.collection('case_openings')
-                .where('userID', '==', userID)
-                .get()
-                .then(function(snapshot) {
-                    var updatePromises = [];
-                    snapshot.forEach(function(doc) {
-                        updatePromises.push(doc.ref.update({
-                            userName: userName,
-                            avatar: avatarData
-                        }).catch(function() {}));
+            userStatsRef.get().then(function(doc) {
+                if (doc.exists) {
+                    // Обновляем существующий документ
+                    var data = doc.data();
+                    var newWinHistory = data.winHistory || [];
+                    newWinHistory.push({
+                        name: reward,
+                        rarity: rarity,
+                        source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                        timestamp: Date.now()
                     });
-                    return Promise.all(updatePromises);
-                })
-                .catch(function() {});
-
-            db.collection('taken_names')
-                .where('userID', '==', userID)
-                .get()
-                .then(function(snapshot) {
-                    var updatePromises = [];
-                    snapshot.forEach(function(doc) {
-                        updatePromises.push(doc.ref.update({
-                            name: userName,
-                            avatar: avatarData,
+                    
+                    // Оставляем только последние 20
+                    if (newWinHistory.length > 20) {
+                        newWinHistory = newWinHistory.slice(-20);
+                    }
+                    
+                    userStatsRef.update({
+                        openedCount: firebase.firestore.FieldValue.increment(1),
+                        winHistory: newWinHistory,
+                        lastUpdated: Date.now()
+                    }).catch(function() {});
+                } else {
+                    // Создаем новый документ
+                    userStatsRef.set({
+                        userID: userID,
+                        userName: userName,
+                        avatar: avatarData,
+                        openedCount: 1,
+                        winHistory: [{
+                            name: reward,
+                            rarity: rarity,
+                            source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             timestamp: Date.now()
-                        }).catch(function() {}));
-                    });
-                    return Promise.all(updatePromises);
-                })
-                .catch(function() {});
+                        }],
+                        lastUpdated: Date.now()
+                    }).catch(function() {});
+                }
+            }).catch(function() {
+                // Если не удалось прочитать, пытаемся создать
+                userStatsRef.set({
+                    userID: userID,
+                    userName: userName,
+                    avatar: avatarData,
+                    openedCount: 1,
+                    winHistory: [{
+                        name: reward,
+                        rarity: rarity,
+                        source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
+                        timestamp: Date.now()
+                    }],
+                    lastUpdated: Date.now()
+                }).catch(function() {});
+            });
         }
 
         function checkAchievements() {
             var newAchievements = [];
-            
-            if (openedCount >= 1 && unlockedAchievements.indexOf('first_case') === -1) {
-                newAchievements.push('first_case');
-            }
-            if (openedCount >= 10 && unlockedAchievements.indexOf('ten_cases') === -1) {
-                newAchievements.push('ten_cases');
-            }
-            if (openedCount >= 50 && unlockedAchievements.indexOf('fifty_cases') === -1) {
-                newAchievements.push('fifty_cases');
-            }
-            if (openedCount >= 100 && unlockedAchievements.indexOf('hundred_cases') === -1) {
-                newAchievements.push('hundred_cases');
-            }
-            if (visitCount >= 3 && unlockedAchievements.indexOf('returning') === -1) {
-                newAchievements.push('returning');
-            }
-            if (userName !== 'Игрок' && unlockedAchievements.indexOf('first_name_change') === -1) {
-                newAchievements.push('first_name_change');
-            }
-            if (avatarData && unlockedAchievements.indexOf('avatar_change') === -1) {
-                newAchievements.push('avatar_change');
-            }
-            
+            if (openedCount >= 1 && unlockedAchievements.indexOf('first_case') === -1) newAchievements.push('first_case');
+            if (openedCount >= 10 && unlockedAchievements.indexOf('ten_cases') === -1) newAchievements.push('ten_cases');
+            if (openedCount >= 50 && unlockedAchievements.indexOf('fifty_cases') === -1) newAchievements.push('fifty_cases');
+            if (openedCount >= 100 && unlockedAchievements.indexOf('hundred_cases') === -1) newAchievements.push('hundred_cases');
+            if (visitCount >= 3 && unlockedAchievements.indexOf('returning') === -1) newAchievements.push('returning');
+            if (userName !== 'Игрок' && unlockedAchievements.indexOf('first_name_change') === -1) newAchievements.push('first_name_change');
+            if (avatarData && unlockedAchievements.indexOf('avatar_change') === -1) newAchievements.push('avatar_change');
             for (var i = 0; i < winHistory.length; i++) {
-                if (winHistory[i].rarity === 'legendary' && unlockedAchievements.indexOf('legendary_win') === -1) {
-                    newAchievements.push('legendary_win');
-                }
-                if (winHistory[i].rarity === 'epic' && unlockedAchievements.indexOf('epic_win') === -1) {
-                    newAchievements.push('epic_win');
-                }
-                if (winHistory[i].rarity === 'rare' && unlockedAchievements.indexOf('rare_win') === -1) {
-                    newAchievements.push('rare_win');
-                }
+                if (winHistory[i].rarity === 'legendary' && unlockedAchievements.indexOf('legendary_win') === -1) newAchievements.push('legendary_win');
+                if (winHistory[i].rarity === 'epic' && unlockedAchievements.indexOf('epic_win') === -1) newAchievements.push('epic_win');
+                if (winHistory[i].rarity === 'rare' && unlockedAchievements.indexOf('rare_win') === -1) newAchievements.push('rare_win');
             }
-            
             if (newAchievements.length > 0) {
                 for (var j = 0; j < newAchievements.length; j++) {
                     if (unlockedAchievements.indexOf(newAchievements[j]) === -1) {
@@ -2220,7 +2138,6 @@
         function displayAchievements() {
             var list = document.getElementById('achievementsList');
             list.innerHTML = '';
-            
             for (var i = 0; i < achievements.length; i++) {
                 (function(achievement) {
                     var div = document.createElement('div');
@@ -2236,9 +2153,7 @@
         }
 
         function getRarity(chance, rarityOverride) {
-            if (rarityOverride) {
-                return 'rarity-' + rarityOverride;
-            }
+            if (rarityOverride) return 'rarity-' + rarityOverride;
             if (chance >= 50) return 'rarity-common';
             if (chance >= 20) return 'rarity-uncommon';
             if (chance >= 5) return 'rarity-rare';
@@ -2266,7 +2181,6 @@
             document.getElementById('otherProfilePage').classList.remove('active');
             document.getElementById('adminListPage').classList.remove('active');
             document.getElementById('adminPanel').classList.remove('active');
-            
             if (bgAnimFrame) cancelAnimationFrame(bgAnimFrame);
             if (spinAnimFrame) cancelAnimationFrame(spinAnimFrame);
             bgAnimFrame = null;
@@ -2287,60 +2201,89 @@
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
-            applyProfileData();
-            document.getElementById('openedCount').textContent = openedCount;
-            
-            var bestWinText = '—';
-            if (winHistory.length > 0) {
-                var best = winHistory[0];
-                for (var i = 0; i < winHistory.length; i++) {
-                    if (parseInt(winHistory[i].name) > parseInt(best.name)) best = winHistory[i];
-                }
-                bestWinText = best.name;
-            }
-            document.getElementById('bestWin').textContent = bestWinText;
-            
-            var list = document.getElementById('historyList');
-            list.innerHTML = '';
-            
-            if (winHistory.length === 0) {
-                list.innerHTML = '<p style="opacity:0.5; width:100%; text-align:center;">Пока пусто</p>';
+            // Перезагружаем данные из user_stats
+            if (userID) {
+                db.collection('user_stats').doc(userID).get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            var data = doc.data();
+                            openedCount = data.openedCount || 0;
+                            winHistory = data.winHistory || [];
+                            userName = data.userName || userName;
+                            avatarData = data.avatar || avatarData;
+                            
+                            try {
+                                localStorage.setItem('admincase_opened_count', openedCount);
+                                localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
+                                localStorage.setItem('admincase_user_name', userName);
+                                if (avatarData) localStorage.setItem('admincase_user_avatar', avatarData);
+                            } catch(e) {}
+                        }
+                        applyProfileData();
+                        document.getElementById('openedCount').textContent = openedCount;
+                        
+                        var bestWinText = '—';
+                        if (winHistory.length > 0) {
+                            var best = winHistory[0];
+                            for (var i = 0; i < winHistory.length; i++) {
+                                if (parseInt(winHistory[i].name) > parseInt(best.name)) best = winHistory[i];
+                            }
+                            bestWinText = best.name;
+                        }
+                        document.getElementById('bestWin').textContent = bestWinText;
+                        
+                        var list = document.getElementById('historyList');
+                        list.innerHTML = '';
+                        if (winHistory.length === 0) {
+                            list.innerHTML = '<p style="opacity:0.5; width:100%; text-align:center;">Пока пусто</p>';
+                        } else {
+                            var sortedHistory = winHistory.slice().sort(function(a, b) {
+                                return (b.timestamp || 0) - (a.timestamp || 0);
+                            });
+                            for (var j = 0; j < sortedHistory.length; j++) {
+                                (function(item) {
+                                    var div = document.createElement('div');
+                                    div.className = 'history-item ' + getRarity(item.chance || 50, item.rarity);
+                                    div.innerHTML = '<span class="history-name">' + item.name + '</span>';
+                                    var btn = document.createElement('button');
+                                    btn.className = 'history-info-circle';
+                                    btn.textContent = '!';
+                                    var tooltip = document.createElement('span');
+                                    tooltip.className = 'history-tooltip';
+                                    var tooltipText = item.source || 'Неизвестный кейс';
+                                    tooltipText += ' • ' + formatDate(item.timestamp);
+                                    tooltip.textContent = tooltipText;
+                                    btn.appendChild(tooltip);
+                                    btn.onclick = function(e) {
+                                        e.stopPropagation();
+                                        tooltip.classList.toggle('show');
+                                        setTimeout(function() { tooltip.classList.remove('show'); }, 3000);
+                                    };
+                                    div.appendChild(btn);
+                                    list.appendChild(div);
+                                })(sortedHistory[j]);
+                            }
+                        }
+                        
+                        checkAchievements();
+                        displayAchievements();
+                        window.scrollTo(0, 0);
+                    })
+                    .catch(function() {
+                        applyProfileData();
+                        document.getElementById('openedCount').textContent = openedCount;
+                        window.scrollTo(0, 0);
+                    });
             } else {
-                var sortedHistory = winHistory.slice().sort(function(a, b) {
-                    return (b.timestamp || 0) - (a.timestamp || 0);
-                });
-                
-                for (var j = 0; j < sortedHistory.length; j++) {
-                    (function(item) {
-                        var div = document.createElement('div');
-                        div.className = 'history-item ' + getRarity(item.chance || 50, item.rarity);
-                        div.innerHTML = '<span class="history-name">' + item.name + '</span>';
-                        var btn = document.createElement('button');
-                        btn.className = 'history-info-circle';
-                        btn.textContent = '!';
-                        var tooltip = document.createElement('span');
-                        tooltip.className = 'history-tooltip';
-                        var tooltipText = item.source || 'Неизвестный кейс';
-                        tooltipText += ' • ' + formatDate(item.timestamp);
-                        tooltip.textContent = tooltipText;
-                        btn.appendChild(tooltip);
-                        btn.onclick = function(e) {
-                            e.stopPropagation();
-                            tooltip.classList.toggle('show');
-                            setTimeout(function() { tooltip.classList.remove('show'); }, 3000);
-                        };
-                        div.appendChild(btn);
-                        list.appendChild(div);
-                    })(sortedHistory[j]);
-                }
+                applyProfileData();
+                document.getElementById('openedCount').textContent = openedCount;
+                checkAchievements();
+                displayAchievements();
+                window.scrollTo(0, 0);
             }
-            
-            checkAchievements();
-            displayAchievements();
-            window.scrollTo(0, 0);
         }
 
-        // ===== ТОП-5 С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ РАЗ В 24 ЧАСА (В 12:00 МСК) =====
+        // ===== ТОП-5 С АВТОМАТИЧЕСКИМ ОБНОВЛЕНИЕМ =====
         function showTopPage() {
             adminReturnPage = 'top';
             hideAllPages();
@@ -2349,39 +2292,14 @@
             
             // Проверяем, нужно ли обновить топ (раз в 24 часа)
             var now = Date.now();
-            var shouldUpdate = false;
-            
-            // Проверяем, был ли топ обновлен сегодня в 12:00 МСК
             var lastUpdateStr = localStorage.getItem('admincase_top_last_update');
-            if (lastUpdateStr) {
-                lastTopUpdateTime = parseInt(lastUpdateStr);
-            }
+            var lastUpdate = lastUpdateStr ? parseInt(lastUpdateStr) : 0;
             
-            // Определяем время следующего обновления (сегодня в 12:00 МСК)
-            var mskOffset = 3 * 60 * 60 * 1000; // МСК = UTC+3
-            var nowMsk = new Date(now + mskOffset);
-            var nextUpdateMsk = new Date(nowMsk);
-            nextUpdateMsk.setHours(12, 0, 0, 0);
-            
-            // Если сейчас меньше 12:00, то сегодняшнее обновление ещё не наступило
-            if (nowMsk < nextUpdateMsk) {
-                // Если последнее обновление было больше 24 часов назад
-                if (now - lastTopUpdateTime > TOP_UPDATE_INTERVAL) {
-                    shouldUpdate = true;
-                }
+            // Если прошло больше 24 часов - обновляем
+            if (now - lastUpdate > 24 * 60 * 60 * 1000) {
+                loadTopFromFirebase();
             } else {
-                // Если уже после 12:00, проверяем, было ли сегодня обновление
-                var todayUpdateMsk = new Date(nowMsk);
-                todayUpdateMsk.setHours(12, 0, 0, 0);
-                var todayUpdateUTC = todayUpdateMsk.getTime() - mskOffset;
-                
-                if (lastTopUpdateTime < todayUpdateUTC) {
-                    shouldUpdate = true;
-                }
-            }
-            
-            // Если топ не нужно обновлять, загружаем из localStorage
-            if (!shouldUpdate) {
+                // Пробуем загрузить из кэша
                 var cachedTop = localStorage.getItem('admincase_top5_data');
                 if (cachedTop) {
                     try {
@@ -2390,109 +2308,53 @@
                         return;
                     } catch(e) {}
                 }
+                // Если кэша нет - загружаем
+                loadTopFromFirebase();
             }
-            
-            // Загружаем топ из Firebase
-            loadTopFromFirebase();
         }
         
         function loadTopFromFirebase() {
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             
-            db.collection('case_openings').get().then(function(caseSnapshot) {
-                var users = [];
-                
-                caseSnapshot.forEach(function(doc) {
-                    var data = doc.data();
-                    if (adminIDs.indexOf(data.userID) !== -1) return;
-                    
-                    var found = false;
-                    for (var i = 0; i < users.length; i++) {
-                        if (users[i].userID === data.userID) {
-                            users[i].openedCount++;
-                            if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                                users[i].avatar = data.avatar;
-                            }
-                            if (data.userName && data.userName !== 'Неизвестно') {
-                                users[i].name = data.userName;
-                            }
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        users.push({
+            // Читаем ТОЛЬКО user_stats (5 документов вместо 1000+)
+            db.collection('user_stats')
+                .orderBy('openedCount', 'desc')
+                .limit(5)
+                .get()
+                .then(function(snapshot) {
+                    var topUsers = [];
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        if (adminIDs.indexOf(data.userID) !== -1) return;
+                        topUsers.push({
                             name: data.userName || 'Неизвестно',
                             userID: data.userID || 'Неизвестно',
-                            openedCount: 1,
-                            avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null,
-                            timestamp: data.timestamp || 0
+                            openedCount: data.openedCount || 0,
+                            avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null
                         });
-                    }
-                });
-                
-                return db.collection('taken_names').get().then(function(nameSnapshot) {
-                    nameSnapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        if (!data.name || data.name === 'Игрок') return;
-                        if (adminIDs.indexOf(data.userID) !== -1) return;
-                        
-                        var found = false;
-                        for (var i = 0; i < users.length; i++) {
-                            if (users[i].userID === data.userID) {
-                                if ((data.timestamp || 0) > users[i].timestamp) {
-                                    users[i].name = data.name;
-                                    users[i].timestamp = data.timestamp || 0;
-                                }
-                                if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                                    users[i].avatar = data.avatar;
-                                }
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            users.push({
-                                name: data.name,
-                                userID: data.userID || 'Неизвестно',
-                                openedCount: 0,
-                                avatar: (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') ? data.avatar : null,
-                                timestamp: data.timestamp || 0
-                            });
-                        }
                     });
-                    
-                    users.sort(function(a, b) {
-                        return b.openedCount - a.openedCount;
-                    });
-                    
-                    // ТОП-5 вместо ТОП-10
-                    var top5 = users.slice(0, 5);
                     
                     // Сохраняем в localStorage
                     try {
-                        localStorage.setItem('admincase_top5_data', JSON.stringify(top5));
+                        localStorage.setItem('admincase_top5_data', JSON.stringify(topUsers));
                         localStorage.setItem('admincase_top_last_update', Date.now());
                     } catch(e) {}
                     
-                    displayTopList(top5);
+                    displayTopList(topUsers);
+                })
+                .catch(function(error) {
+                    list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
                 });
-            }).catch(function(error) {
-                list.innerHTML = '<p style="color:#f44336; text-align:center;">Ошибка: ' + error.message + '</p>';
-            });
         }
         
         function displayTopList(topUsers) {
             var list = document.getElementById('topList');
-            
             if (topUsers.length === 0) {
                 list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
                 return;
             }
-            
             list.innerHTML = '';
-            
             for (var j = 0; j < topUsers.length; j++) {
                 (function(user, index) {
                     var div = document.createElement('div');
@@ -2520,40 +2382,7 @@
             }
         }
 
-        // Функция для автоматического обновления топа в 12:00 МСК
-        function scheduleTopUpdate() {
-            function checkAndUpdate() {
-                var now = Date.now();
-                var mskOffset = 3 * 60 * 60 * 1000;
-                var nowMsk = new Date(now + mskOffset);
-                
-                // Если сейчас ровно 12:00 или позже, и топ не обновлялся сегодня
-                if (nowMsk.getHours() >= 12) {
-                    var todayUpdateMsk = new Date(nowMsk);
-                    todayUpdateMsk.setHours(12, 0, 0, 0);
-                    var todayUpdateUTC = todayUpdateMsk.getTime() - mskOffset;
-                    
-                    var lastUpdateStr = localStorage.getItem('admincase_top_last_update');
-                    var lastUpdate = lastUpdateStr ? parseInt(lastUpdateStr) : 0;
-                    
-                    if (lastUpdate < todayUpdateUTC) {
-                        // Обновляем топ
-                        loadTopFromFirebase();
-                        console.log('Топ обновлен в 12:00 МСК');
-                    }
-                }
-            }
-            
-            // Проверяем каждую минуту
-            setInterval(checkAndUpdate, 60 * 1000);
-            
-            // Проверяем сразу при загрузке
-            checkAndUpdate();
-        }
-        
-        // Запускаем планировщик обновления топа
-        scheduleTopUpdate();
-
+        // ===== ЧУЖОЙ ПРОФИЛЬ (ОПТИМИЗИРОВАНО) =====
         function showOtherProfile(targetUserID) {
             hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
@@ -2568,68 +2397,60 @@
             
             var isOtherAdmin = adminIDs.indexOf(targetUserID) !== -1;
             
-            db.collection('case_openings')
-                .where('userID', '==', targetUserID)
-                .get()
-                .then(function(caseSnapshot) {
-                    var foundName = 'Неизвестно';
-                    var foundAvatar = null;
-                    
-                    caseSnapshot.forEach(function(doc) {
+            // Читаем ОДИН документ user_stats
+            db.collection('user_stats').doc(targetUserID).get()
+                .then(function(doc) {
+                    if (doc.exists) {
                         var data = doc.data();
-                        if (data.userName) foundName = data.userName;
-                        if (data.avatar && !foundAvatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                            foundAvatar = data.avatar;
+                        var foundName = data.userName || 'Неизвестно';
+                        var foundAvatar = data.avatar || null;
+                        var foundOpenedCount = data.openedCount || 0;
+                        
+                        document.getElementById('otherName').textContent = foundName;
+                        document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                        document.getElementById('otherOpenedCount').textContent = foundOpenedCount;
+                        
+                        if (isOtherAdmin) {
+                            document.getElementById('otherName').classList.add('admin-name');
+                            document.getElementById('otherAdminPrefix').style.display = 'inline-block';
+                        } else {
+                            document.getElementById('otherName').classList.remove('admin-name');
+                            document.getElementById('otherAdminPrefix').style.display = 'none';
                         }
-                    });
-                    
-                    document.getElementById('otherName').textContent = foundName;
-                    document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
-                    document.getElementById('otherOpenedCount').textContent = caseSnapshot.size;
-                    
-                    if (isOtherAdmin) {
-                        document.getElementById('otherName').classList.add('admin-name');
-                        document.getElementById('otherAdminPrefix').style.display = 'inline-block';
+                        
+                        var prefix = getPrefix(foundOpenedCount);
+                        var otherPrefixEl = document.getElementById('otherPrefix');
+                        otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
+                        otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
+                        
+                        currentOtherAvatar = foundAvatar;
+                        var otherAvatar = document.getElementById('otherAvatar');
+                        if (foundAvatar) {
+                            otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                        } else {
+                            otherAvatar.innerHTML = '👤';
+                        }
                     } else {
-                        document.getElementById('otherName').classList.remove('admin-name');
-                        document.getElementById('otherAdminPrefix').style.display = 'none';
+                        document.getElementById('otherName').textContent = 'Неизвестно';
+                        document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                        document.getElementById('otherOpenedCount').textContent = '0';
+                        
+                        if (isOtherAdmin) {
+                            document.getElementById('otherName').classList.add('admin-name');
+                            document.getElementById('otherAdminPrefix').style.display = 'inline-block';
+                        } else {
+                            document.getElementById('otherName').classList.remove('admin-name');
+                            document.getElementById('otherAdminPrefix').style.display = 'none';
+                        }
+                        
+                        var prefix = getPrefix(0);
+                        var otherPrefixEl = document.getElementById('otherPrefix');
+                        otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
+                        otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
+                        
+                        currentOtherAvatar = null;
+                        document.getElementById('otherAvatar').innerHTML = '👤';
                     }
-                    
-                    var prefix = getPrefix(caseSnapshot.size);
-                    var otherPrefixEl = document.getElementById('otherPrefix');
-                    otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
-                    otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
-                    
-                    currentOtherAvatar = foundAvatar;
-                    var otherAvatar = document.getElementById('otherAvatar');
-                    if (foundAvatar) {
-                        otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-                    } else {
-                        otherAvatar.innerHTML = '👤';
-                    }
-                    
-                    return db.collection('taken_names')
-                        .where('userID', '==', targetUserID)
-                        .get()
-                        .then(function(nameSnapshot) {
-                            var latestTimestamp = 0;
-                            nameSnapshot.forEach(function(doc) {
-                                var data = doc.data();
-                                var ts = data.timestamp || 0;
-                                if (ts > latestTimestamp && data.name) {
-                                    latestTimestamp = ts;
-                                    foundName = data.name;
-                                    if (data.avatar && data.avatar !== 'undefined' && data.avatar !== 'null') {
-                                        foundAvatar = data.avatar;
-                                    }
-                                }
-                            });
-                            
-                            document.getElementById('otherName').textContent = foundName;
-                            if (foundAvatar && foundAvatar !== 'undefined' && foundAvatar !== 'null') {
-                                otherAvatar.innerHTML = '<img src="' + foundAvatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-                            }
-                        });
                 })
                 .catch(function(error) {
                     document.getElementById('otherName').textContent = 'Ошибка';
@@ -2644,7 +2465,6 @@
                 showCustomModal('Недоступно', '<p>Для смены имени нужно открыть хотя бы 1 кейс!</p>');
                 return;
             }
-            
             isEditMode = true;
             document.getElementById('profileNameDisplay').style.display = 'none';
             document.getElementById('editNameInput').style.display = 'block';
@@ -2669,12 +2489,10 @@
                     showCustomModal('Ошибка', '<p>Подождите 1 минуту перед сменой имени</p>');
                     return;
                 }
-                
                 if (!namesLoaded) {
                     showCustomModal('Ошибка', '<p>Подождите, идёт загрузка списка имён...</p>');
                     return;
                 }
-                
                 if (serverTakenNames.indexOf(newName) !== -1) {
                     showCustomModal('Ошибка', '<p>Это имя уже занято!</p>');
                     return;
@@ -2682,87 +2500,68 @@
                 
                 var oldName = userName;
                 
-                if (userName !== 'Игрок') {
-                    db.collection('taken_names')
-                        .where('uid', '==', userUID)
-                        .get()
-                        .then(function(snapshot) {
-                            var deletePromises = [];
-                            snapshot.forEach(function(doc) {
-                                deletePromises.push(doc.ref.delete());
-                            });
-                            return Promise.all(deletePromises);
-                        })
-                        .then(function() {
-                            return db.collection('taken_names').add({
-                                name: newName,
-                                uid: userUID,
-                                userID: userID,
-                                avatar: avatarData,
-                                timestamp: now
-                            });
-                        })
-                        .then(function() {
-                            userName = newName;
-                            lastNameChangeTime = now;
-                            serverTakenNames.push(newName);
-                            try {
-                                localStorage.setItem('admincase_user_name', userName);
-                                localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
-                            } catch(e) {}
-                            
-                            db.collection('name_changes').add({
-                                userName: newName,
-                                userID: userID,
-                                oldName: oldName,
-                                newName: newName,
-                                timestamp: now
-                            }).catch(function() {});
-                            
-                            updateUserDataInFirebase();
-                            checkAchievements();
-                            
-                            applyProfileData();
-                            exitEditMode();
-                            showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
-                        })
-                        .catch(function() {
-                            showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
-                        });
-                } else {
-                    db.collection('taken_names').add({
-                        name: newName,
-                        uid: userUID,
+                // Обновляем имя в user_stats (1 документ)
+                db.collection('user_stats').doc(userID).update({
+                    userName: newName,
+                    lastUpdated: now
+                }).catch(function() {
+                    // Если документа нет - создаем
+                    db.collection('user_stats').doc(userID).set({
                         userID: userID,
+                        userName: newName,
                         avatar: avatarData,
-                        timestamp: now
-                    }).then(function() {
-                        userName = newName;
-                        lastNameChangeTime = now;
-                        serverTakenNames.push(newName);
-                        try {
-                            localStorage.setItem('admincase_user_name', userName);
-                            localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
-                        } catch(e) {}
-                        
-                        db.collection('name_changes').add({
-                            userName: newName,
-                            userID: userID,
-                            oldName: oldName,
-                            newName: newName,
-                            timestamp: now
-                        }).catch(function() {});
-                        
-                        updateUserDataInFirebase();
-                        checkAchievements();
-                        
-                        applyProfileData();
-                        exitEditMode();
-                        showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
-                    }).catch(function() {
-                        showCustomModal('Ошибка', '<p>Ошибка при сохранении имени</p>');
-                    });
-                }
+                        openedCount: openedCount,
+                        winHistory: winHistory,
+                        lastUpdated: now
+                    }).catch(function() {});
+                });
+                
+                // Обновляем имя в taken_names (для обратной совместимости)
+                db.collection('taken_names').add({
+                    name: newName,
+                    uid: userUID,
+                    userID: userID,
+                    avatar: avatarData,
+                    timestamp: now
+                }).catch(function() {});
+                
+                // Обновляем агрегатор имен
+                db.collection('stats').doc('taken_names').get()
+                    .then(function(doc) {
+                        var names = [];
+                        if (doc.exists) {
+                            names = doc.data().names || [];
+                        }
+                        if (names.indexOf(newName) === -1) {
+                            names.push(newName);
+                            return db.collection('stats').doc('taken_names').set({
+                                names: names,
+                                updatedAt: now
+                            });
+                        }
+                    })
+                    .catch(function() {});
+                
+                userName = newName;
+                lastNameChangeTime = now;
+                serverTakenNames.push(newName);
+                try {
+                    localStorage.setItem('admincase_user_name', userName);
+                    localStorage.setItem('admincase_name_change_time', lastNameChangeTime);
+                } catch(e) {}
+                
+                db.collection('name_changes').add({
+                    userName: newName,
+                    userID: userID,
+                    oldName: oldName,
+                    newName: newName,
+                    timestamp: now
+                }).catch(function() {});
+                
+                checkAchievements();
+                applyProfileData();
+                exitEditMode();
+                showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
                 return;
             }
             applyProfileData();
@@ -2774,7 +2573,6 @@
                 showRoulettePage(caseType);
                 return;
             }
-            
             currentCase = caseType;
             document.getElementById('promoModal').classList.add('active');
             document.getElementById('promoTitle').textContent = 
@@ -2794,7 +2592,6 @@
             
             if (dynamicPromoCodes[input] !== undefined) {
                 var promoData = dynamicPromoCodes[input];
-                
                 if (promoData.expiresAt && promoData.expiresAt < Date.now()) {
                     db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
                     delete dynamicPromoCodes[input];
@@ -2802,7 +2599,6 @@
                     msg.textContent = 'Промокод истёк!';
                     return;
                 }
-                
                 if (promoData.activationsLeft <= 0) {
                     db.collection('active_promos').doc(promoData.docId).delete().catch(function() {});
                     delete dynamicPromoCodes[input];
@@ -2810,7 +2606,6 @@
                     msg.textContent = 'Промокод больше не действителен!';
                     return;
                 }
-                
                 if (promoData.caseType !== currentCase) {
                     msg.className = 'message error';
                     msg.textContent = 'Этот код для другого кейса!';
@@ -3000,11 +2795,21 @@
                             source: currentCase === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
                             timestamp: Date.now()
                         });
+                        
+                        // Оставляем только последние 20
+                        if (winHistory.length > 20) {
+                            winHistory = winHistory.slice(-20);
+                        }
+                        
                         try {
                             localStorage.setItem('admincase_opened_count', openedCount);
                             localStorage.setItem('admincase_win_history', JSON.stringify(winHistory));
                         } catch(e) {}
                         
+                        // Обновляем user_stats (1 документ)
+                        updateUserStats(currentCase, actualWin, actualRarity);
+                        
+                        // Добавляем в case_openings для истории (1 запись)
                         db.collection('case_openings').add({
                             userName: userName,
                             userID: userID,
@@ -3033,15 +2838,11 @@
             for (var t = 0; t < themes.length; t++) {
                 document.getElementById('bodyElement').classList.remove('theme-' + themes[t]);
             }
-            
             currentTheme = theme;
-            
             if (currentTheme !== 'dark') {
                 document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
             }
-            
             try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
-            
             var options = document.querySelectorAll('.theme-option');
             for (var o = 0; o < options.length; o++) {
                 options[o].classList.remove('active');
@@ -3052,7 +2853,6 @@
                 var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
                 if (activeBtn) activeBtn.classList.add('active');
             }
-            
             closeThemeMenu();
         }
 
@@ -3100,7 +2900,6 @@
                 html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
                 content.innerHTML = html;
             }
-            
             modal.classList.add('active');
         }
 
@@ -3125,14 +2924,12 @@
                 localStorage.removeItem('admincase_top5_data');
                 localStorage.removeItem('admincase_top_last_update');
             } catch(e) {}
-            
             closeAuthModal();
             showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
         }
 
         function showLoginForm() {
             var content = document.getElementById('authModalContent');
-            
             var html = '<h2>Вход в аккаунт</h2>';
             html += '<div class="auth-label">ID аккаунта:</div>';
             html += '<input type="text" class="auth-input" id="loginID" placeholder="Введите ID">';
@@ -3144,23 +2941,19 @@
             html += '<button class="btn btn-login" onclick="handleLogin()">Войти</button>';
             html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
             html += '<div class="message" id="authMessage"></div>';
-            
             content.innerHTML = html;
         }
 
         function showRegisterForm() {
             var content = document.getElementById('authModalContent');
-            
             if (openedCount < 10) {
                 content.innerHTML = '<h2>Регистрация недоступна</h2><p style="margin-bottom:15px;">Для регистрации нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p><button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
                 return;
             }
-            
             if (userName === 'Игрок') {
                 content.innerHTML = '<h2>Регистрация недоступна</h2><p style="margin-bottom:15px;">Для регистрации нужно изменить имя в профиле.</p><button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
                 return;
             }
-            
             var html = '<h2>Регистрация аккаунта</h2>';
             html += '<div class="auth-label">ID аккаунта (автоматически):</div>';
             html += '<input type="text" class="auth-input" id="regID" value="' + userID + '" readonly style="opacity:0.5;">';
@@ -3177,7 +2970,6 @@
             html += '<button class="btn btn-register" onclick="handleRegister()">Зарегистрироваться</button>';
             html += '<button class="btn btn-close" onclick="showAuthModal()">Назад</button>';
             html += '<div class="message" id="authMessage"></div>';
-            
             content.innerHTML = html;
         }
 
@@ -3196,28 +2988,23 @@
             var password = document.getElementById('regPassword').value;
             var passwordConfirm = document.getElementById('regPasswordConfirm').value;
             var msg = document.getElementById('authMessage');
-            
             msg.className = 'message';
             msg.textContent = '';
-            
             if (!password || !passwordConfirm) {
                 msg.className = 'message error';
                 msg.textContent = 'Заполните все поля!';
                 return;
             }
-            
             if (password.length < 6 || password.length > 10) {
                 msg.className = 'message error';
                 msg.textContent = 'Пароль должен быть от 6 до 10 символов!';
                 return;
             }
-            
             if (password !== passwordConfirm) {
                 msg.className = 'message error';
                 msg.textContent = 'Пароли не совпадают!';
                 return;
             }
-            
             db.collection('registered_accounts')
                 .where('userID', '==', userID)
                 .get()
@@ -3227,13 +3014,22 @@
                         msg.textContent = 'Аккаунт уже зарегистрирован!';
                         return;
                     }
-                    
                     return db.collection('registered_accounts').add({
                         userID: userID,
                         userName: userName,
                         password: password,
                         createdAt: Date.now()
                     }).then(function() {
+                        // Создаем user_stats при регистрации
+                        db.collection('user_stats').doc(userID).set({
+                            userID: userID,
+                            userName: userName,
+                            avatar: avatarData,
+                            openedCount: openedCount,
+                            winHistory: winHistory,
+                            lastUpdated: Date.now()
+                        }).catch(function() {});
+                        
                         var content = document.getElementById('authModalContent');
                         content.innerHTML = '<h2>✅ Успех!</h2><p style="margin-bottom:15px;">Регистрация успешная. Войдите в аккаунт повторно.<br>Запомните свой ID аккаунта и пароль.</p><p>ID: ' + userID + '</p><button class="btn btn-login" onclick="showLoginForm()">Войти</button>';
                     });
@@ -3248,16 +3044,13 @@
             var inputID = document.getElementById('loginID').value.trim();
             var password = document.getElementById('loginPassword').value;
             var msg = document.getElementById('authMessage');
-            
             msg.className = 'message';
             msg.textContent = '';
-            
             if (!inputID || !password) {
                 msg.className = 'message error';
                 msg.textContent = 'Заполните все поля!';
                 return;
             }
-            
             db.collection('registered_accounts')
                 .where('userID', '==', inputID)
                 .get()
@@ -3267,24 +3060,20 @@
                         msg.textContent = 'Аккаунт не найден!';
                         return;
                     }
-                    
                     var found = false;
                     snapshot.forEach(function(doc) {
                         var data = doc.data();
                         if (data.password === password) {
                             found = true;
-                            
                             try {
                                 localStorage.setItem('admincase_logged_in', 'true');
                                 localStorage.setItem('admincase_logged_in_name', data.userName);
                                 localStorage.setItem('admincase_logged_in_id', data.userID);
                             } catch(e) {}
-                            
                             closeAuthModal();
                             showCustomModal('✅ Успешно!', '<p>Вы вошли в аккаунт "' + data.userName + '".<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
                         }
                     });
-                    
                     if (!found) {
                         msg.className = 'message error';
                         msg.textContent = 'Неверный пароль!';
@@ -3431,7 +3220,12 @@
                         document.getElementById('avatarEmoji').style.display = 'none';
                         try { localStorage.setItem('admincase_user_avatar', avatarData); } catch(e) {}
                         
-                        updateUserDataInFirebase();
+                        // Обновляем user_stats
+                        db.collection('user_stats').doc(userID).update({
+                            avatar: avatarData,
+                            lastUpdated: Date.now()
+                        }).catch(function() {});
+                        
                         checkAchievements();
                     };
                     img.src = ev.target.result;
@@ -3457,7 +3251,6 @@
             if (!e.target.closest('.theme-wrapper') && !e.target.closest('.theme-dropdown')) {
                 closeThemeMenu();
             }
-            
             if (!e.target.closest('.burger-btn') && !e.target.closest('.dropdown-menu')) {
                 document.getElementById('dropdownMenu').classList.remove('show');
             }
