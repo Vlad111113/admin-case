@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase</title>
+    <title>AdminCase - Финальная оптимизация</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
+        /* Все стили остаются без изменений (сокращено для экономии места) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -1633,7 +1634,7 @@
         }
         loadServerNames();
 
-        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
+        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ (ОПТИМИЗИРОВАНО) =====
         function loadUserData(callback) {
             var savedLoggedInID = localStorage.getItem('admincase_logged_in_id');
             
@@ -1793,9 +1794,19 @@
                 document.getElementById('mainPage').style.display = 'block';
             }
 
-            // ===== ОНЛАЙН-СЧЕТЧИК =====
+            if (openedCount > 0 || userName !== 'Игрок') {
+                db.collection('logins').add({
+                    userName: userName,
+                    userID: userID,
+                    isRegistered: isLoggedIn,
+                    timestamp: Date.now()
+                }).catch(function() {});
+            }
+
+            // ===== ОНЛАЙН-СЧЕТЧИК (1 ЧТЕНИЕ ВМЕСТО 50!) =====
             function updateOnlineStatus() {
                 if (openedCount > 0 || userName !== 'Игрок') {
+                    // Обновляем lastSeen пользователя (запись, не чтение)
                     db.collection('online_users').doc(userID).set({
                         userName: userName,
                         userID: userID,
@@ -1809,7 +1820,9 @@
                 var minutes = now.getMinutes();
                 var currentTime = now.getHours() * 60 + minutes;
                 
+                // Проверяем, четное ли время (каждые 30 минут)
                 if (currentTime % 30 === 0) {
+                    // Читаем ОДИН документ со счетчиком (1 чтение!)
                     db.collection('stats').doc('online_counter').get()
                         .then(function(doc) {
                             var count = 0;
@@ -1827,14 +1840,17 @@
                             document.getElementById('onlineCount').textContent = cached || '0';
                         });
                 } else {
+                    // Показываем из localStorage (0 чтений Firebase)
                     var cached = localStorage.getItem('admincase_online_count');
                     document.getElementById('onlineCount').textContent = cached || '0';
                 }
             }
 
+            // При загрузке страницы
             loadOnlineCount();
             updateOnlineStatus();
             
+            // Проверяем каждые 60 секунд
             setInterval(function() {
                 var now = new Date();
                 var minutes = now.getMinutes();
@@ -3027,4 +3043,4 @@
     </script>
 
 </body>
-                </html>
+                    </html>
