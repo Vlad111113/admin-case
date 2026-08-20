@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Final v3</title>
+    <title>AdminCase - Final v4</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -1374,10 +1374,6 @@
         function openPromoModal(caseType) {
             if (isAdmin) {
                 showRoulettePage(caseType);
-                return;
-            }
-            if (!isLoggedIn) {
-                showCustomModal('Требуется вход', '<p>Войдите через Google, чтобы открывать кейсы!</p>');
                 return;
             }
             currentCase = caseType;
