@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Защищенная версия</title>
+    <title>AdminCase - Final</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -135,10 +135,7 @@
             margin-bottom: 20px;
             font-weight: bold;
         }
-        .online-counter span {
-            color: #ffd700;
-            font-size: 1.3rem;
-        }
+        .online-counter span { color: #ffd700; font-size: 1.3rem; }
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn {
             position: fixed; top: 20px; right: 20px;
@@ -155,7 +152,6 @@
             border-radius: 10px; cursor: pointer; z-index: 300;
             font-size: 1.2rem;
         }
-        .auth-btn:hover { background: rgba(255,255,255,0.2); }
         .burger-line { width: 22px; height: 2px; background: #fff; margin: 4px auto; }
         .dropdown-menu {
             position: fixed; top: 75px; right: 20px;
@@ -171,34 +167,17 @@
         }
         .dropdown-item:hover { background: rgba(255,255,255,0.1); }
         .integrations {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            margin-top: 40px;
-            padding: 20px 0;
-            flex-wrap: wrap;
+            display: flex; gap: 15px; justify-content: center;
+            align-items: center; margin-top: 40px; padding: 20px 0; flex-wrap: wrap;
         }
         .integration-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 2px solid #0f3460;
-            background: #16213e;
-            color: #fff;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px; border-radius: 12px;
+            border: 2px solid #0f3460; background: #16213e;
+            color: #fff; font-size: 0.95rem; font-weight: bold;
+            cursor: pointer; text-decoration: none; transition: all 0.3s;
         }
-        .integration-btn:hover {
-            border-color: #4caf50;
-            background: #1a2a4e;
-            transform: translateY(-3px);
-        }
+        .integration-btn:hover { border-color: #4caf50; background: #1a2a4e; transform: translateY(-3px); }
         .integration-icon { font-size: 1.3rem; }
         .vk-btn { border-color: #0077ff; }
         .vk-btn:hover { border-color: #0077ff; box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3); }
@@ -272,38 +251,17 @@
         .message.error { display: block; background: rgba(244,67,54,0.2); color: #f44336; border: 1px solid #f44336; }
         .message.win { display: block; background: rgba(255,215,0,0.2); color: #ffd700; border: 1px solid #ffd700; font-size: 1.2rem; }
         .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 400;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 400; align-items: center; justify-content: center;
         }
         .auth-modal.active { display: flex; }
         .auth-modal-content {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 20px; padding: 25px; width: 90%;
+            max-width: 400px; text-align: center;
         }
         .auth-modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.3rem; }
-        .auth-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 2px solid #0f3460;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 1rem;
-            text-align: center;
-            outline: none;
-            margin-bottom: 10px;
-        }
         .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
@@ -320,16 +278,9 @@
             border-right: 1px solid #0f3460; flex-shrink: 0;
         }
         .roulette-back-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            padding: 5px 15px;
-            position: absolute;
-            top: 0;
-            left: 0;
+            display: none; background: none; border: none;
+            color: #fff; font-size: 2rem; cursor: pointer;
+            padding: 5px 15px; position: absolute; top: 0; left: 0;
         }
         .roulette-back-btn.show { display: block; }
         .rewards-section { width: 100%; max-width: 400px; margin: 30px auto; }
@@ -340,11 +291,6 @@
             align-items: center; border: 1px solid #0f3460;
         }
         .reward-name { font-weight: bold; }
-        .reward-info-circle {
-            width: 28px; height: 28px; background: #666;
-            border-radius: 50%; border: none; color: #fff;
-            cursor: pointer; font-weight: bold;
-        }
         .profile-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .profile-page.active { display: block; }
         .back-btn {
@@ -353,114 +299,60 @@
         }
         .settings-btn {
             background: none; border: none; color: #fff;
-            font-size: 1.5rem; cursor: pointer; padding: 5px 8px;
-            opacity: 0.7;
+            font-size: 1.5rem; cursor: pointer; padding: 5px 8px; opacity: 0.7;
         }
         .theme-btn {
             background: none; border: none; color: #fff;
-            font-size: 1.2rem; cursor: pointer; padding: 5px 8px;
-            opacity: 0.7;
+            font-size: 1.2rem; cursor: pointer; padding: 5px 8px; opacity: 0.7;
         }
         .theme-wrapper { position: relative; display: inline-block; }
         .theme-dropdown {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 15px;
-            min-width: 220px;
-            max-width: 280px;
-            max-height: 70vh;
-            overflow-y: auto;
-            z-index: 500;
-            padding: 10px;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 15px; min-width: 220px; max-width: 280px;
+            max-height: 70vh; overflow-y: auto; z-index: 500; padding: 10px;
         }
         .theme-dropdown.show { display: block; }
         .theme-option {
-            padding: 12px 15px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #fff;
-            transition: background 0.2s;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 8px;
+            padding: 12px 15px; cursor: pointer; font-size: 0.9rem;
+            font-weight: bold; color: #fff; transition: background 0.2s;
+            border: none; background: none; width: 100%; text-align: left;
+            display: flex; align-items: center; gap: 10px; border-radius: 8px;
         }
         .theme-option:hover { background: rgba(255,255,255,0.1); }
         .theme-option.active { background: rgba(76,175,80,0.3); }
         .theme-option-icon { font-size: 1.2rem; }
         .theme-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 499;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 499;
         }
         .theme-overlay.show { display: block; }
         .profile-header {
             background: #16213e; border: 2px solid #0f3460;
-            border-radius: 20px; padding: 25px; margin-bottom: 30px;
-            position: relative;
+            border-radius: 20px; padding: 25px; margin-bottom: 30px; position: relative;
         }
         .profile-top-row {
-            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px;
-            flex-wrap: wrap;
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
         }
         .profile-info { display: flex; align-items: flex-start; gap: 15px; flex: 1; min-width: 0; }
         .avatar {
-            width: 70px;
-            height: 70px;
-            min-width: 70px;
-            min-height: 70px;
-            max-width: 70px;
-            max-height: 70px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4caf50, #ffd700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            overflow: hidden;
-            cursor: pointer;
-            aspect-ratio: 1/1;
-            position: relative;
+            width: 70px; height: 70px; min-width: 70px; min-height: 70px;
+            max-width: 70px; max-height: 70px; flex-shrink: 0;
+            border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; overflow: hidden; cursor: pointer;
+            aspect-ratio: 1/1; position: relative;
         }
-        .avatar img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
         .profile-info-text { flex: 1; min-width: 0; }
         .profile-id { font-size: 0.7rem; color: #999; margin-bottom: 3px; word-break: break-all; }
         .profile-reg-date { font-size: 0.65rem; color: #666; margin-bottom: 3px; word-break: break-all; }
         .profile-name { font-size: 1.2rem; font-weight: bold; word-break: break-word; }
-        .profile-name.admin-name {
-            color: #ff3333;
-            text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
-        }
+        .profile-name.admin-name { color: #ff3333; text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; }
         .profile-prefix {
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-top: 3px;
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 20px;
-            border: 1px solid;
+            font-size: 0.85rem; font-weight: bold; margin-top: 3px;
+            display: inline-block; padding: 2px 8px; border-radius: 20px; border: 1px solid;
         }
         .profile-prefix.prefix-novice { color: #4caf50; border-color: #4caf50; }
         .profile-prefix.prefix-amateur { color: #42a5f5; border-color: #42a5f5; }
@@ -470,15 +362,13 @@
         .profile-prefix.prefix-legend { color: #ffd700; border-color: #ffd700; text-shadow: 0 0 5px #ffd700; }
         .profile-prefix.prefix-overlord { color: #f44336; border-color: #f44336; text-shadow: 0 0 5px #f44336; }
         .profile-prefix.prefix-admin {
-            color: #ff3333;
-            border-color: #ff3333;
+            color: #ff3333; border-color: #ff3333;
             text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333;
-            font-size: 0.9rem;
-            margin-top: 3px;
+            font-size: 0.9rem; margin-top: 3px;
         }
         .profile-stats {
-            display: flex; gap: 20px; border-top: 1px solid #0f3460; padding-top: 20px;
-            flex-wrap: wrap;
+            display: flex; gap: 20px; border-top: 1px solid #0f3460;
+            padding-top: 20px; flex-wrap: wrap;
         }
         .stat-block { flex: 1; text-align: center; min-width: 100px; }
         .stat-value { font-size: 1.5rem; font-weight: bold; color: #ffd700; }
@@ -491,41 +381,14 @@
             font-size: 1.3rem; font-weight: bold; color: #ffd700;
             margin-bottom: 20px; text-align: center;
         }
-        .history-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            justify-content: flex-start;
-        }
+        .history-list { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-start; }
         .history-item {
-            padding: 5px 8px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            border: 1px solid;
-            position: relative;
-            font-size: 0.75rem;
-            flex: 0 0 calc(33.33% - 5px);
-            max-width: calc(33.33% - 5px);
-            min-width: 0;
+            padding: 5px 8px; border-radius: 8px; display: inline-flex;
+            align-items: center; gap: 5px; border: 1px solid;
+            position: relative; font-size: 0.75rem;
+            flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); min-width: 0;
         }
         .history-name { font-weight: bold; font-size: 0.7rem; word-break: break-word; }
-        .history-info-circle {
-            width: 18px; height: 18px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; border: none; color: #fff;
-            cursor: pointer; font-weight: bold; position: relative;
-            font-size: 0.6rem;
-            flex-shrink: 0;
-        }
-        .history-tooltip {
-            position: absolute; bottom: calc(100% + 8px); left: 50%;
-            transform: translateX(-50%); background: #2a2a3e;
-            border: 1px solid #444; border-radius: 8px; padding: 8px 12px;
-            font-size: 0.7rem; color: #ccc; display: none;
-            white-space: nowrap; z-index: 10;
-        }
-        .history-tooltip.show { display: block; }
         .edit-actions { display: none; gap: 10px; margin-top: 20px; justify-content: center; }
         .edit-name-input {
             width: 100%; padding: 10px; border-radius: 8px;
@@ -535,31 +398,21 @@
         .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .top-page.active { display: block; }
         .top-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ffd700;
-            text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.8rem; font-weight: bold; color: #ffd700;
+            text-align: center; margin-bottom: 30px;
         }
         .top-list { display: flex; flex-direction: column; gap: 10px; }
         .top-item {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 15px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
+            background: #16213e; border: 2px solid #0f3460;
+            border-radius: 15px; padding: 15px 20px; display: flex;
+            align-items: center; gap: 15px; cursor: pointer; transition: all 0.3s;
         }
         .top-item:hover { border-color: #4caf50; background: #1a2a4e; }
         .top-place { font-size: 1.5rem; font-weight: bold; color: #ffd700; min-width: 40px; text-align: center; }
         .top-avatar {
             width: 50px; height: 50px; min-width: 50px; min-height: 50px;
             max-width: 50px; max-height: 50px; flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4caf50, #ffd700);
+            border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700);
             display: flex; align-items: center; justify-content: center;
             font-size: 1.8rem; overflow: hidden; cursor: pointer;
         }
@@ -588,8 +441,7 @@
         .other-avatar {
             width: 100px; height: 100px; min-width: 100px; min-height: 100px;
             max-width: 100px; max-height: 100px; flex-shrink: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4caf50, #ffd700);
+            border-radius: 50%; background: linear-gradient(135deg, #4caf50, #ffd700);
             display: flex; align-items: center; justify-content: center;
             font-size: 3rem; overflow: hidden; margin: 0 auto 15px; cursor: pointer;
         }
@@ -648,8 +500,7 @@
         .avatar-modal img { max-width: 90%; max-height: 90%; border-radius: 20px; border: 3px solid #fff; }
         .avatar-modal-close {
             position: absolute; top: 20px; right: 30px;
-            font-size: 2rem; color: #fff; cursor: pointer;
-            background: none; border: none;
+            font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none;
         }
         .custom-modal {
             display: none; position: fixed; top: 0; left: 0;
@@ -1070,8 +921,16 @@
         var loggedInAccountName = '';
         var loggedInAccountID = '';
         var promosLoaded = false;
+        var adminReturnPage = 'main';
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
+
+        // ===== ФОРМАТИРОВАНИЕ ID =====
+        function formatID(id) {
+            if (!id) return '—';
+            if (id.length <= 12) return id;
+            return id.substring(0, 12) + '...';
+        }
 
         // ===== ВХОД ЧЕРЕЗ GOOGLE =====
         function loginWithGoogle() {
@@ -1111,72 +970,13 @@
             });
         }
 
-        // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
-        auth.onAuthStateChanged(function(user) {
-            if (user) {
-                userID = user.uid;
-                userName = user.displayName || 'Игрок';
-                avatarData = user.photoURL || null;
-                isLoggedIn = true;
-                loggedInAccountID = user.uid;
-                loggedInAccountName = user.displayName || 'Пользователь';
-                
-                db.collection('user_stats').doc(userID).get()
-                    .then(function(doc) {
-                        if (doc.exists) {
-                            var data = doc.data();
-                            openedCount = data.openedCount || 0;
-                            winHistory = data.winHistory || [];
-                            userName = data.userName || userName;
-                            avatarData = data.avatar || avatarData;
-                        }
-                        initApp();
-                    })
-                    .catch(function() {
-                        initApp();
-                    });
-            } else {
-                isLoggedIn = false;
-                userID = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                userName = 'Гость';
-                openedCount = 0;
-                winHistory = [];
-                avatarData = null;
-                initApp();
-            }
-        });
-
-        function initApp() {
-            verifyAdmin(function(adminStatus) {
-                isAdmin = adminStatus;
-                applyProfileData();
-                document.getElementById('mainPage').style.display = 'block';
-                var cachedOnline = localStorage.getItem('admincase_online_count');
-                document.getElementById('onlineCount').textContent = cachedOnline || '0';
-            });
-        }
-
-        // ===== ПРОВЕРКА АДМИНА =====
-        function verifyAdmin(callback) {
-            var savedKey = localStorage.getItem('admincase_admin_key');
-            
-            if (!savedKey || !userID) {
-                if (callback) callback(false);
-                return;
-            }
-            
-            db.collection('admin_keys').doc('admin_' + userID).get()
+        // ===== ПРОВЕРКА АДМИНА ПО UID =====
+        function checkAdminByUID(uid, callback) {
+            db.collection('admin_keys').doc('admin_' + uid).get()
                 .then(function(doc) {
                     if (doc.exists) {
-                        var data = doc.data();
-                        if (savedKey === data.secret_key) {
-                            if (callback) callback(true);
-                        } else {
-                            localStorage.removeItem('admincase_admin_key');
-                            if (callback) callback(false);
-                        }
+                        if (callback) callback(true);
                     } else {
-                        localStorage.removeItem('admincase_admin_key');
                         if (callback) callback(false);
                     }
                 })
@@ -1185,6 +985,7 @@
                 });
         }
 
+        // ===== ВХОД В АДМИНКУ =====
         function showAdminLogin() {
             var password = prompt('Введите пароль администратора:');
             if (!password) return;
@@ -1198,6 +999,7 @@
                             isAdmin = true;
                             applyProfileData();
                             alert('✅ Вы вошли как администратор!');
+                            showAdminPanel();
                         } else {
                             alert('❌ Неверный пароль!');
                         }
@@ -1208,6 +1010,76 @@
                 .catch(function(error) {
                     alert('Ошибка: ' + error.message);
                 });
+        }
+
+        // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                userID = user.uid;
+                userName = user.displayName || 'Игрок';
+                avatarData = user.photoURL || null;
+                isLoggedIn = true;
+                loggedInAccountID = user.uid;
+                loggedInAccountName = user.displayName || 'Пользователь';
+                
+                // Проверяем админа
+                checkAdminByUID(userID, function(isAdminUser) {
+                    if (isAdminUser) {
+                        var savedKey = localStorage.getItem('admincase_admin_key');
+                        db.collection('admin_keys').doc('admin_' + userID).get()
+                            .then(function(doc) {
+                                if (doc.exists && savedKey === doc.data().secret_key) {
+                                    isAdmin = true;
+                                } else {
+                                    isAdmin = false;
+                                }
+                                loadUserDataAndInit();
+                            })
+                            .catch(function() {
+                                isAdmin = false;
+                                loadUserDataAndInit();
+                            });
+                    } else {
+                        isAdmin = false;
+                        loadUserDataAndInit();
+                    }
+                });
+            } else {
+                isLoggedIn = false;
+                userID = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                userName = 'Гость';
+                openedCount = 0;
+                winHistory = [];
+                avatarData = null;
+                isAdmin = false;
+                loadUserDataAndInit();
+            }
+        });
+
+        function loadUserDataAndInit() {
+            if (isLoggedIn) {
+                db.collection('user_stats').doc(userID).get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            var data = doc.data();
+                            openedCount = data.openedCount || 0;
+                            winHistory = data.winHistory || [];
+                            userName = data.userName || userName;
+                            avatarData = data.avatar || avatarData;
+                        }
+                        applyProfileData();
+                        document.getElementById('mainPage').style.display = 'block';
+                        var cachedOnline = localStorage.getItem('admincase_online_count');
+                        document.getElementById('onlineCount').textContent = cachedOnline || '0';
+                    })
+                    .catch(function() {
+                        applyProfileData();
+                        document.getElementById('mainPage').style.display = 'block';
+                    });
+            } else {
+                applyProfileData();
+                document.getElementById('mainPage').style.display = 'block';
+            }
         }
 
         function showCustomModal(title, content) {
@@ -1344,6 +1216,7 @@
         }
 
         function showAdminListPage() {
+            adminReturnPage = 'admin_list';
             hideAllPages();
             document.getElementById('adminListPage').classList.add('active');
             var list = document.getElementById('adminListContainer');
@@ -1351,43 +1224,73 @@
             
             db.collection('admin_keys').get()
                 .then(function(snapshot) {
+                    var adminPromises = [];
                     var adminItems = [];
+                    
                     snapshot.forEach(function(doc) {
                         var data = doc.data();
-                        adminItems.push({
-                            userID: data.userID,
-                            name: data.userName || 'Админ',
-                            avatar: data.avatar || null
-                        });
+                        var adminUID = data.userID;
+                        
+                        adminPromises.push(
+                            db.collection('user_stats').doc(adminUID).get()
+                                .then(function(userDoc) {
+                                    var adminData = {
+                                        userID: adminUID,
+                                        name: data.userName || 'Админ',
+                                        avatar: null,
+                                        openedCount: 0
+                                    };
+                                    
+                                    if (userDoc.exists) {
+                                        var userData = userDoc.data();
+                                        adminData.name = userData.userName || data.userName || 'Админ';
+                                        adminData.avatar = userData.avatar || null;
+                                        adminData.openedCount = userData.openedCount || 0;
+                                    }
+                                    
+                                    adminItems.push(adminData);
+                                })
+                                .catch(function() {
+                                    adminItems.push({
+                                        userID: adminUID,
+                                        name: data.userName || 'Админ',
+                                        avatar: null,
+                                        openedCount: 0
+                                    });
+                                })
+                        );
                     });
                     
-                    list.innerHTML = '';
-                    if (adminItems.length === 0) {
-                        list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
-                        return;
-                    }
-                    
-                    for (var i = 0; i < adminItems.length; i++) {
-                        (function(admin) {
-                            var div = document.createElement('div');
-                            div.className = 'admin-item';
-                            var avatarHtml = '<span>👑</span>';
-                            if (admin.avatar) {
-                                avatarHtml = '<img src="' + admin.avatar + '" alt="">';
-                            }
-                            div.innerHTML = 
-                                '<div class="admin-avatar">' + avatarHtml + '</div>' +
-                                '<div class="admin-info">' +
-                                    '<div class="admin-name">' + admin.name + '</div>' +
-                                    '<div class="admin-id">ID: ' + (admin.userID || '—') + '</div>' +
-                                '</div>' +
-                                '<span class="admin-badge">ADMIN</span>';
-                            div.onclick = function() {
-                                showOtherProfile(admin.userID);
-                            };
-                            list.appendChild(div);
-                        })(adminItems[i]);
-                    }
+                    return Promise.all(adminPromises).then(function() {
+                        list.innerHTML = '';
+                        if (adminItems.length === 0) {
+                            list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
+                            return;
+                        }
+                        
+                        for (var i = 0; i < adminItems.length; i++) {
+                            (function(admin) {
+                                var div = document.createElement('div');
+                                div.className = 'admin-item';
+                                var avatarHtml = '<span>👑</span>';
+                                if (admin.avatar) {
+                                    avatarHtml = '<img src="' + admin.avatar + '" alt="">';
+                                }
+                                div.innerHTML = 
+                                    '<div class="admin-avatar">' + avatarHtml + '</div>' +
+                                    '<div class="admin-info">' +
+                                        '<div class="admin-name">' + admin.name + '</div>' +
+                                        '<div class="admin-id">ID: ' + formatID(admin.userID) + '</div>' +
+                                    '</div>' +
+                                    '<span class="admin-badge">ADMIN</span>';
+                                div.onclick = function() {
+                                    adminReturnPage = 'admin_list';
+                                    showOtherProfile(admin.userID);
+                                };
+                                list.appendChild(div);
+                            })(adminItems[i]);
+                        }
+                    });
                 })
                 .catch(function() {
                     list.innerHTML = '<p style="opacity:0.5; text-align:center;">Ошибка загрузки</p>';
@@ -1407,7 +1310,7 @@
 
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
-            document.getElementById('profileIDDisplay').textContent = 'ID: ' + (userID || '—');
+            document.getElementById('profileIDDisplay').textContent = 'ID: ' + formatID(userID);
             
             if (isAdmin) {
                 document.getElementById('profileNameDisplay').classList.add('admin-name');
@@ -1579,6 +1482,7 @@
         }
 
         function showTopPage() {
+            adminReturnPage = 'top';
             hideAllPages();
             document.getElementById('topPage').classList.add('active');
             var cachedTop = localStorage.getItem('admincase_top5_data');
@@ -1638,10 +1542,11 @@
                         '<div class="top-info">' +
                             '<div class="top-name">' + user.name + '</div>' +
                             '<div class="top-prefix ' + prefix.cssClass + '">' + prefix.icon + ' ' + prefix.name + '</div>' +
-                            '<div class="top-id">ID: ' + user.userID + '</div>' +
+                            '<div class="top-id">ID: ' + formatID(user.userID) + '</div>' +
                         '</div>' +
                         '<div class="top-count">' + user.openedCount + '</div>';
                     div.onclick = function() {
+                        adminReturnPage = 'top';
                         showOtherProfile(user.userID);
                     };
                     list.appendChild(div);
@@ -1653,7 +1558,7 @@
             hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
             document.getElementById('otherName').textContent = 'Загрузка...';
-            document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+            document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
             document.getElementById('otherOpenedCount').textContent = '...';
             
             db.collection('user_stats').doc(targetUserID).get()
@@ -1661,7 +1566,7 @@
                     if (doc.exists) {
                         var data = doc.data();
                         document.getElementById('otherName').textContent = data.userName || 'Неизвестно';
-                        document.getElementById('otherID').textContent = 'ID: ' + targetUserID;
+                        document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
                         document.getElementById('otherOpenedCount').textContent = data.openedCount || 0;
                         
                         var prefix = getPrefix(data.openedCount || 0);
@@ -1934,7 +1839,7 @@
             if (isLoggedIn) {
                 var html = '<h2>Аккаунт</h2>';
                 html += '<p style="margin-bottom:15px;">Вы вошли как: ' + userName + '</p>';
-                html += '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + userID + '</p>';
+                html += '<p style="margin-bottom:15px; font-size:0.8rem; opacity:0.7;">ID: ' + formatID(userID) + '</p>';
                 html += '<button class="btn btn-logout" onclick="logout()">Выйти</button>';
                 html += '<br><br><button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
                 content.innerHTML = html;
@@ -1981,10 +1886,19 @@
 
         document.getElementById('backBtn').onclick = function() { showMainPage(); };
         document.getElementById('topBackBtn').onclick = function() { showMainPage(); };
-        document.getElementById('otherBackBtn').onclick = function() { showTopPage(); };
         document.getElementById('adminListBackBtn').onclick = function() { showMainPage(); };
         document.getElementById('adminBackBtn').onclick = function() { showMainPage(); };
         document.getElementById('rouletteBackBtn').onclick = function() { showMainPage(); };
+
+        document.getElementById('otherBackBtn').onclick = function() {
+            if (adminReturnPage === 'admin_list') {
+                showAdminListPage();
+            } else if (adminReturnPage === 'top') {
+                showTopPage();
+            } else {
+                showMainPage();
+            }
+        };
 
         document.getElementById('cheapBox').onclick = function() { openPromoModal('cheap'); };
         document.getElementById('expensiveBox').onclick = function() { openPromoModal('expensive'); };
@@ -2053,4 +1967,4 @@
     </script>
 
 </body>
-    </html>
+        </html>
