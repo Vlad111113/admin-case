@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Admin Login</title>
+    <title>AdminCase - Final Fix 2</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -652,42 +652,87 @@
             return day + '.' + month + '.' + year;
         }
 
+        // ===== ПРОВЕРКА АДМИНА ПО ID =====
+        function checkAdminByID(uid, callback) {
+            db.collection('admin_keys').doc('admin_' + uid).get()
+                .then(function(doc) {
+                    if (doc.exists) {
+                        if (callback) callback(true);
+                    } else {
+                        if (callback) callback(false);
+                    }
+                })
+                .catch(function() {
+                    if (callback) callback(false);
+                });
+        }
+
         // ===== ВХОД ДЛЯ АДМИНИСТРАЦИИ =====
-        function adminLogin() {
-            var adminID = prompt('Введите ID администратора:');
-            if (!adminID) return;
+        function showAdminLoginModal() {
+            var modal = document.getElementById('authModal');
+            var content = document.getElementById('authModalContent');
             
-            var adminPassword = prompt('Введите пароль администратора:');
-            if (!adminPassword) return;
+            var html = '<h2>🔑 Вход для администрации</h2>';
+            html += '<p style="font-size:0.8rem; color:#999; margin-bottom:5px;">Введите ID администратора:</p>';
+            html += '<input type="text" class="auth-input" id="adminIDInput" placeholder="ID администратора" style="text-transform:none;">';
+            html += '<p style="font-size:0.8rem; color:#999; margin-bottom:5px;">Введите пароль:</p>';
+            html += '<input type="password" class="auth-input" id="adminPasswordInput" placeholder="Пароль" style="text-transform:none;">';
+            html += '<button class="btn btn-login" onclick="verifyAdminLogin()">Войти через Google</button>';
+            html += '<button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
+            html += '<div class="message" id="authMessage"></div>';
             
-            // Проверяем ID и пароль в Firestore
+            content.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        function verifyAdminLogin() {
+            var adminID = document.getElementById('adminIDInput').value.trim();
+            var adminPassword = document.getElementById('adminPasswordInput').value;
+            var msg = document.getElementById('authMessage');
+            
+            msg.className = 'message';
+            msg.textContent = '';
+            
+            if (!adminID || !adminPassword) {
+                msg.className = 'message error';
+                msg.textContent = 'Заполните все поля!';
+                return;
+            }
+            
             db.collection('admin_keys').doc('admin_' + adminID).get()
                 .then(function(doc) {
                     if (doc.exists) {
                         var data = doc.data();
                         if (adminPassword === data.secret_key) {
-                            // ID и пароль верны — входим через Google
-                            var provider = new firebase.auth.GoogleAuthProvider();
+                            // Сохраняем данные для проверки после входа
+                            localStorage.setItem('pending_admin_id', adminID);
+                            localStorage.setItem('pending_admin_key', adminPassword);
+                            localStorage.setItem('pending_admin_email', data.email || '');
                             
+                            // Входим через Google
+                            var provider = new firebase.auth.GoogleAuthProvider();
                             auth.signInWithPopup(provider)
                                 .then(function(result) {
                                     var user = result.user;
                                     
-                                    // Проверяем, совпадает ли email
+                                    // Проверяем email
                                     if (data.email && user.email !== data.email) {
-                                        // Email не совпадает — выходим
                                         auth.signOut().then(function() {
+                                            localStorage.removeItem('pending_admin_id');
+                                            localStorage.removeItem('pending_admin_key');
+                                            localStorage.removeItem('pending_admin_email');
+                                            closeAuthModal();
                                             showCustomModal('Ошибка', '<p>Email не совпадает с указанным в admin_keys!</p>');
                                         });
                                         return;
                                     }
                                     
-                                    // Все верно — входим как админ
+                                    // Все верно
+                                    isAdmin = true;
+                                    isLoggedIn = true;
                                     userID = user.uid;
                                     userName = data.userName || user.displayName || 'Админ';
                                     avatarData = user.photoURL || null;
-                                    isAdmin = true;
-                                    isLoggedIn = true;
                                     
                                     localStorage.setItem('admincase_admin_key', adminPassword);
                                     
@@ -699,8 +744,8 @@
                                         lastUpdated: Date.now()
                                     }, { merge: true }).catch(function() {});
                                     
-                                    applyProfileData();
                                     closeAuthModal();
+                                    applyProfileData();
                                     showCustomModal('✅ Успех!', '<p>Вы вошли как администратор: ' + userName + '!</p>');
                                     
                                     setTimeout(function() {
@@ -708,21 +753,25 @@
                                     }, 1000);
                                 })
                                 .catch(function(error) {
-                                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                                    msg.className = 'message error';
+                                    msg.textContent = error.message;
                                 });
                         } else {
-                            showCustomModal('Ошибка', '<p>Неверный пароль!</p>');
+                            msg.className = 'message error';
+                            msg.textContent = 'Неверный пароль!';
                         }
                     } else {
-                        showCustomModal('Ошибка', '<p>Администратор не найден!</p>');
+                        msg.className = 'message error';
+                        msg.textContent = 'Администратор не найден!';
                     }
                 })
                 .catch(function(error) {
-                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                    msg.className = 'message error';
+                    msg.textContent = error.message;
                 });
         }
 
-        // ===== ОБЫЧНЫЙ ВХОД ЧЕРЕЗ GOOGLE =====
+        // ===== ОБЫЧНЫЙ ВХОД =====
         function loginWithGoogle() {
             if (openedCount < 10) {
                 showCustomModal('Требуется 10 кейсов', '<p>Для входа через Google нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p>');
@@ -734,7 +783,6 @@
             auth.signInWithPopup(provider)
                 .then(function(result) {
                     var user = result.user;
-                    
                     userID = user.uid;
                     userName = user.displayName || 'Игрок';
                     avatarData = user.photoURL || null;
@@ -769,7 +817,7 @@
             });
         }
 
-        // ===== ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ =====
+        // ===== ПРОВЕРКА ПРИ ЗАГРУЗКЕ =====
         auth.onAuthStateChanged(function(user) {
             if (user) {
                 userID = user.uid;
@@ -1102,7 +1150,6 @@
 
         function updateUserStats(caseType, reward, rarity) {
             if (!isLoggedIn) return;
-            
             var userStatsRef = db.collection('user_stats').doc(userID);
             var currentHistory = winHistory.slice();
             currentHistory.push({
@@ -1112,7 +1159,6 @@
                 timestamp: Date.now()
             });
             if (currentHistory.length > 20) currentHistory = currentHistory.slice(-20);
-            
             userStatsRef.set({
                 userID: userID,
                 userName: userName,
@@ -1309,45 +1355,62 @@
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
             document.getElementById('otherOpenedCount').textContent = '...';
+            document.getElementById('otherName').classList.remove('admin-name');
+            document.getElementById('otherAdminPrefix').style.display = 'none';
             
-            db.collection('user_stats').doc(targetUserID).get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        var data = doc.data();
-                        document.getElementById('otherName').textContent = data.userName || 'Неизвестно';
-                        document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
-                        document.getElementById('otherOpenedCount').textContent = data.openedCount || 0;
-                        
-                        var prefix = getPrefix(data.openedCount || 0);
-                        var otherPrefixEl = document.getElementById('otherPrefix');
-                        otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
-                        otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
-                        
-                        currentOtherAvatar = data.avatar || null;
-                        var otherAvatar = document.getElementById('otherAvatar');
-                        if (data.avatar) {
-                            otherAvatar.innerHTML = '<img src="' + data.avatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+            // Проверяем, админ ли это
+            checkAdminByID(targetUserID, function(isOtherAdmin) {
+                db.collection('user_stats').doc(targetUserID).get()
+                    .then(function(doc) {
+                        if (doc.exists) {
+                            var data = doc.data();
+                            document.getElementById('otherName').textContent = data.userName || 'Неизвестно';
+                            document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
+                            document.getElementById('otherOpenedCount').textContent = data.openedCount || 0;
+                            
+                            if (isOtherAdmin) {
+                                document.getElementById('otherName').classList.add('admin-name');
+                                document.getElementById('otherAdminPrefix').style.display = 'inline-block';
+                            }
+                            
+                            var prefix = getPrefix(data.openedCount || 0);
+                            var otherPrefixEl = document.getElementById('otherPrefix');
+                            otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
+                            otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
+                            
+                            currentOtherAvatar = data.avatar || null;
+                            var otherAvatar = document.getElementById('otherAvatar');
+                            if (data.avatar) {
+                                otherAvatar.innerHTML = '<img src="' + data.avatar + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                            } else {
+                                otherAvatar.innerHTML = '👤';
+                            }
                         } else {
-                            otherAvatar.innerHTML = '👤';
+                            document.getElementById('otherName').textContent = 'Неизвестно';
+                            document.getElementById('otherOpenedCount').textContent = '0';
+                            document.getElementById('otherAvatar').innerHTML = '👤';
                         }
-                    } else {
-                        document.getElementById('otherName').textContent = 'Неизвестно';
-                        document.getElementById('otherOpenedCount').textContent = '0';
-                        document.getElementById('otherAvatar').innerHTML = '👤';
-                    }
-                })
-                .catch(function(error) {
-                    document.getElementById('otherName').textContent = 'Ошибка';
-                    document.getElementById('otherID').textContent = error.message;
-                });
+                    })
+                    .catch(function(error) {
+                        document.getElementById('otherName').textContent = 'Ошибка';
+                        document.getElementById('otherID').textContent = error.message;
+                    });
+            });
             window.scrollTo(0, 0);
         }
 
         function openPromoModal(caseType) {
+            // Админ открывает кейсы бесплатно
+            if (isAdmin) {
+                showRoulettePage(caseType);
+                return;
+            }
+            
             if (!isLoggedIn) {
                 showCustomModal('Требуется вход', '<p>Войдите через Google, чтобы открывать кейсы!</p>');
                 return;
             }
+            
             currentCase = caseType;
             document.getElementById('promoModal').classList.add('active');
             document.getElementById('promoTitle').textContent = 
@@ -1398,6 +1461,7 @@
         }
 
         function showRoulettePage(caseType) {
+            currentCase = caseType;
             hideAllPages();
             document.getElementById('roulettePage').classList.add('active');
             document.getElementById('rouletteTitle').textContent = 
@@ -1621,7 +1685,7 @@
         };
 
         document.getElementById('adminLoginBtn').onclick = function() {
-            adminLogin();
+            showAdminLoginModal();
         };
 
         document.getElementById('burgerBtn').onclick = function() {
@@ -1746,4 +1810,4 @@
     </script>
 
 </body>
-                </html>
+    </html>
