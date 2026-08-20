@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Максимальная оптимизация</title>
+    <title>AdminCase - Защищенная версия</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
@@ -1389,11 +1389,77 @@
         var loggedInAccountName = '';
         var loggedInAccountID = '';
         var adminReturnPage = 'top';
-        var dataLoadedFromFirebase = false;
-        var userDataCache = {};
         var promosLoaded = false;
+        var userDataCache = {};
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
+
+        // ===== ПРОВЕРКА АДМИНА ЧЕРЕЗ СЕКРЕТНЫЙ КЛЮЧ =====
+        function verifyAdmin(callback) {
+            var savedAdminKey = localStorage.getItem('admincase_admin_key');
+            
+            if (!savedAdminKey) {
+                isAdmin = false;
+                if (callback) callback(false);
+                return;
+            }
+            
+            // Проверяем ключ для конкретного пользователя
+            db.collection('admin_keys').doc('admin_' + userID).get()
+                .then(function(doc) {
+                    if (doc.exists) {
+                        var data = doc.data();
+                        if (savedAdminKey === data.secret_key) {
+                            isAdmin = true;
+                        } else {
+                            isAdmin = false;
+                            localStorage.removeItem('admincase_admin_key');
+                        }
+                    } else {
+                        isAdmin = false;
+                        localStorage.removeItem('admincase_admin_key');
+                    }
+                    if (callback) callback(isAdmin);
+                })
+                .catch(function() {
+                    isAdmin = false;
+                    if (callback) callback(false);
+                });
+        }
+
+        // ===== ВХОД В АДМИНКУ =====
+        function loginAsAdmin() {
+            var password = prompt('Введите ваш пароль администратора:');
+            if (!password) return;
+            
+            db.collection('admin_keys').doc('admin_' + userID).get()
+                .then(function(doc) {
+                    if (doc.exists) {
+                        var data = doc.data();
+                        if (password === data.secret_key) {
+                            localStorage.setItem('admincase_admin_key', password);
+                            isAdmin = true;
+                            applyProfileData();
+                            showCustomModal('✅ Успех!', '<p>Вы вошли как администратор!</p>');
+                        } else {
+                            showCustomModal('Ошибка', '<p>Неверный пароль!</p>');
+                        }
+                    } else {
+                        showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
+                    }
+                })
+                .catch(function(error) {
+                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                });
+        }
+
+        // ===== ВЫХОД ИЗ АДМИНКИ =====
+        function logoutAdmin() {
+            localStorage.removeItem('admincase_admin_key');
+            isAdmin = false;
+            applyProfileData();
+            showCustomModal('✅ Успех!', '<p>Вы вышли из режима администратора!</p>');
+        }
 
         function showCustomModal(title, content) {
             var modal = document.getElementById('customModal');
@@ -1412,7 +1478,7 @@
             }
         };
 
-        // ===== ЗАГРУЗКА ПРОМОКОДОВ (ОДИН РАЗ) =====
+        // ===== ЗАГРУЗКА ПРОМОКОДОВ =====
         function loadPromoCodesOnce() {
             if (promosLoaded) return;
             
@@ -1442,6 +1508,12 @@
         }
 
         function createPromoCode() {
+            // Проверяем права администратора
+            if (!isAdmin) {
+                showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
+                return;
+            }
+            
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
             var caseType = document.getElementById('adminPromoCase').value;
             var activations = parseInt(document.getElementById('adminPromoActivations').value);
@@ -1454,6 +1526,7 @@
             if (dynamicPromoCodes[code]) { showCustomModal('Ошибка', '<p>Такой промокод уже существует!</p>'); return; }
             
             var expiresAt = Date.now() + hours * 60 * 60 * 1000;
+            var adminKey = localStorage.getItem('admincase_admin_key');
             
             db.collection('active_promos').add({
                 code: code,
@@ -1463,11 +1536,11 @@
                 expiresAt: expiresAt,
                 createdAt: Date.now(),
                 createdBy: userName,
-                createdByID: userID
+                createdByID: userID,
+                adminKey: adminKey
             }).then(function(docRef) {
                 document.getElementById('adminPromoCode').value = '';
                 
-                // Обновляем локальный список
                 dynamicPromoCodes[code] = {
                     caseType: caseType,
                     docId: docRef.id,
@@ -1513,9 +1586,13 @@
         }
 
         function deletePromoCode(docId) {
+            if (!isAdmin) {
+                showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
+                return;
+            }
+            
             db.collection('active_promos').doc(docId).delete()
                 .then(function() {
-                    // Удаляем из локального списка
                     for (var code in dynamicPromoCodes) {
                         if (dynamicPromoCodes[code].docId === docId) {
                             delete dynamicPromoCodes[code];
@@ -1531,6 +1608,11 @@
         }
 
         function showAdminPanel() {
+            if (!isAdmin) {
+                showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
+                return;
+            }
+            
             hideAllPages();
             document.getElementById('adminPanel').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'admin'); } catch(e) {}
@@ -1631,9 +1713,8 @@
                 });
         }
 
-        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ (С КЭШЕМ НА 10 МИНУТ) =====
+        // ===== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ =====
         function loadUserData(callback) {
-            // Сначала пробуем загрузить из localStorage
             try {
                 var savedCount = localStorage.getItem('admincase_opened_count');
                 if (savedCount) openedCount = parseInt(savedCount);
@@ -1668,13 +1749,11 @@
                 loggedInAccountID = savedLoggedInID;
                 loggedInAccountName = localStorage.getItem('admincase_logged_in_name') || 'Пользователь';
                 
-                // Проверяем кэш
                 if (userDataCache[userID] && Date.now() - userDataCache[userID].timestamp < 600000) {
                     if (callback) callback();
                     return;
                 }
                 
-                // Читаем из Firebase только если нет кэша
                 db.collection('user_stats').doc(userID).get()
                     .then(function(doc) {
                         if (doc.exists) {
@@ -1739,8 +1818,6 @@
                 }
             }
 
-            isAdmin = adminIDs.indexOf(userID) !== -1;
-
             try {
                 var savedNameTime = localStorage.getItem('admincase_name_change_time');
                 if (savedNameTime) lastNameChangeTime = parseInt(savedNameTime);
@@ -1784,57 +1861,36 @@
                 }
             } catch(e) {}
 
-            applyProfileData();
-
-            try {
-                var savedPage = localStorage.getItem('admincase_current_page');
-                if (savedPage === 'profile') {
-                    showProfile();
-                } else if (savedPage === 'top') {
-                    showTopPage();
-                } else if (savedPage === 'other_profile') {
-                    var savedOtherID = localStorage.getItem('admincase_other_profile_id');
-                    if (savedOtherID) showOtherProfile(savedOtherID);
-                } else if (savedPage === 'admin') {
-                    if (isAdmin) showAdminPanel();
-                } else if (savedPage === 'admin_list') {
-                    showAdminListPage();
-                } else {
+            // Проверяем права администратора
+            verifyAdmin(function(adminStatus) {
+                isAdmin = adminStatus;
+                applyProfileData();
+                
+                try {
+                    var savedPage = localStorage.getItem('admincase_current_page');
+                    if (savedPage === 'profile') {
+                        showProfile();
+                    } else if (savedPage === 'top') {
+                        showTopPage();
+                    } else if (savedPage === 'other_profile') {
+                        var savedOtherID = localStorage.getItem('admincase_other_profile_id');
+                        if (savedOtherID) showOtherProfile(savedOtherID);
+                    } else if (savedPage === 'admin') {
+                        if (isAdmin) showAdminPanel();
+                        else showMainPage();
+                    } else if (savedPage === 'admin_list') {
+                        showAdminListPage();
+                    } else {
+                        document.getElementById('mainPage').style.display = 'block';
+                    }
+                } catch(e) {
                     document.getElementById('mainPage').style.display = 'block';
                 }
-            } catch(e) {
-                document.getElementById('mainPage').style.display = 'block';
-            }
 
-            // Онлайн-счетчик из localStorage
-            var cachedOnline = localStorage.getItem('admincase_online_count');
-            document.getElementById('onlineCount').textContent = cachedOnline || '0';
-
-            // Обновляем онлайн-счетчик только в четное время
-            function isEvenHalfHour() {
-                var now = new Date();
-                var minutes = now.getMinutes();
-                return minutes === 0 || minutes === 30;
-            }
-
-            function updateOnlineCounter() {
-                if (isEvenHalfHour()) {
-                    db.collection('stats').doc('online_counter').get()
-                        .then(function(doc) {
-                            var count = 0;
-                            if (doc.exists) {
-                                count = doc.data().count || 0;
-                            }
-                            document.getElementById('onlineCount').textContent = count;
-                            try {
-                                localStorage.setItem('admincase_online_count', count);
-                            } catch(e) {}
-                        })
-                        .catch(function() {});
-                }
-            }
-
-            updateOnlineCounter();
+                // Онлайн-счетчик
+                var cachedOnline = localStorage.getItem('admincase_online_count');
+                document.getElementById('onlineCount').textContent = cachedOnline || '0';
+            });
         });
 
         function getPrefix(openCount) {
@@ -2010,7 +2066,6 @@
             document.getElementById('profilePage').classList.add('active');
             try { localStorage.setItem('admincase_current_page', 'profile'); } catch(e) {}
             
-            // Используем данные из памяти, не читаем Firebase
             applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
             
@@ -2587,6 +2642,7 @@
                 localStorage.removeItem('admincase_other_profile_id');
                 localStorage.removeItem('admincase_top5_data');
                 localStorage.removeItem('admincase_online_count');
+                localStorage.removeItem('admincase_admin_key');
             } catch(e) {}
             closeAuthModal();
             showCustomModal('✅ Успешно!', '<p>Вы вышли из аккаунта.<br>Все данные сброшены.<br>Страница будет перезагружена.</p><button class="btn btn-open" onclick="location.reload()">Перезагрузить</button>');
@@ -2773,7 +2829,11 @@
 
         document.getElementById('adminPanelBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.remove('show');
-            showAdminPanel();
+            if (isAdmin) {
+                showAdminPanel();
+            } else {
+                loginAsAdmin();
+            }
         };
 
         document.getElementById('backBtn').onclick = function() {
@@ -2922,4 +2982,4 @@
     </script>
 
 </body>
-        </html>
+    </html>
