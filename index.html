@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Final Fix</title>
+    <title>AdminCase - Admin Login</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
-        /* ... весь CSS без изменений ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
@@ -116,6 +115,7 @@
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn { position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; }
         .auth-btn { position: fixed; top: 20px; right: 75px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
+        .admin-login-btn { position: fixed; top: 20px; right: 130px; width: 45px; height: 45px; background: rgba(255,152,0,0.2); border: 2px solid #ff9800; border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
         .burger-line { width: 22px; height: 2px; background: #fff; margin: 4px auto; }
         .dropdown-menu { position: fixed; top: 75px; right: 20px; background: #16213e; border: 2px solid #0f3460; border-radius: 12px; padding: 10px 0; display: none; z-index: 300; min-width: 180px; }
         .dropdown-menu.show { display: block; }
@@ -157,6 +157,7 @@
         .auth-modal.active { display: flex; }
         .auth-modal-content { background: #16213e; border: 2px solid #0f3460; border-radius: 20px; padding: 25px; width: 90%; max-width: 400px; text-align: center; }
         .auth-modal-content h2 { margin-bottom: 20px; color: #ff6b6b; font-size: 1.3rem; }
+        .auth-input { width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; text-align: center; outline: none; margin-bottom: 10px; }
         .roulette-page { display: none; padding: 20px; position: relative; }
         .roulette-page.active { display: block; }
         .roulette-page h2 { font-size: 2rem; margin-bottom: 20px; text-align: center; color: #ff6b6b; }
@@ -313,6 +314,7 @@
             .profile-name { font-size: 1rem; }
             .profile-prefix { font-size: 0.75rem; }
             .auth-btn { right: 75px; }
+            .admin-login-btn { right: 130px; }
             .history-item { flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); }
         }
     </style>
@@ -320,6 +322,7 @@
 <body id="bodyElement">
 
     <button class="auth-btn" id="authBtn" title="Вход">👤</button>
+    <button class="admin-login-btn" id="adminLoginBtn" title="Вход для администрации">🔑</button>
     <button class="burger-btn" id="burgerBtn">
         <div class="burger-line"></div>
         <div class="burger-line"></div>
@@ -639,9 +642,88 @@
             return id.substring(0, 12) + '...';
         }
 
-        // ===== ВХОД ЧЕРЕЗ GOOGLE =====
+        function formatDate(timestamp) {
+            if (!timestamp) return '—';
+            var d = new Date(timestamp);
+            if (isNaN(d.getTime())) return '—';
+            var day = String(d.getDate()).padStart(2, '0');
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var year = d.getFullYear();
+            return day + '.' + month + '.' + year;
+        }
+
+        // ===== ВХОД ДЛЯ АДМИНИСТРАЦИИ =====
+        function adminLogin() {
+            var adminID = prompt('Введите ID администратора:');
+            if (!adminID) return;
+            
+            var adminPassword = prompt('Введите пароль администратора:');
+            if (!adminPassword) return;
+            
+            // Проверяем ID и пароль в Firestore
+            db.collection('admin_keys').doc('admin_' + adminID).get()
+                .then(function(doc) {
+                    if (doc.exists) {
+                        var data = doc.data();
+                        if (adminPassword === data.secret_key) {
+                            // ID и пароль верны — входим через Google
+                            var provider = new firebase.auth.GoogleAuthProvider();
+                            
+                            auth.signInWithPopup(provider)
+                                .then(function(result) {
+                                    var user = result.user;
+                                    
+                                    // Проверяем, совпадает ли email
+                                    if (data.email && user.email !== data.email) {
+                                        // Email не совпадает — выходим
+                                        auth.signOut().then(function() {
+                                            showCustomModal('Ошибка', '<p>Email не совпадает с указанным в admin_keys!</p>');
+                                        });
+                                        return;
+                                    }
+                                    
+                                    // Все верно — входим как админ
+                                    userID = user.uid;
+                                    userName = data.userName || user.displayName || 'Админ';
+                                    avatarData = user.photoURL || null;
+                                    isAdmin = true;
+                                    isLoggedIn = true;
+                                    
+                                    localStorage.setItem('admincase_admin_key', adminPassword);
+                                    
+                                    db.collection('user_stats').doc(userID).set({
+                                        userID: userID,
+                                        userName: userName,
+                                        avatar: avatarData,
+                                        registrationDate: Date.now(),
+                                        lastUpdated: Date.now()
+                                    }, { merge: true }).catch(function() {});
+                                    
+                                    applyProfileData();
+                                    closeAuthModal();
+                                    showCustomModal('✅ Успех!', '<p>Вы вошли как администратор: ' + userName + '!</p>');
+                                    
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 1000);
+                                })
+                                .catch(function(error) {
+                                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                                });
+                        } else {
+                            showCustomModal('Ошибка', '<p>Неверный пароль!</p>');
+                        }
+                    } else {
+                        showCustomModal('Ошибка', '<p>Администратор не найден!</p>');
+                    }
+                })
+                .catch(function(error) {
+                    showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                });
+        }
+
+        // ===== ОБЫЧНЫЙ ВХОД ЧЕРЕЗ GOOGLE =====
         function loginWithGoogle() {
-            // Проверяем, открыл ли пользователь 10 кейсов
             if (openedCount < 10) {
                 showCustomModal('Требуется 10 кейсов', '<p>Для входа через Google нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p>');
                 return;
@@ -656,6 +738,7 @@
                     userID = user.uid;
                     userName = user.displayName || 'Игрок';
                     avatarData = user.photoURL || null;
+                    isLoggedIn = true;
                     
                     db.collection('user_stats').doc(userID).set({
                         userID: userID,
@@ -663,6 +746,7 @@
                         avatar: avatarData,
                         openedCount: openedCount,
                         winHistory: winHistory,
+                        registrationDate: Date.now(),
                         lastUpdated: Date.now()
                     }, { merge: true }).catch(function() {});
                     
@@ -685,60 +769,7 @@
             });
         }
 
-        // ===== ПРОВЕРКА АДМИНА ПО UID =====
-        function checkAdminByUID(uid, callback) {
-            db.collection('admin_keys').doc('admin_' + uid).get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        var data = doc.data();
-                        if (data.secret_key) {
-                            // Проверяем, сохранен ли ключ
-                            var savedKey = localStorage.getItem('admincase_admin_key');
-                            if (savedKey === data.secret_key) {
-                                if (callback) callback(true);
-                            } else {
-                                if (callback) callback(false);
-                            }
-                        } else {
-                            if (callback) callback(false);
-                        }
-                    } else {
-                        if (callback) callback(false);
-                    }
-                })
-                .catch(function() {
-                    if (callback) callback(false);
-                });
-        }
-
-        // ===== ВХОД В АДМИНКУ =====
-        function showAdminLogin() {
-            var password = prompt('Введите пароль администратора:');
-            if (!password) return;
-            
-            db.collection('admin_keys').doc('admin_' + userID).get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        var data = doc.data();
-                        if (password === data.secret_key) {
-                            localStorage.setItem('admincase_admin_key', password);
-                            isAdmin = true;
-                            applyProfileData();
-                            alert('✅ Вы вошли как администратор!');
-                            showAdminPanel();
-                        } else {
-                            alert('❌ Неверный пароль!');
-                        }
-                    } else {
-                        alert('❌ У вас нет прав администратора!');
-                    }
-                })
-                .catch(function(error) {
-                    alert('Ошибка: ' + error.message);
-                });
-        }
-
-        // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
+        // ===== ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ =====
         auth.onAuthStateChanged(function(user) {
             if (user) {
                 userID = user.uid;
@@ -754,28 +785,44 @@
                             winHistory = data.winHistory || [];
                             userName = data.userName || user.displayName || 'Игрок';
                             avatarData = data.avatar || user.photoURL || null;
+                            registrationDate = data.registrationDate || null;
                         } else {
                             userName = user.displayName || 'Игрок';
                             avatarData = user.photoURL || null;
+                            registrationDate = Date.now();
                         }
                         
                         // Проверяем админа
-                        checkAdminByUID(userID, function(isAdminUser) {
-                            isAdmin = isAdminUser;
+                        var savedKey = localStorage.getItem('admincase_admin_key');
+                        if (savedKey) {
+                            db.collection('admin_keys').doc('admin_' + userID).get()
+                                .then(function(adminDoc) {
+                                    if (adminDoc.exists && savedKey === adminDoc.data().secret_key) {
+                                        isAdmin = true;
+                                    } else {
+                                        isAdmin = false;
+                                        localStorage.removeItem('admincase_admin_key');
+                                    }
+                                    applyProfileData();
+                                    document.getElementById('mainPage').style.display = 'block';
+                                })
+                                .catch(function() {
+                                    isAdmin = false;
+                                    applyProfileData();
+                                    document.getElementById('mainPage').style.display = 'block';
+                                });
+                        } else {
+                            isAdmin = false;
                             applyProfileData();
                             document.getElementById('mainPage').style.display = 'block';
-                            var cachedOnline = localStorage.getItem('admincase_online_count');
-                            document.getElementById('onlineCount').textContent = cachedOnline || '0';
-                        });
+                        }
                     })
                     .catch(function() {
                         userName = user.displayName || 'Игрок';
                         avatarData = user.photoURL || null;
-                        checkAdminByUID(userID, function(isAdminUser) {
-                            isAdmin = isAdminUser;
-                            applyProfileData();
-                            document.getElementById('mainPage').style.display = 'block';
-                        });
+                        isAdmin = false;
+                        applyProfileData();
+                        document.getElementById('mainPage').style.display = 'block';
                     });
             } else {
                 isLoggedIn = false;
@@ -913,7 +960,7 @@
 
         function showAdminPanel() {
             if (!isAdmin) {
-                showAdminLogin();
+                showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
                 return;
             }
             hideAllPages();
@@ -1020,6 +1067,12 @@
             document.getElementById('profileNameDisplay').textContent = userName;
             document.getElementById('profileIDDisplay').textContent = 'ID: ' + formatID(userID);
             
+            if (registrationDate) {
+                document.getElementById('profileRegDate').textContent = 'Регистрация: ' + formatDate(registrationDate);
+            } else {
+                document.getElementById('profileRegDate').textContent = 'Регистрация: —';
+            }
+            
             if (isAdmin) {
                 document.getElementById('profileNameDisplay').classList.add('admin-name');
                 document.getElementById('profileAdminPrefix').style.display = 'inline-block';
@@ -1115,18 +1168,6 @@
             if (chance >= 5) return 'rarity-rare';
             if (chance >= 0.5) return 'rarity-epic';
             return 'rarity-legendary';
-        }
-
-        function formatDate(timestamp) {
-            if (!timestamp) return 'Дата неизвестна';
-            var d = new Date(timestamp);
-            if (isNaN(d.getTime())) return 'Дата неизвестна';
-            var day = String(d.getDate()).padStart(2, '0');
-            var month = String(d.getMonth() + 1).padStart(2, '0');
-            var year = d.getFullYear();
-            var hours = String(d.getHours()).padStart(2, '0');
-            var minutes = String(d.getMinutes()).padStart(2, '0');
-            return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
         }
 
         function hideAllPages() {
@@ -1579,6 +1620,10 @@
             showAuthModal();
         };
 
+        document.getElementById('adminLoginBtn').onclick = function() {
+            adminLogin();
+        };
+
         document.getElementById('burgerBtn').onclick = function() {
             document.getElementById('dropdownMenu').classList.toggle('show');
         };
@@ -1638,7 +1683,6 @@
             if (e.target === this) document.getElementById('promoModal').classList.remove('active');
         };
 
-        // ===== СМЕНА ИМЕНИ (только для вошедших через Google) =====
         document.getElementById('settingsBtn').onclick = function() {
             if (!isLoggedIn) {
                 showCustomModal('Требуется вход', '<p>Войдите через Google, чтобы менять имя!</p>');
@@ -1702,4 +1746,4 @@
     </script>
 
 </body>
-        </html>
+                </html>
