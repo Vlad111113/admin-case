@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Final Fix 2</title>
+    <title>AdminCase - Final v3</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -110,8 +110,6 @@
         }
         body.theme-twilight h1 { color: #ce93d8; }
 
-        .online-counter { text-align: center; font-size: 1.1rem; color: #4caf50; margin-bottom: 20px; font-weight: bold; }
-        .online-counter span { color: #ffd700; font-size: 1.3rem; }
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn { position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; }
         .auth-btn { position: fixed; top: 20px; right: 75px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
@@ -171,6 +169,9 @@
         .rewards-section h3 { text-align: center; margin-bottom: 20px; color: #ffd700; }
         .reward-item { background: #1a1a2e; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #0f3460; }
         .reward-name { font-weight: bold; }
+        .reward-info-circle { width: 28px; height: 28px; background: #666; border-radius: 50%; border: none; color: #fff; cursor: pointer; font-weight: bold; }
+        .reward-tooltip { display: none; background: #2a2a3e; border: 1px solid #444; border-radius: 8px; padding: 8px 12px; font-size: 0.75rem; color: #ccc; margin-left: 10px; }
+        .reward-tooltip.show { display: inline-block; }
         .profile-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
         .profile-page.active { display: block; }
         .back-btn { background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; margin-bottom: 20px; padding: 5px 15px; }
@@ -213,6 +214,9 @@
         .history-list { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-start; }
         .history-item { padding: 5px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid; position: relative; font-size: 0.75rem; flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); min-width: 0; }
         .history-name { font-weight: bold; font-size: 0.7rem; word-break: break-word; }
+        .history-info-circle { width: 18px; height: 18px; background: rgba(255,255,255,0.2); border-radius: 50%; border: none; color: #fff; cursor: pointer; font-weight: bold; position: relative; font-size: 0.6rem; flex-shrink: 0; }
+        .history-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #2a2a3e; border: 1px solid #444; border-radius: 8px; padding: 8px 12px; font-size: 0.7rem; color: #ccc; display: none; white-space: nowrap; z-index: 10; }
+        .history-tooltip.show { display: block; }
         .edit-actions { display: none; gap: 10px; margin-top: 20px; justify-content: center; }
         .edit-name-input { width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #0f3460; background: #1a1a2e; color: #fff; font-size: 1rem; margin-top: 10px; display: none; }
         .top-page { display: none; width: 100%; max-width: 600px; margin: 0 auto; }
@@ -337,7 +341,6 @@
 
     <div id="mainPage">
         <h1>AdminCase</h1>
-        <div class="online-counter">🟢 Онлайн: <span id="onlineCount">—</span></div>
         <div class="boxes">
             <div class="box cheap" id="cheapBox">
                 <button class="info-circle" id="infoCheap">!</button>
@@ -635,7 +638,6 @@
 
         var themes = ['dark', 'neon', 'gold', 'cyberpunk', 'space', 'blood', 'emerald', 'ice', 'fire', 'twilight'];
 
-        // ===== ФОРМАТИРОВАНИЕ ID =====
         function formatID(id) {
             if (!id) return '—';
             if (id.length <= 12) return id;
@@ -649,10 +651,11 @@
             var day = String(d.getDate()).padStart(2, '0');
             var month = String(d.getMonth() + 1).padStart(2, '0');
             var year = d.getFullYear();
-            return day + '.' + month + '.' + year;
+            var hours = String(d.getHours()).padStart(2, '0');
+            var minutes = String(d.getMinutes()).padStart(2, '0');
+            return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
         }
 
-        // ===== ПРОВЕРКА АДМИНА ПО ID =====
         function checkAdminByID(uid, callback) {
             db.collection('admin_keys').doc('admin_' + uid).get()
                 .then(function(doc) {
@@ -667,11 +670,9 @@
                 });
         }
 
-        // ===== ВХОД ДЛЯ АДМИНИСТРАЦИИ =====
         function showAdminLoginModal() {
             var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
-            
             var html = '<h2>🔑 Вход для администрации</h2>';
             html += '<p style="font-size:0.8rem; color:#999; margin-bottom:5px;">Введите ID администратора:</p>';
             html += '<input type="text" class="auth-input" id="adminIDInput" placeholder="ID администратора" style="text-transform:none;">';
@@ -680,7 +681,6 @@
             html += '<button class="btn btn-login" onclick="verifyAdminLogin()">Войти через Google</button>';
             html += '<button class="btn btn-close" onclick="closeAuthModal()">Закрыть</button>';
             html += '<div class="message" id="authMessage"></div>';
-            
             content.innerHTML = html;
             modal.classList.add('active');
         }
@@ -689,7 +689,6 @@
             var adminID = document.getElementById('adminIDInput').value.trim();
             var adminPassword = document.getElementById('adminPasswordInput').value;
             var msg = document.getElementById('authMessage');
-            
             msg.className = 'message';
             msg.textContent = '';
             
@@ -704,38 +703,23 @@
                     if (doc.exists) {
                         var data = doc.data();
                         if (adminPassword === data.secret_key) {
-                            // Сохраняем данные для проверки после входа
-                            localStorage.setItem('pending_admin_id', adminID);
-                            localStorage.setItem('pending_admin_key', adminPassword);
-                            localStorage.setItem('pending_admin_email', data.email || '');
-                            
-                            // Входим через Google
                             var provider = new firebase.auth.GoogleAuthProvider();
                             auth.signInWithPopup(provider)
                                 .then(function(result) {
                                     var user = result.user;
-                                    
-                                    // Проверяем email
                                     if (data.email && user.email !== data.email) {
                                         auth.signOut().then(function() {
-                                            localStorage.removeItem('pending_admin_id');
-                                            localStorage.removeItem('pending_admin_key');
-                                            localStorage.removeItem('pending_admin_email');
                                             closeAuthModal();
                                             showCustomModal('Ошибка', '<p>Email не совпадает с указанным в admin_keys!</p>');
                                         });
                                         return;
                                     }
-                                    
-                                    // Все верно
                                     isAdmin = true;
                                     isLoggedIn = true;
                                     userID = user.uid;
                                     userName = data.userName || user.displayName || 'Админ';
                                     avatarData = user.photoURL || null;
-                                    
                                     localStorage.setItem('admincase_admin_key', adminPassword);
-                                    
                                     db.collection('user_stats').doc(userID).set({
                                         userID: userID,
                                         userName: userName,
@@ -743,14 +727,10 @@
                                         registrationDate: Date.now(),
                                         lastUpdated: Date.now()
                                     }, { merge: true }).catch(function() {});
-                                    
                                     closeAuthModal();
                                     applyProfileData();
                                     showCustomModal('✅ Успех!', '<p>Вы вошли как администратор: ' + userName + '!</p>');
-                                    
-                                    setTimeout(function() {
-                                        location.reload();
-                                    }, 1000);
+                                    setTimeout(function() { location.reload(); }, 1000);
                                 })
                                 .catch(function(error) {
                                     msg.className = 'message error';
@@ -771,15 +751,12 @@
                 });
         }
 
-        // ===== ОБЫЧНЫЙ ВХОД =====
         function loginWithGoogle() {
             if (openedCount < 10) {
                 showCustomModal('Требуется 10 кейсов', '<p>Для входа через Google нужно открыть 10 кейсов. У вас: ' + openedCount + '/10</p>');
                 return;
             }
-            
             var provider = new firebase.auth.GoogleAuthProvider();
-            
             auth.signInWithPopup(provider)
                 .then(function(result) {
                     var user = result.user;
@@ -787,7 +764,6 @@
                     userName = user.displayName || 'Игрок';
                     avatarData = user.photoURL || null;
                     isLoggedIn = true;
-                    
                     db.collection('user_stats').doc(userID).set({
                         userID: userID,
                         userName: userName,
@@ -797,13 +773,9 @@
                         registrationDate: Date.now(),
                         lastUpdated: Date.now()
                     }, { merge: true }).catch(function() {});
-                    
                     closeAuthModal();
                     showCustomModal('✅ Успех!', '<p>Вы вошли как ' + userName + '!</p>');
-                    
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1000);
+                    setTimeout(function() { location.reload(); }, 1000);
                 })
                 .catch(function(error) {
                     showCustomModal('Ошибка', '<p>' + error.message + '</p>');
@@ -817,14 +789,12 @@
             });
         }
 
-        // ===== ПРОВЕРКА ПРИ ЗАГРУЗКЕ =====
         auth.onAuthStateChanged(function(user) {
             if (user) {
                 userID = user.uid;
                 isLoggedIn = true;
                 loggedInAccountID = user.uid;
                 loggedInAccountName = user.displayName || 'Пользователь';
-                
                 db.collection('user_stats').doc(userID).get()
                     .then(function(doc) {
                         if (doc.exists) {
@@ -839,8 +809,6 @@
                             avatarData = user.photoURL || null;
                             registrationDate = Date.now();
                         }
-                        
-                        // Проверяем админа
                         var savedKey = localStorage.getItem('admincase_admin_key');
                         if (savedKey) {
                             db.collection('admin_keys').doc('admin_' + userID).get()
@@ -926,14 +894,11 @@
                 showCustomModal('Ошибка', '<p>У вас нет прав администратора!</p>');
                 return;
             }
-            
             var code = document.getElementById('adminPromoCode').value.trim().toUpperCase();
             var caseType = document.getElementById('adminPromoCase').value;
             var activations = parseInt(document.getElementById('adminPromoActivations').value);
             var hours = parseInt(document.getElementById('adminPromoHours').value);
-            
             if (!code) { showCustomModal('Ошибка', '<p>Введите код промокода!</p>'); return; }
-            
             db.collection('active_promos').add({
                 code: code,
                 caseType: caseType,
@@ -1024,16 +989,13 @@
             document.getElementById('adminListPage').classList.add('active');
             var list = document.getElementById('adminListContainer');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            
             db.collection('admin_keys').get()
                 .then(function(snapshot) {
                     var adminPromises = [];
                     var adminItems = [];
-                    
                     snapshot.forEach(function(doc) {
                         var data = doc.data();
                         var adminUID = data.userID;
-                        
                         adminPromises.push(
                             db.collection('user_stats').doc(adminUID).get()
                                 .then(function(userDoc) {
@@ -1043,14 +1005,12 @@
                                         avatar: null,
                                         openedCount: 0
                                     };
-                                    
                                     if (userDoc.exists) {
                                         var userData = userDoc.data();
                                         adminData.name = userData.userName || data.userName || 'Админ';
                                         adminData.avatar = userData.avatar || null;
                                         adminData.openedCount = userData.openedCount || 0;
                                     }
-                                    
                                     adminItems.push(adminData);
                                 })
                                 .catch(function() {
@@ -1063,22 +1023,18 @@
                                 })
                         );
                     });
-                    
                     return Promise.all(adminPromises).then(function() {
                         list.innerHTML = '';
                         if (adminItems.length === 0) {
                             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Нет данных</p>';
                             return;
                         }
-                        
                         for (var i = 0; i < adminItems.length; i++) {
                             (function(admin) {
                                 var div = document.createElement('div');
                                 div.className = 'admin-item';
                                 var avatarHtml = '<span>👑</span>';
-                                if (admin.avatar) {
-                                    avatarHtml = '<img src="' + admin.avatar + '" alt="">';
-                                }
+                                if (admin.avatar) avatarHtml = '<img src="' + admin.avatar + '" alt="">';
                                 div.innerHTML = 
                                     '<div class="admin-avatar">' + avatarHtml + '</div>' +
                                     '<div class="admin-info">' +
@@ -1114,13 +1070,11 @@
         function applyProfileData() {
             document.getElementById('profileNameDisplay').textContent = userName;
             document.getElementById('profileIDDisplay').textContent = 'ID: ' + formatID(userID);
-            
             if (registrationDate) {
                 document.getElementById('profileRegDate').textContent = 'Регистрация: ' + formatDate(registrationDate);
             } else {
                 document.getElementById('profileRegDate').textContent = 'Регистрация: —';
             }
-            
             if (isAdmin) {
                 document.getElementById('profileNameDisplay').classList.add('admin-name');
                 document.getElementById('profileAdminPrefix').style.display = 'inline-block';
@@ -1130,12 +1084,10 @@
                 document.getElementById('profileAdminPrefix').style.display = 'none';
                 document.getElementById('adminPanelBtn').style.display = 'none';
             }
-            
             var prefix = getPrefix(openedCount);
             var prefixEl = document.getElementById('profilePrefixDisplay');
             prefixEl.textContent = prefix.icon + ' ' + prefix.name;
             prefixEl.className = 'profile-prefix ' + prefix.cssClass;
-            
             var avatarImg = document.getElementById('avatarImg');
             var avatarEmoji = document.getElementById('avatarEmoji');
             if (avatarData) {
@@ -1242,7 +1194,6 @@
             document.getElementById('profilePage').classList.add('active');
             applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
-            
             var bestWinText = '—';
             if (winHistory.length > 0) {
                 var best = winHistory[0];
@@ -1252,7 +1203,6 @@
                 bestWinText = best.name;
             }
             document.getElementById('bestWin').textContent = bestWinText;
-            
             var list = document.getElementById('historyList');
             list.innerHTML = '';
             if (winHistory.length === 0) {
@@ -1266,11 +1216,23 @@
                         var div = document.createElement('div');
                         div.className = 'history-item ' + getRarity(item.chance || 50, item.rarity);
                         div.innerHTML = '<span class="history-name">' + item.name + '</span>';
+                        var btn = document.createElement('button');
+                        btn.className = 'history-info-circle';
+                        btn.textContent = '!';
+                        var tooltip = document.createElement('span');
+                        tooltip.className = 'history-tooltip';
+                        tooltip.textContent = (item.source || 'Неизвестный кейс') + ' • ' + formatDate(item.timestamp);
+                        btn.appendChild(tooltip);
+                        btn.onclick = function(e) {
+                            e.stopPropagation();
+                            tooltip.classList.toggle('show');
+                            setTimeout(function() { tooltip.classList.remove('show'); }, 3000);
+                        };
+                        div.appendChild(btn);
                         list.appendChild(div);
                     })(sortedHistory[j]);
                 }
             }
-            
             checkAchievements();
             displayAchievements();
             window.scrollTo(0, 0);
@@ -1294,21 +1256,35 @@
         function loadTopFromFirebase() {
             var list = document.getElementById('topList');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
-            db.collection('user_stats')
-                .orderBy('openedCount', 'desc')
-                .limit(5)
-                .get()
-                .then(function(snapshot) {
-                    var topUsers = [];
-                    snapshot.forEach(function(doc) {
-                        var data = doc.data();
-                        topUsers.push({
-                            name: data.userName || 'Неизвестно',
-                            userID: data.userID || 'Неизвестно',
-                            openedCount: data.openedCount || 0,
-                            avatar: data.avatar || null
-                        });
+            db.collection('admin_keys').get()
+                .then(function(adminSnapshot) {
+                    var adminUIDs = [];
+                    adminSnapshot.forEach(function(doc) {
+                        adminUIDs.push(doc.data().userID);
                     });
+                    return adminUIDs;
+                })
+                .then(function(adminUIDs) {
+                    return db.collection('user_stats')
+                        .orderBy('openedCount', 'desc')
+                        .limit(20)
+                        .get()
+                        .then(function(snapshot) {
+                            var topUsers = [];
+                            snapshot.forEach(function(doc) {
+                                var data = doc.data();
+                                if (adminUIDs.indexOf(data.userID) !== -1) return;
+                                topUsers.push({
+                                    name: data.userName || 'Неизвестно',
+                                    userID: data.userID || 'Неизвестно',
+                                    openedCount: data.openedCount || 0,
+                                    avatar: data.avatar || null
+                                });
+                            });
+                            return topUsers.slice(0, 5);
+                        });
+                })
+                .then(function(topUsers) {
                     try { localStorage.setItem('admincase_top5_data', JSON.stringify(topUsers)); } catch(e) {}
                     displayTopList(topUsers);
                 })
@@ -1358,7 +1334,6 @@
             document.getElementById('otherName').classList.remove('admin-name');
             document.getElementById('otherAdminPrefix').style.display = 'none';
             
-            // Проверяем, админ ли это
             checkAdminByID(targetUserID, function(isOtherAdmin) {
                 db.collection('user_stats').doc(targetUserID).get()
                     .then(function(doc) {
@@ -1367,17 +1342,14 @@
                             document.getElementById('otherName').textContent = data.userName || 'Неизвестно';
                             document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
                             document.getElementById('otherOpenedCount').textContent = data.openedCount || 0;
-                            
                             if (isOtherAdmin) {
                                 document.getElementById('otherName').classList.add('admin-name');
                                 document.getElementById('otherAdminPrefix').style.display = 'inline-block';
                             }
-                            
                             var prefix = getPrefix(data.openedCount || 0);
                             var otherPrefixEl = document.getElementById('otherPrefix');
                             otherPrefixEl.textContent = prefix.icon + ' ' + prefix.name;
                             otherPrefixEl.className = 'other-prefix ' + prefix.cssClass;
-                            
                             currentOtherAvatar = data.avatar || null;
                             var otherAvatar = document.getElementById('otherAvatar');
                             if (data.avatar) {
@@ -1400,17 +1372,14 @@
         }
 
         function openPromoModal(caseType) {
-            // Админ открывает кейсы бесплатно
             if (isAdmin) {
                 showRoulettePage(caseType);
                 return;
             }
-            
             if (!isLoggedIn) {
                 showCustomModal('Требуется вход', '<p>Войдите через Google, чтобы открывать кейсы!</p>');
                 return;
             }
-            
             currentCase = caseType;
             document.getElementById('promoModal').classList.add('active');
             document.getElementById('promoTitle').textContent = 
@@ -1511,7 +1480,16 @@
                 (function(item) {
                     var div = document.createElement('div');
                     div.className = 'reward-item ' + getRarity(item.chance, item.rarity);
-                    div.innerHTML = '<span class="reward-name">' + item.name + '</span>';
+                    div.innerHTML = '<span class="reward-name">' + item.name + '</span>' +
+                        '<button class="reward-info-circle">!</button>' +
+                        '<span class="reward-tooltip">Шанс: ' + item.chance + '% | Редкость: ' + (item.rarity || 'обычная') + '</span>';
+                    var btn = div.querySelector('.reward-info-circle');
+                    btn.onclick = function(e) {
+                        e.stopPropagation();
+                        var tip = div.querySelector('.reward-tooltip');
+                        tip.classList.toggle('show');
+                        setTimeout(function() { tip.classList.remove('show'); }, 2000);
+                    };
                     rewardsList.appendChild(div);
                 })(caseContents[caseType][m]);
             }
@@ -1680,33 +1658,12 @@
             if (e.target === this) closeAuthModal();
         };
 
-        document.getElementById('authBtn').onclick = function() {
-            showAuthModal();
-        };
-
-        document.getElementById('adminLoginBtn').onclick = function() {
-            showAdminLoginModal();
-        };
-
-        document.getElementById('burgerBtn').onclick = function() {
-            document.getElementById('dropdownMenu').classList.toggle('show');
-        };
-
-        document.getElementById('profileBtn').onclick = function() {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            showProfile();
-        };
-
-        document.getElementById('topBtn').onclick = function() {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            showTopPage();
-        };
-
-        document.getElementById('adminPanelBtn').onclick = function() {
-            document.getElementById('dropdownMenu').classList.remove('show');
-            showAdminPanel();
-        };
-
+        document.getElementById('authBtn').onclick = function() { showAuthModal(); };
+        document.getElementById('adminLoginBtn').onclick = function() { showAdminLoginModal(); };
+        document.getElementById('burgerBtn').onclick = function() { document.getElementById('dropdownMenu').classList.toggle('show'); };
+        document.getElementById('profileBtn').onclick = function() { document.getElementById('dropdownMenu').classList.remove('show'); showProfile(); };
+        document.getElementById('topBtn').onclick = function() { document.getElementById('dropdownMenu').classList.remove('show'); showTopPage(); };
+        document.getElementById('adminPanelBtn').onclick = function() { document.getElementById('dropdownMenu').classList.remove('show'); showAdminPanel(); };
         document.getElementById('backBtn').onclick = function() { showMainPage(); };
         document.getElementById('topBackBtn').onclick = function() { showMainPage(); };
         document.getElementById('adminListBackBtn').onclick = function() { showMainPage(); };
@@ -1725,34 +1682,18 @@
 
         document.getElementById('cheapBox').onclick = function() { openPromoModal('cheap'); };
         document.getElementById('expensiveBox').onclick = function() { openPromoModal('expensive'); };
-
-        document.getElementById('infoCheap').onclick = function(e) {
-            e.stopPropagation();
-            document.getElementById('tooltipCheap').classList.toggle('show');
-        };
-
-        document.getElementById('infoExpensive').onclick = function(e) {
-            e.stopPropagation();
-            document.getElementById('tooltipExpensive').classList.toggle('show');
-        };
-
-        document.getElementById('closeModalBtn').onclick = function() {
-            document.getElementById('promoModal').classList.remove('active');
-        };
-
+        document.getElementById('infoCheap').onclick = function(e) { e.stopPropagation(); document.getElementById('tooltipCheap').classList.toggle('show'); };
+        document.getElementById('infoExpensive').onclick = function(e) { e.stopPropagation(); document.getElementById('tooltipExpensive').classList.toggle('show'); };
+        document.getElementById('closeModalBtn').onclick = function() { document.getElementById('promoModal').classList.remove('active'); };
         document.getElementById('activateBtn').onclick = function() { checkPromo(); };
         document.getElementById('spinBtn').onclick = function() { spinRoulette(); };
-
-        document.getElementById('promoModal').onclick = function(e) {
-            if (e.target === this) document.getElementById('promoModal').classList.remove('active');
-        };
+        document.getElementById('promoModal').onclick = function(e) { if (e.target === this) document.getElementById('promoModal').classList.remove('active'); };
 
         document.getElementById('settingsBtn').onclick = function() {
             if (!isLoggedIn) {
                 showCustomModal('Требуется вход', '<p>Войдите через Google, чтобы менять имя!</p>');
                 return;
             }
-            
             isEditMode = true;
             document.getElementById('profileNameDisplay').style.display = 'none';
             document.getElementById('editNameInput').style.display = 'block';
@@ -1785,9 +1726,7 @@
         };
 
         document.getElementById('avatar').onclick = function() {
-            if (isLoggedIn && avatarData) {
-                openAvatarViewer(avatarData);
-            }
+            if (isLoggedIn && avatarData) openAvatarViewer(avatarData);
         };
 
         document.getElementById('themeBtn').onclick = function(e) {
