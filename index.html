@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Final v5</title>
+    <title>AdminCase - Final v6</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -736,6 +736,7 @@
                                         userID: userID,
                                         userName: userName,
                                         avatar: avatarData,
+                                        email: user.email,
                                         registrationDate: Date.now(),
                                         lastUpdated: Date.now()
                                     }, { merge: true }).catch(function() {});
@@ -780,6 +781,7 @@
                         userID: userID,
                         userName: userName,
                         avatar: avatarData,
+                        email: user.email,
                         openedCount: openedCount,
                         winHistory: winHistory,
                         registrationDate: Date.now(),
@@ -804,7 +806,6 @@
             });
         }
 
-        // ===== ВОССТАНОВЛЕНИЕ ТЕМЫ =====
         try {
             var savedTheme = localStorage.getItem('admincase_theme');
             if (savedTheme && themes.indexOf(savedTheme) !== -1) {
@@ -815,7 +816,6 @@
             }
         } catch(e) {}
 
-        // ===== ВОССТАНОВЛЕНИЕ СТРАНИЦЫ =====
         function restorePage() {
             try {
                 var savedPage = localStorage.getItem('admincase_current_page');
@@ -1753,13 +1753,43 @@
         document.getElementById('confirmEditBtn').onclick = function() {
             var newName = document.getElementById('editNameInput').value.trim();
             if (newName && newName !== userName) {
+                var oldName = userName;
                 userName = newName;
-                db.collection('user_stats').doc(userID).update({
-                    userName: userName,
-                    lastUpdated: Date.now()
-                }).catch(function() {});
-                applyProfileData();
-                showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
+                
+                // Загружаем текущие nameChanges
+                db.collection('user_stats').doc(userID).get()
+                    .then(function(doc) {
+                        var nameChanges = [];
+                        if (doc.exists && doc.data().nameChanges) {
+                            nameChanges = doc.data().nameChanges;
+                        }
+                        
+                        // Добавляем новую запись
+                        nameChanges.push({
+                            oldName: oldName,
+                            newName: newName,
+                            timestamp: Date.now()
+                        });
+                        
+                        // Ограничиваем 20 записями
+                        if (nameChanges.length > 20) {
+                            nameChanges = nameChanges.slice(-20);
+                        }
+                        
+                        // Сохраняем
+                        return db.collection('user_stats').doc(userID).update({
+                            userName: newName,
+                            nameChanges: nameChanges,
+                            lastUpdated: Date.now()
+                        });
+                    })
+                    .then(function() {
+                        applyProfileData();
+                        showCustomModal('✅ Успех!', '<p>Имя изменено!</p>');
+                    })
+                    .catch(function(error) {
+                        showCustomModal('Ошибка', '<p>' + error.message + '</p>');
+                    });
             }
             isEditMode = false;
             document.getElementById('profileNameDisplay').style.display = 'block';
@@ -1796,7 +1826,6 @@
             }
         });
 
-        // Восстановление темы при загрузке
         (function() {
             var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
             if (activeBtn) activeBtn.classList.add('active');
