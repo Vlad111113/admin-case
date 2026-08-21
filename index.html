@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdminCase - Final v4</title>
+    <title>AdminCase - Final v5</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -113,7 +113,7 @@
         h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ff6b6b; text-align: center; }
         .burger-btn { position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; }
         .auth-btn { position: fixed; top: 20px; right: 75px; width: 45px; height: 45px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
-        .admin-login-btn { position: fixed; top: 20px; right: 130px; width: 45px; height: 45px; background: rgba(255,152,0,0.2); border: 2px solid #ff9800; border-radius: 10px; cursor: pointer; z-index: 300; font-size: 1.2rem; }
+        .admin-login-btn { position: fixed; top: 20px; right: 130px; width: auto; height: 45px; background: rgba(255,152,0,0.2); border: 2px solid #ff9800; border-radius: 10px; cursor: pointer; z-index: 300; font-size: 0.8rem; padding: 0 10px; color: #fff; font-weight: bold; }
         .burger-line { width: 22px; height: 2px; background: #fff; margin: 4px auto; }
         .dropdown-menu { position: fixed; top: 75px; right: 20px; background: #16213e; border: 2px solid #0f3460; border-radius: 12px; padding: 10px 0; display: none; z-index: 300; min-width: 180px; }
         .dropdown-menu.show { display: block; }
@@ -318,7 +318,7 @@
             .profile-name { font-size: 1rem; }
             .profile-prefix { font-size: 0.75rem; }
             .auth-btn { right: 75px; }
-            .admin-login-btn { right: 130px; }
+            .admin-login-btn { right: 130px; font-size: 0.7rem; }
             .history-item { flex: 0 0 calc(33.33% - 5px); max-width: calc(33.33% - 5px); }
         }
     </style>
@@ -326,7 +326,7 @@
 <body id="bodyElement">
 
     <button class="auth-btn" id="authBtn" title="Вход">👤</button>
-    <button class="admin-login-btn" id="adminLoginBtn" title="Вход для администрации">🔑</button>
+    <button class="admin-login-btn" id="adminLoginBtn" title="Вход для администрации">🔑 Админ</button>
     <button class="burger-btn" id="burgerBtn">
         <div class="burger-line"></div>
         <div class="burger-line"></div>
@@ -656,6 +656,14 @@
             return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
         }
 
+        function savePage(page) {
+            try { localStorage.setItem('admincase_current_page', page); } catch(e) {}
+        }
+
+        function saveTheme(theme) {
+            try { localStorage.setItem('admincase_theme', theme); } catch(e) {}
+        }
+
         function checkAdminByID(uid, callback) {
             db.collection('admin_keys').doc('admin_' + uid).get()
                 .then(function(doc) {
@@ -671,6 +679,10 @@
         }
 
         function showAdminLoginModal() {
+            if (isLoggedIn) {
+                showCustomModal('Аккаунт', '<p>Вы уже вошли как: ' + userName + '</p><button class="btn btn-logout" onclick="logout()">Выйти</button>');
+                return;
+            }
             var modal = document.getElementById('authModal');
             var content = document.getElementById('authModalContent');
             var html = '<h2>🔑 Вход для администрации</h2>';
@@ -784,9 +796,44 @@
 
         function logout() {
             auth.signOut().then(function() {
-                try { localStorage.clear(); } catch(e) {}
+                try { 
+                    localStorage.removeItem('admincase_admin_key');
+                    localStorage.removeItem('admincase_current_page');
+                } catch(e) {}
                 location.reload();
             });
+        }
+
+        // ===== ВОССТАНОВЛЕНИЕ ТЕМЫ =====
+        try {
+            var savedTheme = localStorage.getItem('admincase_theme');
+            if (savedTheme && themes.indexOf(savedTheme) !== -1) {
+                currentTheme = savedTheme;
+                if (currentTheme !== 'dark') {
+                    document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
+                }
+            }
+        } catch(e) {}
+
+        // ===== ВОССТАНОВЛЕНИЕ СТРАНИЦЫ =====
+        function restorePage() {
+            try {
+                var savedPage = localStorage.getItem('admincase_current_page');
+                if (savedPage === 'profile') {
+                    showProfile();
+                } else if (savedPage === 'top') {
+                    showTopPage();
+                } else if (savedPage === 'admin_list') {
+                    showAdminListPage();
+                } else if (savedPage === 'admin') {
+                    if (isAdmin) showAdminPanel();
+                    else showMainPage();
+                } else {
+                    document.getElementById('mainPage').style.display = 'block';
+                }
+            } catch(e) {
+                document.getElementById('mainPage').style.display = 'block';
+            }
         }
 
         auth.onAuthStateChanged(function(user) {
@@ -820,17 +867,17 @@
                                         localStorage.removeItem('admincase_admin_key');
                                     }
                                     applyProfileData();
-                                    document.getElementById('mainPage').style.display = 'block';
+                                    restorePage();
                                 })
                                 .catch(function() {
                                     isAdmin = false;
                                     applyProfileData();
-                                    document.getElementById('mainPage').style.display = 'block';
+                                    restorePage();
                                 });
                         } else {
                             isAdmin = false;
                             applyProfileData();
-                            document.getElementById('mainPage').style.display = 'block';
+                            restorePage();
                         }
                     })
                     .catch(function() {
@@ -838,7 +885,7 @@
                         avatarData = user.photoURL || null;
                         isAdmin = false;
                         applyProfileData();
-                        document.getElementById('mainPage').style.display = 'block';
+                        restorePage();
                     });
             } else {
                 isLoggedIn = false;
@@ -849,7 +896,7 @@
                 avatarData = null;
                 isAdmin = false;
                 applyProfileData();
-                document.getElementById('mainPage').style.display = 'block';
+                restorePage();
             }
         });
 
@@ -978,6 +1025,7 @@
             }
             hideAllPages();
             document.getElementById('adminPanel').classList.add('active');
+            savePage('admin');
             loadPromoCodesOnce();
             showActivePromos();
             window.scrollTo(0, 0);
@@ -987,6 +1035,7 @@
             adminReturnPage = 'admin_list';
             hideAllPages();
             document.getElementById('adminListPage').classList.add('active');
+            savePage('admin_list');
             var list = document.getElementById('adminListContainer');
             list.innerHTML = '<p style="opacity:0.5; text-align:center;">Загрузка...</p>';
             db.collection('admin_keys').get()
@@ -1079,10 +1128,17 @@
                 document.getElementById('profileNameDisplay').classList.add('admin-name');
                 document.getElementById('profileAdminPrefix').style.display = 'inline-block';
                 document.getElementById('adminPanelBtn').style.display = 'block';
+                document.getElementById('adminLoginBtn').textContent = '✅ Админ';
             } else {
                 document.getElementById('profileNameDisplay').classList.remove('admin-name');
                 document.getElementById('profileAdminPrefix').style.display = 'none';
                 document.getElementById('adminPanelBtn').style.display = 'none';
+                document.getElementById('adminLoginBtn').textContent = '🔑 Админ';
+            }
+            if (isLoggedIn) {
+                document.getElementById('authBtn').textContent = '✅';
+            } else {
+                document.getElementById('authBtn').textContent = '👤';
             }
             var prefix = getPrefix(openedCount);
             var prefixEl = document.getElementById('profilePrefixDisplay');
@@ -1103,20 +1159,12 @@
         function updateUserStats(caseType, reward, rarity) {
             if (!isLoggedIn) return;
             var userStatsRef = db.collection('user_stats').doc(userID);
-            var currentHistory = winHistory.slice();
-            currentHistory.push({
-                name: reward,
-                rarity: rarity,
-                source: caseType === 'cheap' ? 'Дешевый кейс' : 'Дорогой кейс',
-                timestamp: Date.now()
-            });
-            if (currentHistory.length > 20) currentHistory = currentHistory.slice(-20);
             userStatsRef.set({
                 userID: userID,
                 userName: userName,
                 avatar: avatarData,
                 openedCount: openedCount,
-                winHistory: currentHistory,
+                winHistory: winHistory,
                 lastUpdated: Date.now()
             }, { merge: true }).catch(function() {});
         }
@@ -1186,12 +1234,14 @@
         function showMainPage() {
             hideAllPages();
             document.getElementById('mainPage').style.display = 'block';
+            savePage('main');
             window.scrollTo(0, 0);
         }
 
         function showProfile() {
             hideAllPages();
             document.getElementById('profilePage').classList.add('active');
+            savePage('profile');
             applyProfileData();
             document.getElementById('openedCount').textContent = openedCount;
             var bestWinText = '—';
@@ -1242,6 +1292,7 @@
             adminReturnPage = 'top';
             hideAllPages();
             document.getElementById('topPage').classList.add('active');
+            savePage('top');
             var cachedTop = localStorage.getItem('admincase_top5_data');
             if (cachedTop) {
                 try {
@@ -1328,6 +1379,7 @@
         function showOtherProfile(targetUserID) {
             hideAllPages();
             document.getElementById('otherProfilePage').classList.add('active');
+            savePage('other_profile');
             document.getElementById('otherName').textContent = 'Загрузка...';
             document.getElementById('otherID').textContent = 'ID: ' + formatID(targetUserID);
             document.getElementById('otherOpenedCount').textContent = '...';
@@ -1429,6 +1481,7 @@
             currentCase = caseType;
             hideAllPages();
             document.getElementById('roulettePage').classList.add('active');
+            try { localStorage.removeItem('admincase_current_page'); } catch(e) {}
             document.getElementById('rouletteTitle').textContent = 
                 caseType === 'cheap' ? '📦 Дешевый кейс' : '🎁 Дорогой кейс';
             document.getElementById('resultMessage').className = 'message';
@@ -1589,7 +1642,7 @@
             if (currentTheme !== 'dark') {
                 document.getElementById('bodyElement').classList.add('theme-' + currentTheme);
             }
-            try { localStorage.setItem('admincase_theme', currentTheme); } catch(e) {}
+            saveTheme(currentTheme);
             var options = document.querySelectorAll('.theme-option');
             for (var o = 0; o < options.length; o++) options[o].classList.remove('active');
             if (btn) btn.classList.add('active');
@@ -1742,6 +1795,12 @@
                 document.getElementById('dropdownMenu').classList.remove('show');
             }
         });
+
+        // Восстановление темы при загрузке
+        (function() {
+            var activeBtn = document.querySelector('.theme-option[data-theme="' + currentTheme + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+        })();
     </script>
 
 </body>
