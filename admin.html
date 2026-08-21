@@ -242,7 +242,7 @@
         var currentFilter = 'all';
         var allLogsData = [];
         var currentPage = 1;
-        var logsPerPage = 20;
+        var logsPerPage = 5; // ← 5 логов на странице
 
         // ===== ПРОВЕРКА ВХОДА =====
         function checkSavedLogin() {
@@ -273,7 +273,6 @@
                 return;
             }
             
-            // Проверяем логин и пароль из Firestore
             db.collection('log_users').doc(username).get()
                 .then(function(doc) {
                     if (doc.exists) {
@@ -312,6 +311,8 @@
         function logout() {
             try {
                 localStorage.removeItem('admincase_logs_login');
+                localStorage.removeItem('admincase_logs_data');
+                localStorage.removeItem('admincase_logs_time');
             } catch(e) {}
             document.getElementById('mainContent').classList.remove('active');
             document.getElementById('loginScreen').classList.add('active');
@@ -376,13 +377,12 @@
             }
         }
 
-        // ===== ЗАГРУЗКА ЛОГОВ (ОПТИМИЗИРОВАННАЯ) =====
+        // ===== ЗАГРУЗКА ЛОГОВ =====
         function loadLogs() {
             var list = document.getElementById('logsList');
             list.innerHTML = '<p class="empty-message">Загрузка...</p>';
             allLogsData = [];
             
-            // Проверяем кэш (5 минут)
             var cachedLogs = localStorage.getItem('admincase_logs_data');
             var cachedTime = localStorage.getItem('admincase_logs_time');
             if (cachedLogs && cachedTime && Date.now() - parseInt(cachedTime) < 300000) {
@@ -394,32 +394,31 @@
                 } catch(e) {}
             }
             
-            // Загружаем user_stats (последние 50)
+            // Загружаем ВСЕХ зарегистрированных пользователей (без лимита)
             db.collection('user_stats')
-                .orderBy('lastUpdated', 'desc')
-                .limit(50)
+                .orderBy('registrationDate', 'desc')
                 .get()
                 .then(function(snapshot) {
-                    var promises = [];
-                    
                     snapshot.forEach(function(doc) {
                         var data = doc.data();
                         var userID = data.userID || doc.id;
                         var userName = data.userName || 'Неизвестно';
                         var email = data.email || '—';
                         
-                        // Зарегистрированные пользователи
-                        allLogsData.push({
-                            id: doc.id + '_user',
-                            type: 'users',
-                            title: 'Пользователь: ' + userName,
-                            detail: 'ID: ' + userID + ' | Email: ' + email,
-                            timestamp: data.registrationDate || data.lastUpdated || Date.now()
-                        });
+                        // Зарегистрированные пользователи (без ограничения)
+                        if (data.registrationDate) {
+                            allLogsData.push({
+                                id: doc.id + '_user',
+                                type: 'users',
+                                title: 'Пользователь: ' + userName,
+                                detail: 'ID: ' + userID + ' | Email: ' + email,
+                                timestamp: data.registrationDate
+                            });
+                        }
                         
-                        // Кейсы (последние 5 из истории)
+                        // Кейсы (последние 20)
                         if (data.winHistory && data.winHistory.length > 0) {
-                            var recentWins = data.winHistory.slice(-5);
+                            var recentWins = data.winHistory.slice(-20);
                             for (var i = 0; i < recentWins.length; i++) {
                                 allLogsData.push({
                                     id: doc.id + '_case_' + i,
@@ -431,15 +430,16 @@
                             }
                         }
                         
-                        // Смена имени
+                        // Смена имени (последние 20)
                         if (data.nameChanges && data.nameChanges.length > 0) {
-                            for (var j = 0; j < data.nameChanges.length; j++) {
+                            var recentChanges = data.nameChanges.slice(-20);
+                            for (var j = 0; j < recentChanges.length; j++) {
                                 allLogsData.push({
                                     id: doc.id + '_name_' + j,
                                     type: 'names',
                                     title: userName + ' сменил имя',
-                                    detail: 'С "' + data.nameChanges[j].oldName + '" на "' + data.nameChanges[j].newName + '" | ID: ' + userID,
-                                    timestamp: data.nameChanges[j].timestamp || Date.now()
+                                    detail: 'С "' + recentChanges[j].oldName + '" на "' + recentChanges[j].newName + '" | ID: ' + userID,
+                                    timestamp: recentChanges[j].timestamp || Date.now()
                                 });
                             }
                         }
@@ -450,7 +450,6 @@
                         return (b.timestamp || 0) - (a.timestamp || 0);
                     });
                     
-                    // Сохраняем в кэш
                     try {
                         localStorage.setItem('admincase_logs_data', JSON.stringify(allLogsData));
                         localStorage.setItem('admincase_logs_time', Date.now());
